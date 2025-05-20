@@ -1,0 +1,7 @@
+The blog post discusses the joy and subversive nature of reading novels purely for pleasure. Austin Kleon emphasizes that reading a novel is an act of resistance in today's fast-paced world, highlighting how it feels like getting away with something enjoyable. The author notes that reading should feel subversive due to its inherent value as an activity that defies the constant digital and societal pressures.
+
+Kleon references his recent newsletter where he encouraged readers to simply sit and read a novel without any practical purpose or agenda. He mentions that readers provided many book recommendations in response, and suggests checking out a previous newsletter for a list of favorite novels. The post also includes links to other relevant content on the blog, such as a list of big books for summer.
+
+Austin Kleon is described as a writer who draws and the author of bestselling books like "Steal Like An Artist." He invites readers to subscribe to his weekly newsletter, which reaches hundreds of thousands of people. The post concludes by mentioning various other sections of the website, including recent posts, book recommendations, and social media links.
+
+The site also notes its participation in the Amazon Affiliates program, with proceeds used to keep the blog free for all readers.
