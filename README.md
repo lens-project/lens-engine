@@ -61,6 +61,13 @@ The samples feature real, accessible content from Austin Kleon's blog, allowing 
 
 For detailed information on the sample data structure and how to use it in development, see the [Sample Data Guide](docs/samples/README.md).
 
+To run the sample script to initialize the sample data, run the following command from the scripts directory:
+
+```bash
+cd scripts
+setup-example.sh
+```
+
 ## Architecture
 
 Lens uses a modular architecture with specialized processing paths for different content types:
