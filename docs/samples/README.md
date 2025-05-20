@@ -33,6 +33,15 @@ These samples can be used to:
 2. **Test Processing Components**: Use the samples to test individual components without setting up a full data environment.
 3. **Develop New Features**: Build and test new features with consistent sample data.
 
+## Using the Sample Script
+
+To run the sample script to initialize the sample data, run the following command from the scripts directory:
+
+```bash
+cd scripts
+setup-example.sh
+```
+
 ## Setting Up Your Own Data
 
 To set up your own data directory:
@@ -45,7 +54,7 @@ To set up your own data directory:
    - `processed/` - For processed content and summaries
 3. Run the OPML processor to populate your feeds directory:
    ```bash
-   deno run --allow-net --allow-read --allow-write src/feeds/lab/opml_feed_processor.ts path/to/your/opml/file.opml
+   deno run --allow-net --allow-read --allow-write src/feeds/lab/opml_feed_processor.ts
    ```
 4. Run the content fetcher to download HTML content:
    ```bash

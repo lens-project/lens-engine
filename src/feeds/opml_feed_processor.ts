@@ -6,8 +6,7 @@
  * the RSS client, and saves the feeds as individual JSON files.
  *
  * @module opml_feed_processor
- * @lab Experimental OPML feed processor
- * @version 0.1.0
+ * @version 1.0.0
  */
 
 import {
@@ -16,17 +15,17 @@ import {
   saveRssFeed,
   ensureDir,
   type RssFeed
-} from "./rss_client.ts";
+} from "./lab/rss_client.ts";
 
 import {
   parseOpml,
   extractFeeds,
   getFeedsByCategory,
   type FeedSource
-} from "./opml_parser.ts";
+} from "./lab/opml_parser.ts";
 
-import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
-import { getConfig } from "../../config/mod.ts";
+import { join } from "@std/path";
+import { getConfig } from "../config/mod.ts";
 
 /**
  * Options for processing feeds from an OPML file
@@ -120,7 +119,7 @@ export async function processFeedsFromOpml(
     // Wait for all remaining promises to complete
     await Promise.all(pendingPromises);
 
-    // Prepare summary
+    // Calculate summary statistics
     const successCount = results.filter(r => r.success).length;
     const failureCount = results.length - successCount;
 
@@ -187,108 +186,48 @@ async function processSingleFeed(
 }
 
 /**
- * Cleans up CDATA sections and other problematic content in a feed
+ * Cleans and sanitizes a string for use as a filename
  *
- * This function recursively processes all string properties in the feed object,
- * removing CDATA sections and cleaning up the content.
+ * @param input - The input string
+ * @returns A sanitized string safe for use as a filename
+ */
+function cleanAndSanitizeFilename(input: string): string {
+  // Replace invalid filename characters with underscores
+  return input
+    .trim()
+    .replace(/[/\\?%*:|"<>]/g, "_")
+    .replace(/\s+/g, "_")
+    .toLowerCase();
+}
+
+/**
+ * Cleans CDATA sections from feed content
  *
- * @param feed - The RSS feed to clean
+ * @param feed - The feed to clean
  */
 function cleanFeedContent(feed: RssFeed): void {
-  // Clean the feed title
-  if (feed.title) {
-    feed.title = cleanCdataContent(feed.title);
-  }
-
-  // Clean the feed description
-  if (feed.description) {
-    feed.description = cleanCdataContent(feed.description);
-  }
-
-  // Clean each item in the feed
-  for (const item of feed.items) {
-    // Clean item title
-    if (item.title) {
-      item.title = cleanCdataContent(item.title);
-    }
-
-    // Clean item description
-    if (item.description) {
-      item.description = cleanCdataContent(item.description);
-    }
-
-    // Clean other string properties
-    for (const key in item) {
-      if (typeof item[key] === "string") {
-        item[key] = cleanCdataContent(item[key] as string);
+  if (feed.items) {
+    for (const item of feed.items) {
+      if (item.content) {
+        item.content = cleanCdata(item.content);
+      }
+      if (item.contentSnippet) {
+        item.contentSnippet = cleanCdata(item.contentSnippet);
       }
     }
   }
 }
 
 /**
- * Cleans CDATA sections and other problematic content from a string
+ * Cleans CDATA sections from a string
  *
- * @param content - The string content to clean
- * @returns The cleaned string
+ * @param text - The text to clean
+ * @returns The cleaned text
  */
-function cleanCdataContent(content: string): string {
-  if (!content) return content;
-
-  // Remove CDATA wrapper but keep the content
-  let cleaned = content.replace(/\s*<!\[CDATA\[(.*?)\]\]>\s*/g, "$1");
-
-  // If the content still contains CDATA markers (possibly malformed),
-  // try a more aggressive approach
-  if (cleaned.includes("![CDATA[")) {
-    cleaned = cleaned.replace(/!\[CDATA\[/g, "");
-  }
-
-  if (cleaned.includes("]]>")) {
-    cleaned = cleaned.replace(/\]\]>/g, "");
-  }
-
-  return cleaned;
-}
-
-/**
- * Cleans and sanitizes a string for use as a filename
- *
- * This function handles special cases like CDATA sections and other problematic
- * characters that might appear in feed titles.
- *
- * @param name - The string to sanitize
- * @returns A sanitized string safe for use as a filename
- */
-function cleanAndSanitizeFilename(name: string): string {
-  // Handle empty or undefined names
-  if (!name) return "unnamed_feed";
-
-  // Remove CDATA sections
-  let cleaned = name.replace(/\s*<!\[CDATA\[(.*?)\]\]>\s*/g, "$1");
-
-  // Remove HTML tags
-  cleaned = cleaned.replace(/<[^>]*>/g, "");
-
-  // Replace invalid filename characters with underscores
-  cleaned = cleaned.replace(/[/\\?%*:|"<>]/g, "_");
-
-  // Replace multiple spaces and other whitespace with a single underscore
-  cleaned = cleaned.replace(/\s+/g, "_");
-
-  // Remove leading/trailing underscores and dots
-  cleaned = cleaned.replace(/^[_\.]+|[_\.]+$/g, "");
-
-  // Replace multiple consecutive underscores with a single one
-  cleaned = cleaned.replace(/_+/g, "_");
-
-  // Convert to lowercase
-  cleaned = cleaned.toLowerCase();
-
-  // If the name is empty after cleaning, use a default name
-  if (!cleaned) return "unnamed_feed";
-
-  return cleaned;
+function cleanCdata(text: string): string {
+  return text
+    .replace(/<!\[CDATA\[/g, "")
+    .replace(/\]\]>/g, "");
 }
 
 /**
@@ -311,24 +250,20 @@ if (import.meta.main) {
     await ensureDir(opmlDir);
     await ensureDir(feedsDir);
 
-    // Default OPML file path (can be overridden by command line)
-    let opmlPath = Deno.args[1] || join(opmlDir, "feeds.opml");
+    // Set OPML file path to example.opml in the opml directory
+    const opmlPath = join(opmlDir, "example.opml");
 
-    // Check if the OPML file exists, if not, try the tmp directory
+    // Check if the OPML file exists, if not, exit with an error
     try {
       await Deno.stat(opmlPath);
     } catch (error) {
       if (error instanceof Deno.errors.NotFound) {
-        // Try the tmp directory
-        const tmpOpmlPath = join("tmp", "data", "opml", "feeds.opml");
-        try {
-          await Deno.stat(tmpOpmlPath);
-          console.log(`OPML file not found at ${opmlPath}, using ${tmpOpmlPath} instead`);
-          opmlPath = tmpOpmlPath;
-        } catch (_innerError) {
-          // Both paths failed, continue with the original path (will fail later)
-          console.warn(`OPML file not found at ${opmlPath} or ${tmpOpmlPath}`);
-        }
+        console.error(`Error: OPML file not found at ${opmlPath}`);
+        console.error(`Please ensure that example.opml exists in the ${opmlDir} directory.`);
+        Deno.exit(1);
+      } else {
+        console.error(`Error checking OPML file: ${error.message}`);
+        Deno.exit(1);
       }
     }
 
@@ -350,24 +285,25 @@ if (import.meta.main) {
     });
 
     // Print summary
-    console.log(`\nProcessing complete:`);
-    console.log(`- Total feeds: ${summary.totalFeeds}`);
-    console.log(`- Successfully processed: ${summary.successCount}`);
-    console.log(`- Failed: ${summary.failureCount}`);
+    console.log(`\nProcessing complete!`);
+    console.log(`Total feeds: ${summary.totalFeeds}`);
+    console.log(`Successfully processed: ${summary.successCount}`);
+    console.log(`Failed: ${summary.failureCount}`);
 
-    // Print failures if any
+    // Print details of failed feeds
     if (summary.failureCount > 0) {
-      console.log("\nFailures:");
+      console.log(`\nFailed feeds:`);
       summary.results
         .filter(r => !r.success)
-        .forEach(r => {
-          console.log(`- ${r.source.title}: ${r.message}`);
+        .forEach(result => {
+          console.log(`- ${result.source.title}: ${result.message}`);
         });
     }
 
-    console.log(`\nFeeds saved to ${feedsDir}`);
+    // Exit with appropriate code
+    Deno.exit(summary.failureCount > 0 ? 1 : 0);
   } catch (error) {
-    console.error(error instanceof Error ? error.message : String(error));
+    console.error(`Error: ${error.message}`);
     Deno.exit(1);
   }
 }
