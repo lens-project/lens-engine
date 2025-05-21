@@ -1,5 +1,7 @@
 # Lens: Content-Aware Feed Aggregator
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/lens-project/lens-engine)
+
 ## Overview
 
 Lens is a next-generation feed aggregator that uses local AI models to intelligently filter, rank, and recommend content from RSS feeds based on user interests. The system distinguishes between different content types (particularly video vs. article content) and uses specialized processing paths for each, learning user preferences for topics and content formats over time.
