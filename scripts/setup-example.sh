@@ -1,5 +1,34 @@
 #!/bin/bash
-# Interactive setup script for project configuration
+#==============================================================================
+# Lens Engine Setup Script
+#==============================================================================
+#
+# DESCRIPTION:
+#   This script sets up the Lens Engine environment by:
+#   1. Detecting and respecting existing configuration in .env file
+#   2. Creating or configuring the data directory for Lens Engine
+#   3. Setting up the environment configuration (.env file)
+#   4. Creating the necessary directory structure
+#   5. Optionally initializing the data pipeline
+#
+# FEATURES:
+#   - Respects existing configuration: If you have an existing .env file and
+#     choose not to overwrite it, the script will use your current settings
+#   - Smart defaults: Uses existing data directory if available
+#   - Backup creation: Creates a backup of your .env file before overwriting
+#   - Sample data: Copies sample files if available
+#   - Data pipeline initialization: Optionally runs the data pipeline
+#
+# USAGE:
+#   Run this script from the scripts directory:
+#   $ cd scripts
+#   $ ./setup.sh
+#
+# NOTES:
+#   - Requires Deno to be installed
+#   - Must be run from the scripts directory
+#   - Will create directories if they don't exist
+#==============================================================================
 
 # Print with colors
 GREEN='\033[0;32m'
@@ -22,13 +51,38 @@ if ! command -v deno &> /dev/null; then
     exit 1
 fi
 
+# Function to extract value from .env file
+extract_env_value() {
+    local key=$1
+    local file=$2
+    local value=$(grep "^$key=" "$file" | cut -d '=' -f2-)
+    echo "$value"
+}
+
+# Check if .env exists and extract data directory if it does
+if [ -f ../.env ]; then
+    EXISTING_DATA_DIR=$(extract_env_value "LENS_DATA_DIR" "../.env")
+    echo -e "\n${YELLOW}Found existing data directory in .env: ${EXISTING_DATA_DIR}${NC}"
+fi
+
 # Ask for data directory
 echo -e "\n${YELLOW}Where would you like to store your data?${NC}"
-echo -e "Leave blank for default: ${HOME}/lens-data"
+if [ -n "$EXISTING_DATA_DIR" ]; then
+    echo -e "Leave blank to use existing: ${EXISTING_DATA_DIR}"
+else
+    echo -e "Leave blank for default: ${HOME}/lens-data"
+fi
 read -p "Data directory: " DATA_DIR
 
+# Use existing data directory if none provided
 if [ -z "$DATA_DIR" ]; then
-    DATA_DIR="${HOME}/lens-data"
+    if [ -n "$EXISTING_DATA_DIR" ]; then
+        DATA_DIR="$EXISTING_DATA_DIR"
+        echo -e "Using existing data directory: ${DATA_DIR}"
+    else
+        DATA_DIR="${HOME}/lens-data"
+        echo -e "Using default data directory: ${DATA_DIR}"
+    fi
 fi
 
 # Create .env file
@@ -43,26 +97,41 @@ if [ -f ../.env ]; then
         cp ../.env "$BACKUP_FILE"
         echo -e "Backup created: ${BACKUP_FILE}"
         ENV_FILE="../.env"
+        
+        # Check if .env.example exists
+        if [ ! -f ../.env.example ]; then
+            echo -e "${RED}Error: .env.example file not found!${NC}"
+            echo -e "Please make sure you're running this script from the scripts directory."
+            exit 1
+        fi
+        
+        # Create new .env file from example
+        cp ../.env.example $ENV_FILE
+        sed -i.bak "s|LENS_DATA_DIR=.*|LENS_DATA_DIR=${DATA_DIR}|" $ENV_FILE
+        rm -f "${ENV_FILE}.bak" 2>/dev/null
+        
+        echo -e "Environment file updated: ${ENV_FILE}"
     else
-        ENV_FILE="../.env.new"
-        echo -e "Creating ${ENV_FILE} instead."
+        echo -e "${GREEN}Using existing .env file with data directory: ${DATA_DIR}${NC}"
+        # No need to create .env.new, just use the existing .env
     fi
 else
     ENV_FILE="../.env"
+    
+    # Check if .env.example exists
+    if [ ! -f ../.env.example ]; then
+        echo -e "${RED}Error: .env.example file not found!${NC}"
+        echo -e "Please make sure you're running this script from the scripts directory."
+        exit 1
+    fi
+    
+    # Create new .env file from example
+    cp ../.env.example $ENV_FILE
+    sed -i.bak "s|LENS_DATA_DIR=.*|LENS_DATA_DIR=${DATA_DIR}|" $ENV_FILE
+    rm -f "${ENV_FILE}.bak" 2>/dev/null
+    
+    echo -e "Environment file created: ${ENV_FILE}"
 fi
-
-# Check if .env.example exists
-if [ ! -f ../.env.example ]; then
-    echo -e "${RED}Error: .env.example file not found!${NC}"
-    echo -e "Please make sure you're running this script from the scripts directory."
-    exit 1
-fi
-
-cp ../.env.example $ENV_FILE
-sed -i.bak "s|LENS_DATA_DIR=.*|LENS_DATA_DIR=${DATA_DIR}|" $ENV_FILE
-rm -f "${ENV_FILE}.bak" 2>/dev/null
-
-echo -e "Environment file created: ${ENV_FILE}"
 
 # Create directory structure
 echo -e "\n${GREEN}Creating directory structure...${NC}"
