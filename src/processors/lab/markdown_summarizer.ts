@@ -88,8 +88,27 @@ export function processMarkdownContent(markdown: string): string {
     // Remove code blocks
     text = text.replace(/```[\s\S]*?```/g, "");
 
-    // Remove markdown links but keep the text
-    text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+    // Extract URLs from markdown links and preserve them
+    const urls: string[] = [];
+    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+    let match;
+
+    // First, collect all URLs
+    while ((match = linkRegex.exec(markdown)) !== null) {
+      // We only need the URL (match[2]), not the link text (match[1])
+      const url = match[2];
+      if (url && url.startsWith('http')) {
+        urls.push(url);
+      }
+    }
+
+    // Then replace markdown links with just the text
+    text = text.replace(linkRegex, "$1");
+
+    // Add a URLs section at the end if any were found
+    if (urls.length > 0) {
+      text += "\n\nRelevant URLs:\n" + urls.map(url => `- ${url}`).join("\n");
+    }
 
     // Remove image references
     text = text.replace(/!\[[^\]]*\]\([^)]+\)/g, "");
@@ -179,7 +198,9 @@ export async function summarizeContent(
       Create a concise but comprehensive summary of the provided text.
       Focus on the main points, key arguments, and important details.
       Organize the summary in a clear, readable format with paragraphs.
-      Do not include your own opinions or analysis.`,
+      Do not include your own opinions or analysis.
+      IMPORTANT: If the content contains a "Relevant URLs" section, include those URLs in your summary
+      to maintain links to the original content.`,
       ],
       ["human", `Please summarize the following content:\n\n${content}`],
     ]);

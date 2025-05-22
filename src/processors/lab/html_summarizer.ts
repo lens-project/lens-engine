@@ -99,13 +99,34 @@ export function extractTextFromHtml(html: string): string {
       text = bodyMatch[1];
     }
 
+    // Extract URLs from anchor tags
+    const urls: string[] = [];
+    const anchorRegex = /<a\s+(?:[^>]*?\s+)?href="([^"]*)"[^>]*>(.*?)<\/a>/gi;
+    let anchorMatch;
+
+    // First, collect all URLs from anchor tags
+    while ((anchorMatch = anchorRegex.exec(text)) !== null) {
+      const url = anchorMatch[1];
+      if (url && url.startsWith('http')) {
+        urls.push(url);
+      }
+    }
+
     // Remove HTML tags but preserve content
     // First, replace specific tags that shouldn't add spaces
     text = text.replace(/<(strong|em|b|i|span)[^>]*>/gi, "");
     text = text.replace(/<\/(strong|em|b|i|span)[^>]*>/gi, "");
 
+    // Replace anchor tags with just their text content
+    text = text.replace(/<a\s+(?:[^>]*?\s+)?href="[^"]*"[^>]*>(.*?)<\/a>/gi, "$1");
+
     // Then replace other tags with spaces
     text = text.replace(/<[^>]+>/g, " ");
+
+    // Add a URLs section at the end if any were found
+    if (urls.length > 0) {
+      text += "\n\nRelevant URLs:\n" + urls.map(url => `- ${url}`).join("\n");
+    }
 
     // Normalize whitespace
     text = text.replace(/\s+/g, " ");
@@ -189,7 +210,9 @@ export async function summarizeContent(
       Create a concise but comprehensive summary of the provided text.
       Focus on the main points, key arguments, and important details.
       Organize the summary in a clear, readable format with paragraphs.
-      Do not include your own opinions or analysis.`,
+      Do not include your own opinions or analysis.
+      IMPORTANT: If the content contains a "Relevant URLs" section, include those URLs in your summary
+      to maintain links to the original content.`,
       ],
       ["human", `Please summarize the following content:\n\n${content}`],
     ]);
