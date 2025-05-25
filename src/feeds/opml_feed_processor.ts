@@ -10,18 +10,18 @@
  */
 
 import {
+  ensureDir,
   fetchRssFeed,
   parseRssFeed,
+  type RssFeed,
   saveRssFeed,
-  ensureDir,
-  type RssFeed
 } from "./lab/rss_client.ts";
 
 import {
-  parseOpml,
   extractFeeds,
+  type FeedSource,
   getFeedsByCategory,
-  type FeedSource
+  parseOpml,
 } from "./lab/opml_parser.ts";
 
 import { join } from "@std/path";
@@ -65,7 +65,7 @@ export interface ProcessSummary {
  * @returns A promise that resolves to a summary of the processing operation
  */
 export async function processFeedsFromOpml(
-  options: ProcessOptions
+  options: ProcessOptions,
 ): Promise<ProcessSummary> {
   try {
     // Ensure the output directory exists
@@ -102,14 +102,14 @@ export async function processFeedsFromOpml(
             } catch {
               return i;
             }
-          })
+          }),
         );
         pendingPromises.splice(completedIndex, 1);
       }
 
       // Create a new promise for this feed
       const promise = processSingleFeed(source, options)
-        .then(result => {
+        .then((result) => {
           results.push(result);
         });
 
@@ -120,20 +120,20 @@ export async function processFeedsFromOpml(
     await Promise.all(pendingPromises);
 
     // Calculate summary statistics
-    const successCount = results.filter(r => r.success).length;
+    const successCount = results.filter((r) => r.success).length;
     const failureCount = results.length - successCount;
 
     return {
       totalFeeds: results.length,
       successCount,
       failureCount,
-      results
+      results,
     };
   } catch (error) {
     throw new Error(
       `Error processing feeds from OPML: ${
         error instanceof Error ? error.message : String(error)
-      }`
+      }`,
     );
   }
 }
@@ -147,13 +147,13 @@ export async function processFeedsFromOpml(
  */
 async function processSingleFeed(
   source: FeedSource,
-  options: ProcessOptions
+  options: ProcessOptions,
 ): Promise<ProcessResult> {
   try {
     // Fetch the feed
     const xml = await fetchRssFeed({
       url: source.xmlUrl,
-      timeout: options.timeout
+      timeout: options.timeout,
     });
 
     // Parse the feed
@@ -174,13 +174,13 @@ async function processSingleFeed(
       source,
       success: true,
       message: `Successfully processed feed: ${feedTitle}`,
-      outputPath
+      outputPath,
     };
   } catch (error) {
     return {
       source,
       success: false,
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     };
   }
 }
@@ -259,7 +259,9 @@ if (import.meta.main) {
     } catch (error) {
       if (error instanceof Deno.errors.NotFound) {
         console.error(`Error: OPML file not found at ${opmlPath}`);
-        console.error(`Please ensure that example.opml exists in the ${opmlDir} directory.`);
+        console.error(
+          `Please ensure that example.opml exists in the ${opmlDir} directory.`,
+        );
         Deno.exit(1);
       } else {
         console.error(`Error checking OPML file: ${error.message}`);
@@ -281,7 +283,7 @@ if (import.meta.main) {
       outputDir: feedsDir,
       categoryFilter: category,
       maxConcurrent: 3,
-      timeout: 10000
+      timeout: 10000,
     });
 
     // Print summary
@@ -294,8 +296,8 @@ if (import.meta.main) {
     if (summary.failureCount > 0) {
       console.log(`\nFailed feeds:`);
       summary.results
-        .filter(r => !r.success)
-        .forEach(result => {
+        .filter((r) => !r.success)
+        .forEach((result) => {
           console.log(`- ${result.source.title}: ${result.message}`);
         });
     }

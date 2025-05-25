@@ -141,7 +141,7 @@ This is an empty template with minimal content.
 export const SUCCESSFUL_LLM_RESPONSE = {
   success: true,
   content: "This is a successful response from the LLM.",
-  error: undefined
+  error: undefined,
 };
 
 /**
@@ -150,7 +150,7 @@ export const SUCCESSFUL_LLM_RESPONSE = {
 export const FAILED_LLM_RESPONSE = {
   success: false,
   content: undefined,
-  error: "Failed to connect to LLM API: Connection refused"
+  error: "Failed to connect to LLM API: Connection refused",
 };
 
 /**
@@ -164,7 +164,7 @@ export const JSON_LLM_RESPONSE = {
     "occupation": "Software Engineer",
     "skills": ["JavaScript", "TypeScript", "React"]
   }`,
-  error: undefined
+  error: undefined,
 };
 
 /**
@@ -179,7 +179,7 @@ export const TOPICS_EXTRACTION_RESPONSE = {
     {"topic": "Web Development", "relevance": 0.65},
     {"topic": "Static Typing", "relevance": 0.55}
   ]`,
-  error: undefined
+  error: undefined,
 };
 
 /**
@@ -192,7 +192,7 @@ export const QUERY_REFORMULATION_RESPONSE = {
     "specific": "typescript configuration and best practices for deno server development",
     "semantic": "implementing typescript projects in deno environment for server-side applications"
   }`,
-  error: undefined
+  error: undefined,
 };
 
 // ============================================================================
@@ -208,7 +208,7 @@ export const QUERY_REFORMULATION_RESPONSE = {
  */
 export function setupFileMocks(
   templateContent: string = SIMPLE_TEMPLATE,
-  templateMap: Record<string, string> = {}
+  templateMap: Record<string, string> = {},
 ) {
   // Store original functions
   const originalReadTextFile = Deno.readTextFile;
@@ -231,7 +231,7 @@ export function setupFileMocks(
   return {
     restore: () => {
       Deno.readTextFile = originalReadTextFile;
-    }
+    },
   };
 }
 
@@ -279,9 +279,13 @@ export function setupLLMMocks(response: LLMResponse = SUCCESSFUL_LLM_RESPONSE) {
     },
 
     // Track calls for verification
-    trackCall: (systemPrompt: string, userPrompt: string, options: LLMOptions) => {
+    trackCall: (
+      systemPrompt: string,
+      userPrompt: string,
+      options: LLMOptions,
+    ) => {
       calls.push({ systemPrompt, userPrompt, options });
-    }
+    },
   };
 
   // Return the mock and functions to access call information
@@ -313,7 +317,7 @@ export function setupEnvMocks(envVars: Record<string, string> = {}) {
   return {
     restore: () => {
       Deno.env.get = originalGet;
-    }
+    },
   };
 }
 
@@ -338,7 +342,9 @@ export interface TemplateContent {
  * @param response The response to return from callLLM and callLLMWithTemplate
  * @returns Mock template engine object
  */
-export function createMockTemplateEngine(response: LLMResponse = SUCCESSFUL_LLM_RESPONSE) {
+export function createMockTemplateEngine(
+  response: LLMResponse = SUCCESSFUL_LLM_RESPONSE,
+) {
   // Store information about calls
   const calls: {
     method: string;
@@ -361,7 +367,7 @@ export function createMockTemplateEngine(response: LLMResponse = SUCCESSFUL_LLM_
         inputVariables: { name: "Name variable", age: "Age variable" },
         systemPrompt: "You are a helpful assistant.",
         userPrompt: "Hello, {{name}}! You are {{age}} years old.",
-        outputFormat: "A friendly response."
+        outputFormat: "A friendly response.",
       } as TemplateContent;
     },
 
@@ -373,24 +379,42 @@ export function createMockTemplateEngine(response: LLMResponse = SUCCESSFUL_LLM_
     renderTemplate: (template: string, variables: Record<string, unknown>) => {
       calls.push({ method: "renderTemplate", args: [template, variables] });
       // Simple variable substitution for testing
-      return template.replace(/{{(\w+)}}/g, (_, name) =>
-        String(variables[name] || `{{${name}}}`));
+      return template.replace(
+        /{{(\w+)}}/g,
+        (_, name) => String(variables[name] || `{{${name}}}`),
+      );
     },
 
     // Mock methods that return the provided response
-    callLLM: (systemPrompt: string, userPrompt: string, options: LLMOptions = {}) => {
-      calls.push({ method: "callLLM", args: [systemPrompt, userPrompt, options] });
+    callLLM: (
+      systemPrompt: string,
+      userPrompt: string,
+      options: LLMOptions = {},
+    ) => {
+      calls.push({
+        method: "callLLM",
+        args: [systemPrompt, userPrompt, options],
+      });
       return Promise.resolve(response);
     },
 
-    callLLMWithTemplate: (path: string, variables: Record<string, unknown>, options: LLMOptions = {}) => {
-      calls.push({ method: "callLLMWithTemplate", args: [path, variables, options] });
+    callLLMWithTemplate: (
+      path: string,
+      variables: Record<string, unknown>,
+      options: LLMOptions = {},
+    ) => {
+      calls.push({
+        method: "callLLMWithTemplate",
+        args: [path, variables, options],
+      });
       return Promise.resolve(response);
     },
 
     // Helper methods for testing
     getCalls: () => calls,
     getLastCall: () => calls[calls.length - 1],
-    clearCalls: () => { calls.length = 0; }
+    clearCalls: () => {
+      calls.length = 0;
+    },
   };
 }

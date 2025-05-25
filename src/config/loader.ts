@@ -131,7 +131,9 @@ export async function getConfig(): Promise<AppConfig> {
  * @param testConfig Optional test configuration to use in test mode
  * @returns Configuration object
  */
-export async function getConfigWithTestSupport(testConfig?: AppConfig): Promise<AppConfig> {
+export async function getConfigWithTestSupport(
+  testConfig?: AppConfig,
+): Promise<AppConfig> {
   // Import test utilities dynamically to avoid circular dependencies
   const { isTestEnvironment } = await import("./test-config.ts");
 

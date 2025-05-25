@@ -80,13 +80,14 @@ The guide concludes with case studies of successful agent implementations and re
  */
 export const BLOG_POST_METADATA = {
   "title": "Maycember Rage",
-  "summary": "A blog post by Austin Kleon discussing the stress and burnout associated with the end of the school year in May, comparing it to the overwhelming nature of December.",
+  "summary":
+    "A blog post by Austin Kleon discussing the stress and burnout associated with the end of the school year in May, comparing it to the overwhelming nature of December.",
   "topics": [
     "Stress Management",
     "Parenting",
     "Education",
     "Personal Reflection",
-    "Work-Life Balance"
+    "Work-Life Balance",
   ],
   "technologies": [],
   "contentType": "Personal Blog Post",
@@ -100,12 +101,12 @@ export const BLOG_POST_METADATA = {
     "emotional exhaustion",
     "Austin Kleon",
     "newsletter",
-    "Steal Like an Artist"
+    "Steal Like an Artist",
   ],
   "estimatedReadingTime": 3,
   "author": "Austin Kleon",
   "publicationDate": null,
-  "url": "https://austinkleon.com/2023/05/22/maycember-rage/"
+  "url": "https://austinkleon.com/2023/05/22/maycember-rage/",
 };
 
 /**
@@ -113,19 +114,20 @@ export const BLOG_POST_METADATA = {
  */
 export const TECHNICAL_ARTICLE_METADATA = {
   "title": "API Testing In The Vibe Coding Age",
-  "summary": "A comprehensive guide to API testing using ReqBin with n8n integration, covering setup, test creation, and automation in the context of modern 'vibe coding' that prioritizes user experience.",
+  "summary":
+    "A comprehensive guide to API testing using ReqBin with n8n integration, covering setup, test creation, and automation in the context of modern 'vibe coding' that prioritizes user experience.",
   "topics": [
     "API Testing",
     "Software Development",
     "Quality Assurance",
     "Automation",
-    "Integration Testing"
+    "Integration Testing",
   ],
   "technologies": [
     "ReqBin",
     "n8n",
     "API",
-    "Continuous Integration"
+    "Continuous Integration",
   ],
   "contentType": "Tutorial",
   "difficultyLevel": "Intermediate",
@@ -139,12 +141,12 @@ export const TECHNICAL_ARTICLE_METADATA = {
     "continuous testing",
     "software quality",
     "test cases",
-    "development pipeline"
+    "development pipeline",
   ],
   "estimatedReadingTime": 12,
   "author": null,
   "publicationDate": null,
-  "url": "https://example.com/api-testing-vibe-coding"
+  "url": "https://example.com/api-testing-vibe-coding",
 };
 
 /**
@@ -152,19 +154,20 @@ export const TECHNICAL_ARTICLE_METADATA = {
  */
 export const AI_TECHNOLOGY_METADATA = {
   "title": "The AI Agent Developer's Bible",
-  "summary": "A comprehensive guide for building and deploying AI agents using Anthropic's technologies, covering the entire development lifecycle from conceptualization to production deployment.",
+  "summary":
+    "A comprehensive guide for building and deploying AI agents using Anthropic's technologies, covering the entire development lifecycle from conceptualization to production deployment.",
   "topics": [
     "Artificial Intelligence",
     "AI Agents",
     "Software Development",
     "Prompt Engineering",
-    "AI Deployment"
+    "AI Deployment",
   ],
   "technologies": [
     "Anthropic",
     "Claude",
     "AI Agents",
-    "APIs"
+    "APIs",
   ],
   "contentType": "Technical Guide",
   "difficultyLevel": "Intermediate",
@@ -178,12 +181,12 @@ export const AI_TECHNOLOGY_METADATA = {
     "deployment",
     "monitoring",
     "responsible AI",
-    "integration"
+    "integration",
   ],
   "estimatedReadingTime": 25,
   "author": "Anthropic",
   "publicationDate": null,
-  "url": "https://docs.anthropic.com/claude/docs/ai-agent-developers-guide"
+  "url": "https://docs.anthropic.com/claude/docs/ai-agent-developers-guide",
 };
 
 // ============================================================================
@@ -214,15 +217,16 @@ export function setupOllamaMock(mockMetadata: Record<string, unknown>) {
             return Promise.resolve({
               ok: true,
               status: 200,
-              json: () => Promise.resolve({
-                model: requestBody.model,
-                created_at: new Date().toISOString(),
-                message: {
-                  role: "assistant",
-                  content: JSON.stringify(mockMetadata)
-                },
-                done: true
-              })
+              json: () =>
+                Promise.resolve({
+                  model: requestBody.model,
+                  created_at: new Date().toISOString(),
+                  message: {
+                    role: "assistant",
+                    content: JSON.stringify(mockMetadata),
+                  },
+                  done: true,
+                }),
             } as Response);
           }
         } catch (e) {
@@ -234,11 +238,12 @@ export function setupOllamaMock(mockMetadata: Record<string, unknown>) {
       return Promise.resolve({
         ok: true,
         status: 200,
-        json: () => Promise.resolve({
-          message: {
-            content: JSON.stringify(mockMetadata)
-          }
-        })
+        json: () =>
+          Promise.resolve({
+            message: {
+              content: JSON.stringify(mockMetadata),
+            },
+          }),
       } as Response);
     }
 
@@ -249,7 +254,7 @@ export function setupOllamaMock(mockMetadata: Record<string, unknown>) {
   return {
     restore: () => {
       globalThis.fetch = originalFetch;
-    }
+    },
   };
 }
 
@@ -286,9 +291,10 @@ export function setupFileMocks(summaryContent: string) {
 
   // Mock Deno.stat
   // @ts-ignore: Mocking for test purposes
-  Deno.stat = () => Promise.resolve({
-    isFile: true
-  } as Deno.FileInfo);
+  Deno.stat = () =>
+    Promise.resolve({
+      isFile: true,
+    } as Deno.FileInfo);
 
   return {
     getWrittenContent: () => writtenContent,
@@ -298,6 +304,6 @@ export function setupFileMocks(summaryContent: string) {
       Deno.writeTextFile = originalWriteTextFile;
       Deno.mkdir = originalMkdir;
       Deno.stat = originalStat;
-    }
+    },
   };
 }

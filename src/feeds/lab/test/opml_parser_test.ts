@@ -8,20 +8,20 @@
 
 import { assertEquals, assertExists } from "@std/assert";
 import {
-  parseOpml,
   extractFeeds,
-  getFeedsByCategory,
   generateOpml,
-  type OpmlDocument
+  getFeedsByCategory,
+  type OpmlDocument,
+  parseOpml,
 } from "../opml_parser.ts";
 
 // Import test fixtures
 import {
-  SIMPLE_OPML,
   COMPLEX_OPML,
-  SPECIAL_CHARS_OPML,
   EMPTY_OPML,
-  MALFORMED_OPML
+  MALFORMED_OPML,
+  SIMPLE_OPML,
+  SPECIAL_CHARS_OPML,
 } from "./fixtures/fixtures.ts";
 
 Deno.test("parseOpml - should parse simple OPML XML correctly", () => {
@@ -46,18 +46,24 @@ Deno.test("parseOpml - should parse complex OPML XML correctly", () => {
   assertExists(document.outlines[0].children);
 
   // Check that TechCrunch exists in Technology
-  const techCrunchOutline = document.outlines[0].children.find(child =>
-    child.title === "TechCrunch" && child.xmlUrl === "https://techcrunch.com/feed/");
+  const techCrunchOutline = document.outlines[0].children.find((child) =>
+    child.title === "TechCrunch" &&
+    child.xmlUrl === "https://techcrunch.com/feed/"
+  );
   assertExists(techCrunchOutline);
 
   // Check that News category exists
-  const newsOutline = document.outlines.find(outline => outline.title === "News");
+  const newsOutline = document.outlines.find((outline) =>
+    outline.title === "News"
+  );
   assertExists(newsOutline);
   assertExists(newsOutline.children);
 
   // Check that BBC News exists in News
-  const bbcNewsOutline = newsOutline.children.find(child =>
-    child.title === "BBC News" && child.xmlUrl === "http://feeds.bbci.co.uk/news/rss.xml");
+  const bbcNewsOutline = newsOutline.children.find((child) =>
+    child.title === "BBC News" &&
+    child.xmlUrl === "http://feeds.bbci.co.uk/news/rss.xml"
+  );
   assertExists(bbcNewsOutline);
 });
 
@@ -73,14 +79,16 @@ Deno.test("parseOpml - should handle special characters in OPML", () => {
 
   // The parser might return either the escaped or unescaped version
   // depending on implementation, so we check for either
-  const titleIsValid =
-    document.title === "Feed & Collection" ||
+  const titleIsValid = document.title === "Feed & Collection" ||
     document.title === "Feed &amp; Collection";
-  assertEquals(titleIsValid, true, `Title should be either "Feed & Collection" or "Feed &amp; Collection", got "${document.title}"`);
+  assertEquals(
+    titleIsValid,
+    true,
+    `Title should be either "Feed & Collection" or "Feed &amp; Collection", got "${document.title}"`,
+  );
 
   // Check outline title
-  const outlineTitleIsValid =
-    document.outlines[0].title === "Tech & News" ||
+  const outlineTitleIsValid = document.outlines[0].title === "Tech & News" ||
     document.outlines[0].title === "Tech &amp; News";
   assertEquals(outlineTitleIsValid, true);
 
@@ -116,10 +124,14 @@ Deno.test("extractFeeds - should extract all feeds from complex OPML", () => {
   const feeds = extractFeeds(document);
 
   // Check that we have feeds
-  assertEquals(feeds.length > 0, true, `Expected at least 1 feed, got ${feeds.length}`);
+  assertEquals(
+    feeds.length > 0,
+    true,
+    `Expected at least 1 feed, got ${feeds.length}`,
+  );
 
   // Check TechCrunch feed
-  const techcrunch = feeds.find(f => f.title === "TechCrunch");
+  const techcrunch = feeds.find((f) => f.title === "TechCrunch");
   assertExists(techcrunch);
   assertEquals(techcrunch.xmlUrl, "https://techcrunch.com/feed/");
 
@@ -127,7 +139,7 @@ Deno.test("extractFeeds - should extract all feeds from complex OPML", () => {
   assertExists(techcrunch.category);
 
   // Check BBC News feed
-  const bbc = feeds.find(f => f.title === "BBC News");
+  const bbc = feeds.find((f) => f.title === "BBC News");
   assertExists(bbc);
   assertExists(bbc.category);
 });
@@ -137,18 +149,26 @@ Deno.test("getFeedsByCategory - should filter feeds by category", () => {
 
   // Test Technology category
   const techFeeds = getFeedsByCategory(document, "Technology");
-  assertEquals(techFeeds.length > 0, true, `Expected at least 1 Technology feed, got ${techFeeds.length}`);
+  assertEquals(
+    techFeeds.length > 0,
+    true,
+    `Expected at least 1 Technology feed, got ${techFeeds.length}`,
+  );
 
   // Check that TechCrunch is in Technology feeds
-  const techCrunch = techFeeds.find(f => f.title === "TechCrunch");
+  const techCrunch = techFeeds.find((f) => f.title === "TechCrunch");
   assertExists(techCrunch);
 
   // Test News category
   const newsFeeds = getFeedsByCategory(document, "News");
-  assertEquals(newsFeeds.length > 0, true, `Expected at least 1 News feed, got ${newsFeeds.length}`);
+  assertEquals(
+    newsFeeds.length > 0,
+    true,
+    `Expected at least 1 News feed, got ${newsFeeds.length}`,
+  );
 
   // Check that BBC News is in News feeds
-  const bbcNews = newsFeeds.find(f => f.title === "BBC News");
+  const bbcNews = newsFeeds.find((f) => f.title === "BBC News");
   assertExists(bbcNews);
 
   // Test non-existent category
@@ -170,11 +190,11 @@ Deno.test("generateOpml - should generate valid OPML XML", () => {
             type: "rss",
             xmlUrl: "https://example.com/tech/feed",
             htmlUrl: "https://example.com/tech",
-            children: []
-          }
-        ]
-      }
-    ]
+            children: [],
+          },
+        ],
+      },
+    ],
   };
 
   const xml = generateOpml(document);
@@ -187,7 +207,10 @@ Deno.test("generateOpml - should generate valid OPML XML", () => {
   assertEquals(parsedDocument.outlines[0].title, "Tech");
   assertEquals(parsedDocument.outlines[0].children.length, 1);
   assertEquals(parsedDocument.outlines[0].children[0].title, "Example Tech");
-  assertEquals(parsedDocument.outlines[0].children[0].xmlUrl, "https://example.com/tech/feed");
+  assertEquals(
+    parsedDocument.outlines[0].children[0].xmlUrl,
+    "https://example.com/tech/feed",
+  );
 });
 
 Deno.test("generateOpml - should escape special characters", () => {
@@ -204,11 +227,11 @@ Deno.test("generateOpml - should escape special characters", () => {
             type: "rss",
             xmlUrl: "https://example.com/tech/feed?a=1&b=2",
             htmlUrl: "https://example.com/tech",
-            children: []
-          }
-        ]
-      }
-    ]
+            children: [],
+          },
+        ],
+      },
+    ],
   };
 
   const xml = generateOpml(document);
@@ -228,8 +251,7 @@ Deno.test("generateOpml - should escape special characters", () => {
 
   // The parser might return either the escaped or unescaped version
   // depending on implementation, so we check for either
-  const titleIsValid =
-    parsedDocument.title === "Feed & Collection" ||
+  const titleIsValid = parsedDocument.title === "Feed & Collection" ||
     parsedDocument.title === "Feed &amp; Collection";
   assertEquals(titleIsValid, true);
 

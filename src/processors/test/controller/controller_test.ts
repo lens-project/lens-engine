@@ -1,11 +1,14 @@
-import { assertEquals, assertExists } from "https://deno.land/std@0.224.0/assert/mod.ts";
 import {
+  assertEquals,
+  assertExists,
+} from "https://deno.land/std@0.224.0/assert/mod.ts";
+import {
+  type BatchResult,
+  processHtmlBatch,
   processHtmlContent,
   processHtmlFile,
-  processHtmlBatch,
-  processMixedBatch,
   type ProcessingResult,
-  type BatchResult,
+  processMixedBatch,
 } from "../../src/controller/mod.ts";
 
 // Content Controller Tests
@@ -17,7 +20,7 @@ Deno.test("HTML Controller - module exists and exports", () => {
 Deno.test("HTML Controller - processHtmlContent success", async () => {
   const html = "<h1>Test Title</h1><p>This is test content.</p>";
   const result: ProcessingResult = await processHtmlContent(html, "test.html", {
-    skipSummarization: true  // Skip summarization to avoid HTTP calls in tests
+    skipSummarization: true, // Skip summarization to avoid HTTP calls in tests
   });
 
   assertEquals(result.success, true);
@@ -33,7 +36,7 @@ Deno.test("HTML Controller - processHtmlContent with options", async () => {
     preserveUrls: true,
     preserveHeadings: true,
     outputDir: "/tmp/test",
-    skipSummarization: true  // Skip summarization to avoid HTTP calls in tests
+    skipSummarization: true, // Skip summarization to avoid HTTP calls in tests
   });
 
   assertEquals(result.success, true);
@@ -42,7 +45,7 @@ Deno.test("HTML Controller - processHtmlContent with options", async () => {
 
 Deno.test("HTML Controller - processHtmlFile nonexistent", async () => {
   const result = await processHtmlFile("nonexistent.html", {
-    skipSummarization: true  // Skip summarization to avoid HTTP calls in tests
+    skipSummarization: true, // Skip summarization to avoid HTTP calls in tests
   });
 
   assertEquals(result.success, false);
@@ -54,10 +57,11 @@ Deno.test("HTML Controller - processHtmlFile nonexistent", async () => {
 Deno.test({
   name: "HTML Controller - processHtmlContent with summarization",
   async fn() {
-    const html = "<h1>Test Article</h1><p>This is a test article about software development and testing.</p>";
+    const html =
+      "<h1>Test Article</h1><p>This is a test article about software development and testing.</p>";
     const result = await processHtmlContent(html, "test.html", {
-      skipSummarization: false,  // Enable summarization
-      summaryTemperature: 0.1,   // Low temperature for consistent results
+      skipSummarization: false, // Enable summarization
+      summaryTemperature: 0.1, // Low temperature for consistent results
     });
 
     assertEquals(result.success, true);
@@ -71,7 +75,9 @@ Deno.test({
       assertEquals(typeof result.metadata.summaryProcessingTime, "number");
       console.log("Summary generated:", result.metadata.summary);
     } else {
-      console.log("Summarization skipped or failed (expected if Ollama not running)");
+      console.log(
+        "Summarization skipped or failed (expected if Ollama not running)",
+      );
     }
   },
   sanitizeResources: false,
@@ -101,7 +107,7 @@ Deno.test("Batch Controller - processHtmlBatch with progress", async () => {
     continueOnError: true,
     onProgress: (completed, total, current) => {
       progressCalls.push([completed, total, current]);
-    }
+    },
   });
 
   assertEquals(result.totalItems, 2);
@@ -114,7 +120,7 @@ Deno.test("Batch Controller - processMixedBatch filters file types", async () =>
   const result = await processMixedBatch(files);
 
   // Should only process HTML files
-  assertEquals(result.totalItems, 4);  // All files counted
+  assertEquals(result.totalItems, 4); // All files counted
   // Results depend on whether files exist, but structure should be correct
   assertEquals(Array.isArray(result.results), true);
 });

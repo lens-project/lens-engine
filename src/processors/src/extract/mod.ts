@@ -1,6 +1,6 @@
 /**
  * Content Extraction Module
- * 
+ *
  * This module provides functions to extract plain text content from
  * various document formats while preserving important metadata.
  */

@@ -14,29 +14,29 @@ import {
 import {
   createFilenameFromUrl,
   extractUrls,
-  fetchContent,
+  fetchAllContent,
   fetchAndSaveContent,
+  fetchContent,
+  FetchResult,
   loadJsonFile,
   processBatch,
-  fetchAllContent,
-  saveContent,
   sanitizeFilename,
-  FetchResult,
+  saveContent,
 } from "../content_fetcher.ts";
 
 // Import test fixtures
 import {
-  SIMPLE_HTML,
-  COMPLEX_HTML,
-  SPECIAL_CHARS_HTML,
-  MALFORMED_HTML,
-  SIMPLE_FEED,
   COMPLEX_FEED,
+  COMPLEX_HTML,
   EMPTY_FEED,
   INVALID_FEED,
+  MALFORMED_HTML,
+  setupEnvMocks,
   setupFileMocks,
   setupNetworkMocks,
-  setupEnvMocks,
+  SIMPLE_FEED,
+  SIMPLE_HTML,
+  SPECIAL_CHARS_HTML,
 } from "./fixtures/fixtures.ts";
 
 Deno.test("sanitizeFilename - should sanitize filenames correctly", () => {
@@ -91,7 +91,7 @@ Deno.test("createFilenameFromUrl - should create filenames from URLs correctly",
 Deno.test("fetchContent - should fetch content successfully", async () => {
   // Setup network mock to return simple HTML
   const networkMock = setupNetworkMocks({
-    "example.com": { content: SIMPLE_HTML, status: 200, ok: true }
+    "example.com": { content: SIMPLE_HTML, status: 200, ok: true },
   });
 
   try {
@@ -105,7 +105,7 @@ Deno.test("fetchContent - should fetch content successfully", async () => {
 Deno.test("fetchContent - should handle fetch errors", async () => {
   // Setup network mock to return an error
   const networkMock = setupNetworkMocks({
-    "example.com/not-found": { content: "Not Found", status: 404, ok: false }
+    "example.com/not-found": { content: "Not Found", status: 404, ok: false },
   });
 
   try {
@@ -142,7 +142,7 @@ Deno.test("extractUrls - should handle empty or invalid data", () => {
 Deno.test("fetchAndSaveContent - should fetch and save content", async () => {
   // Setup network mock to return complex HTML
   const networkMock = setupNetworkMocks({
-    "example.com/article": { content: COMPLEX_HTML, status: 200, ok: true }
+    "example.com/article": { content: COMPLEX_HTML, status: 200, ok: true },
   });
 
   // Setup file system mocks
@@ -151,7 +151,7 @@ Deno.test("fetchAndSaveContent - should fetch and save content", async () => {
   try {
     const result = await fetchAndSaveContent(
       "https://example.com/article",
-      "./tmp/data/fetched"
+      "./tmp/data/fetched",
     );
 
     // Check the result
@@ -164,7 +164,7 @@ Deno.test("fetchAndSaveContent - should fetch and save content", async () => {
     const writtenFiles = fileMocks.getWrittenFiles();
     const fileKeys = Object.keys(writtenFiles);
     assertEquals(fileKeys.length > 0, true);
-    assertEquals(fileKeys.some(key => key.includes("article")), true);
+    assertEquals(fileKeys.some((key) => key.includes("article")), true);
 
     // Check that the content was written correctly
     const fileContent = Object.values(writtenFiles)[0];
@@ -172,8 +172,11 @@ Deno.test("fetchAndSaveContent - should fetch and save content", async () => {
 
     // Check that the directory was created
     const createdDirs = fileMocks.getCreatedDirs();
-    assertEquals(createdDirs.includes("./tmp/data/fetched") ||
-                createdDirs.some(dir => dir.includes("fetched")), true);
+    assertEquals(
+      createdDirs.includes("./tmp/data/fetched") ||
+        createdDirs.some((dir) => dir.includes("fetched")),
+      true,
+    );
   } finally {
     networkMock.restore();
     fileMocks.restore();
@@ -206,8 +209,12 @@ Deno.test("processBatch - should process a batch of URLs", async () => {
   const networkMock = setupNetworkMocks({
     "example.com/article1": { content: SIMPLE_HTML, status: 200, ok: true },
     "example.com/article2": { content: COMPLEX_HTML, status: 200, ok: true },
-    "example.com/article3": { content: SPECIAL_CHARS_HTML, status: 200, ok: true },
-    "example.com/not-found": { content: "Not Found", status: 404, ok: false }
+    "example.com/article3": {
+      content: SPECIAL_CHARS_HTML,
+      status: 200,
+      ok: true,
+    },
+    "example.com/not-found": { content: "Not Found", status: 404, ok: false },
   });
 
   // Setup file system mocks
@@ -218,7 +225,7 @@ Deno.test("processBatch - should process a batch of URLs", async () => {
       "https://example.com/article1",
       "https://example.com/article2",
       "https://example.com/article3",
-      "https://example.com/not-found"
+      "https://example.com/not-found",
     ];
 
     const results = await processBatch(
@@ -227,8 +234,8 @@ Deno.test("processBatch - should process a batch of URLs", async () => {
       {
         concurrency: 2,
         timeout: 1000,
-        overwrite: false
-      }
+        overwrite: false,
+      },
     );
 
     // Check the results array
@@ -262,13 +269,21 @@ Deno.test("processBatch - should process a batch of URLs", async () => {
 Deno.test("fetchAllContent - should fetch all content from a feed", async () => {
   // Setup environment variables
   const envMocks = setupEnvMocks({
-    "LENS_DATA_DIR": "/tmp/lens"
+    "LENS_DATA_DIR": "/tmp/lens",
   });
 
   // Setup network mocks
   const networkMock = setupNetworkMocks({
-    "example.com/content-fetching": { content: SIMPLE_HTML, status: 200, ok: true },
-    "example.com/web-scraping": { content: COMPLEX_HTML, status: 200, ok: true }
+    "example.com/content-fetching": {
+      content: SIMPLE_HTML,
+      status: 200,
+      ok: true,
+    },
+    "example.com/web-scraping": {
+      content: COMPLEX_HTML,
+      status: 200,
+      ok: true,
+    },
   });
 
   // Setup file system mocks
@@ -279,7 +294,7 @@ Deno.test("fetchAllContent - should fetch all content from a feed", async () => 
       jsonPath: "./test/fixtures/sample_feed.json",
       outputDir: "./tmp/data/fetched",
       concurrency: 2,
-      timeout: 1000
+      timeout: 1000,
     });
 
     // Check the results array
@@ -311,8 +326,8 @@ Deno.test("saveContent - should save content to a file", async () => {
       MALFORMED_HTML,
       {
         path: "./tmp/data/fetched/test.html",
-        overwrite: true
-      }
+        overwrite: true,
+      },
     );
 
     // Check that the file was written

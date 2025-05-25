@@ -1,27 +1,27 @@
 /**
  * Controller Module
- * 
+ *
  * Exports all controller functionality for content processing workflows.
  */
 
 // Content controllers
 export {
+  type HtmlProcessingOptions,
   processHtmlContent,
   processHtmlFile,
-  type HtmlProcessingOptions,
 } from "./content/mod.ts";
 
-// Processing controllers  
+// Processing controllers
 export {
+  type BatchProcessingOptions,
   processHtmlBatch,
   processMixedBatch,
-  type BatchProcessingOptions,
 } from "./processing/mod.ts";
 
 // Shared types
 export type {
+  BatchResult,
   ProcessingOptions,
   ProcessingResult,
-  BatchResult,
   ProgressCallback,
 } from "./types.ts";

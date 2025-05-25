@@ -21,9 +21,7 @@ import { assertEquals, assertExists, assertStringIncludes } from "@std/assert";
 import { TemplateEngine } from "../template_engine.ts";
 
 // Import test fixtures
-import {
-  SIMPLE_TEMPLATE
-} from "./fixtures/fixtures.ts";
+import { SIMPLE_TEMPLATE } from "./fixtures/fixtures.ts";
 
 // Use the prompts directory
 const templateDir = "./prompts";
@@ -46,11 +44,20 @@ Deno.test({
     const parsed = engine.parseTemplate(SIMPLE_TEMPLATE);
 
     assertEquals(parsed.name, "Simple Test Template");
-    assertEquals(parsed.description, "This is a simple test template for unit testing.");
+    assertEquals(
+      parsed.description,
+      "This is a simple test template for unit testing.",
+    );
     assertEquals(parsed.inputVariables.name, "The name of the person");
     assertEquals(parsed.inputVariables.age, "The age of the person");
-    assertEquals(parsed.systemPrompt, "You are a helpful assistant providing information about {{name}}.");
-    assertEquals(parsed.userPrompt, "Tell me about a person named {{name}} who is {{age}} years old.");
+    assertEquals(
+      parsed.systemPrompt,
+      "You are a helpful assistant providing information about {{name}}.",
+    );
+    assertEquals(
+      parsed.userPrompt,
+      "Tell me about a person named {{name}} who is {{age}} years old.",
+    );
     assertEquals(parsed.outputFormat, "A short paragraph about {{name}}.");
   },
 });
@@ -140,20 +147,26 @@ Deno.test({
 
     // Check that variables are substituted correctly
     assertStringIncludes(rendered, "Hello, John!");
-    assertStringIncludes(rendered, "Your age is 30 and your favorite color is blue.");
+    assertStringIncludes(
+      rendered,
+      "Your age is 30 and your favorite color is blue.",
+    );
     assertStringIncludes(rendered, "{{missing}} should remain as is.");
 
     // The current implementation doesn't automatically stringify objects
     // So we'll test with primitive values only
     const templateWithNumber = `Count: {{count}}`;
     const numberVariables = {
-      count: 42
+      count: 42,
     };
 
-    const renderedWithNumber = engine.renderTemplate(templateWithNumber, numberVariables);
+    const renderedWithNumber = engine.renderTemplate(
+      templateWithNumber,
+      numberVariables,
+    );
 
     // Check that numbers are converted to strings
-    assertStringIncludes(renderedWithNumber, 'Count: 42');
+    assertStringIncludes(renderedWithNumber, "Count: 42");
   },
 });
 

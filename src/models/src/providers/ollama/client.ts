@@ -231,7 +231,8 @@ export async function chatWithOllamaCustomPrompt(
         const config = await getConfig();
 
         // Use provided options or fall back to config
-        const tracingEnabled = options.langSmithTracing ?? config.langSmith.tracingEnabled;
+        const tracingEnabled = options.langSmithTracing ??
+          config.langSmith.tracingEnabled;
         const apiKey = options.langSmithApiKey || config.langSmith.apiKey;
         const project = options.langSmithProject || config.langSmith.project;
 
@@ -244,7 +245,10 @@ export async function chatWithOllamaCustomPrompt(
         }
       } catch (configError) {
         // If config loading fails, disable tracing and continue
-        console.warn("Failed to load config for LangSmith, disabling tracing:", configError);
+        console.warn(
+          "Failed to load config for LangSmith, disabling tracing:",
+          configError,
+        );
         Deno.env.set("LANGCHAIN_TRACING_V2", "false");
       }
     }
@@ -262,7 +266,10 @@ export async function chatWithOllamaCustomPrompt(
         baseUrl = baseUrl || config.llm.ollamaBaseUrl;
       } catch (configError) {
         // If config loading fails, use defaults
-        console.warn("Failed to load config for model settings, using defaults:", configError);
+        console.warn(
+          "Failed to load config for model settings, using defaults:",
+          configError,
+        );
         modelName = modelName || "llama3.2";
         baseUrl = baseUrl || "http://localhost:11434";
       }

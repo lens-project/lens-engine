@@ -15,10 +15,7 @@ import {
   chatWithOllamaCustomPrompt,
   validateOllamaConnection,
 } from "../../src/providers/ollama/client.ts";
-import {
-  configureTest,
-  cleanupTestEnvironment,
-} from "../../../config/mod.ts";
+import { cleanupTestEnvironment, configureTest } from "../../../config/mod.ts";
 
 // Test 1: Basic Ollama API validation
 Deno.test({
@@ -85,7 +82,8 @@ Deno.test({
     const testConfig = configureTest("minimal");
 
     try {
-      const customPrompt = "You are a helpful assistant. Please respond to: {message}";
+      const customPrompt =
+        "You are a helpful assistant. Please respond to: {message}";
       const variables = { message: "What is 2+2?" };
 
       const result = await chatWithOllamaCustomPrompt(
@@ -96,7 +94,7 @@ Deno.test({
           baseUrl: testConfig.llm.ollamaBaseUrl,
           temperature: 0.1,
           langSmithTracing: testConfig.langSmith.tracingEnabled,
-        }
+        },
       );
 
       // Check response structure
@@ -109,10 +107,16 @@ Deno.test({
         assertExists(result.metadata);
         assertEquals(typeof result.metadata.processingTime, "number");
 
-        console.log("Custom prompt response:", result.content?.substring(0, 100) + "...");
+        console.log(
+          "Custom prompt response:",
+          result.content?.substring(0, 100) + "...",
+        );
       } else {
         assertExists(result.error);
-        console.log("Custom prompt failed (expected if Ollama not running):", result.error);
+        console.log(
+          "Custom prompt failed (expected if Ollama not running):",
+          result.error,
+        );
       }
     } finally {
       cleanupTestEnvironment();

@@ -20,7 +20,7 @@ export interface ProcessingOptions {
   /** Whether to skip summarization step */
   skipSummarization?: boolean;
   /** Summarization strategy to use */
-  summaryStrategy?: 'brief' | 'detailed' | 'key-points';
+  summaryStrategy?: "brief" | "detailed" | "key-points";
   /** Custom prompt for summarization */
   customPrompt?: string;
   /** Ollama model to use for summarization */
@@ -71,4 +71,8 @@ export interface BatchResult {
 /**
  * Progress callback for batch processing
  */
-export type ProgressCallback = (completed: number, total: number, current?: string) => void;
+export type ProgressCallback = (
+  completed: number,
+  total: number,
+  current?: string,
+) => void;

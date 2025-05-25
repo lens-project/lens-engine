@@ -1,13 +1,13 @@
 /**
  * Content Controllers Module
- * 
+ *
  * Exports all content-specific processing controllers.
  */
 
 export {
+  type HtmlProcessingOptions,
   processHtmlContent,
   processHtmlFile,
-  type HtmlProcessingOptions,
 } from "./html.ts";
 
 // Future exports:

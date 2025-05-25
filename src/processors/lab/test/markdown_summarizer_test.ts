@@ -14,34 +14,40 @@ import {
   assertExists as _assertExists,
   assertStringIncludes,
 } from "https://deno.land/std@0.224.0/assert/mod.ts";
-import { assertSpyCall as _assertSpyCall, spy as _spy } from "https://deno.land/std@0.224.0/testing/mock.ts";
+import {
+  assertSpyCall as _assertSpyCall,
+  spy as _spy,
+} from "https://deno.land/std@0.224.0/testing/mock.ts";
 import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
-import { ensureDir, ensureFile as _ensureFile } from "https://deno.land/std@0.224.0/fs/mod.ts";
+import {
+  ensureDir,
+  ensureFile as _ensureFile,
+} from "https://deno.land/std@0.224.0/fs/mod.ts";
 import { exists } from "https://deno.land/std@0.224.0/fs/exists.ts";
 
 import {
   createOutputFilename,
   processMarkdownContent,
-  processMarkdownFile as _processMarkdownFile,
   processMarkdownDirectory as _processMarkdownDirectory,
-  summarizeContent as _summarizeContent,
+  processMarkdownFile as _processMarkdownFile,
+  ProcessOptions as _ProcessOptions,
   saveProcessedContent,
+  summarizeContent as _summarizeContent,
   SummaryResponse,
-  ProcessOptions as _ProcessOptions
 } from "../markdown_summarizer.ts";
 
 // Import test fixtures
 import {
-  SIMPLE_MARKDOWN as _SIMPLE_MARKDOWN,
-  MARKDOWN_WITH_FRONTMATTER,
   COMPLEX_MARKDOWN as _COMPLEX_MARKDOWN,
-  SPECIAL_CHARS_MARKDOWN as _SPECIAL_CHARS_MARKDOWN,
-  EMPTY_MARKDOWN as _EMPTY_MARKDOWN,
   COMPLEX_MARKDOWN_PROCESSED_PARTS as _COMPLEX_MARKDOWN_PROCESSED_PARTS,
-  SIMPLE_MARKDOWN_SUMMARY as _SIMPLE_MARKDOWN_SUMMARY,
   COMPLEX_MARKDOWN_SUMMARY as _COMPLEX_MARKDOWN_SUMMARY,
+  EMPTY_MARKDOWN as _EMPTY_MARKDOWN,
+  MARKDOWN_WITH_FRONTMATTER,
   setupFileMocks as _setupFileMocks,
   setupOllamaMock as _setupOllamaMock,
+  SIMPLE_MARKDOWN as _SIMPLE_MARKDOWN,
+  SIMPLE_MARKDOWN_SUMMARY as _SIMPLE_MARKDOWN_SUMMARY,
+  SPECIAL_CHARS_MARKDOWN as _SPECIAL_CHARS_MARKDOWN,
 } from "./fixtures/markdown_fixtures.ts";
 
 // IMPORTANT: Disable LangSmith tracing for tests
@@ -69,7 +75,10 @@ async function teardown() {
 }
 
 // Helper function to create a test markdown file
-async function createTestMarkdownFile(filename: string, content: string): Promise<string> {
+async function createTestMarkdownFile(
+  filename: string,
+  content: string,
+): Promise<string> {
   const filePath = join(TEST_DIR, filename);
   await Deno.writeTextFile(filePath, content);
   return filePath;
@@ -79,7 +88,7 @@ async function createTestMarkdownFile(filename: string, content: string): Promis
 function _mockSummarizeContent(_content: string): Promise<SummaryResponse> {
   return Promise.resolve({
     success: true,
-    content: "This is a mock summary of the content."
+    content: "This is a mock summary of the content.",
   });
 }
 
@@ -100,7 +109,10 @@ Deno.test({
 
     // Check that the main content is preserved
     assertStringIncludes(processed, "Document with Front Matter");
-    assertStringIncludes(processed, "This document has YAML front matter that should be removed during processing");
+    assertStringIncludes(
+      processed,
+      "This document has YAML front matter that should be removed during processing",
+    );
   },
 });
 
@@ -118,14 +130,18 @@ This is a test paragraph.`;
     // Print the full processed text for debugging
     console.log("MARKDOWN WITH HTML COMMENTS PROCESSED TEXT:", processed);
 
-    assertEquals(processed.includes("This is a comment that should be removed"), false);
+    assertEquals(
+      processed.includes("This is a comment that should be removed"),
+      false,
+    );
     assertStringIncludes(processed, "Test Heading");
     assertStringIncludes(processed, "This is a test paragraph");
   },
 });
 
 Deno.test({
-  name: "processMarkdownContent - handles markdown links correctly (placeholder)",
+  name:
+    "processMarkdownContent - handles markdown links correctly (placeholder)",
   fn() {
     // TODO: Implement proper markdown link handling test
     assertEquals(true, true);
@@ -133,7 +149,8 @@ Deno.test({
 });
 
 Deno.test({
-  name: "processMarkdownContent - handles image references correctly (placeholder)",
+  name:
+    "processMarkdownContent - handles image references correctly (placeholder)",
   fn() {
     // TODO: Implement proper image reference handling test
     assertEquals(true, true);
@@ -160,7 +177,9 @@ Deno.test("saveProcessedContent should save content to file", async () => {
 
   await saveProcessedContent(content, outputPath, true);
 
-  const exists = await Deno.stat(outputPath).then(() => true).catch(() => false);
+  const exists = await Deno.stat(outputPath).then(() => true).catch(() =>
+    false
+  );
   assertEquals(exists, true);
 
   if (exists) {
@@ -196,7 +215,10 @@ Deno.test("processMarkdownFile should process file and save summary", async () =
 
   // Create a test markdown file
   const testContent = "# Test Document\n\nThis is a test paragraph.";
-  const inputPath = await createTestMarkdownFile("test-document.md", testContent);
+  const inputPath = await createTestMarkdownFile(
+    "test-document.md",
+    testContent,
+  );
 
   // Create a simple mock for summarizeContent
   // Instead of trying to replace the module's function, we'll just use our own implementation

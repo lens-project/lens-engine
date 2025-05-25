@@ -107,7 +107,7 @@ export function extractTextFromHtml(html: string): string {
     // First, collect all URLs from anchor tags
     while ((anchorMatch = anchorRegex.exec(text)) !== null) {
       const url = anchorMatch[1];
-      if (url && url.startsWith('http')) {
+      if (url && url.startsWith("http")) {
         urls.push(url);
       }
     }
@@ -118,14 +118,17 @@ export function extractTextFromHtml(html: string): string {
     text = text.replace(/<\/(strong|em|b|i|span)[^>]*>/gi, "");
 
     // Replace anchor tags with just their text content
-    text = text.replace(/<a\s+(?:[^>]*?\s+)?href="[^"]*"[^>]*>(.*?)<\/a>/gi, "$1");
+    text = text.replace(
+      /<a\s+(?:[^>]*?\s+)?href="[^"]*"[^>]*>(.*?)<\/a>/gi,
+      "$1",
+    );
 
     // Then replace other tags with spaces
     text = text.replace(/<[^>]+>/g, " ");
 
     // Add a URLs section at the end if any were found
     if (urls.length > 0) {
-      text += "\n\nRelevant URLs:\n" + urls.map(url => `- ${url}`).join("\n");
+      text += "\n\nRelevant URLs:\n" + urls.map((url) => `- ${url}`).join("\n");
     }
 
     // Normalize whitespace
@@ -385,7 +388,10 @@ export async function processHtmlDirectory(
     // Get all HTML files in the input directory
     const files: string[] = [];
     for await (const entry of Deno.readDir(inputDir)) {
-      if (entry.isFile && (entry.name.endsWith(".html") || entry.name.endsWith(".htm"))) {
+      if (
+        entry.isFile &&
+        (entry.name.endsWith(".html") || entry.name.endsWith(".htm"))
+      ) {
         files.push(entry.name);
       }
     }
@@ -418,7 +424,9 @@ export async function processHtmlDirectory(
           console.error(`❌ Failed to process ${file}: ${result.error}`);
         }
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
+        const errorMessage = error instanceof Error
+          ? error.message
+          : String(error);
         failureCount++;
         results.push({ file, success: false, error: errorMessage });
         console.error(`❌ Error processing ${file}: ${errorMessage}`);
@@ -462,7 +470,7 @@ if (import.meta.main) {
         modelName: config.llm.llmModel, // Use model from config
         temperature: 0.5,
         langSmithTracing: config.langSmith.tracingEnabled, // Use tracing setting from config
-      }
+      },
     );
 
     console.log("\nProcessing Summary:");
@@ -473,8 +481,8 @@ if (import.meta.main) {
     if (summary.failureCount > 0) {
       console.log("\nFailed files:");
       summary.results
-        .filter(r => !r.success)
-        .forEach(r => console.log(`- ${r.file}: ${r.error}`));
+        .filter((r) => !r.success)
+        .forEach((r) => console.log(`- ${r.file}: ${r.error}`));
     }
   } catch (error) {
     console.error(

@@ -14,10 +14,7 @@ import {
   type SummaryOptions,
   type SummaryResponse,
 } from "../../src/controller/summarizer.ts";
-import {
-  configureTest,
-  cleanupTestEnvironment,
-} from "../../../config/mod.ts";
+import { cleanupTestEnvironment, configureTest } from "../../../config/mod.ts";
 
 // Test content
 const TEST_CONTENT = `
@@ -71,8 +68,7 @@ Deno.test({
 
         // Check that the summary contains relevant terms
         const summary = result.content.toLowerCase();
-        const hasRelevantTerms =
-          summary.includes("test") ||
+        const hasRelevantTerms = summary.includes("test") ||
           summary.includes("development") ||
           summary.includes("tdd") ||
           summary.includes("code");
@@ -84,7 +80,10 @@ Deno.test({
         // If it fails, it should have an error message
         assertExists(result.error);
         assertEquals(typeof result.error, "string");
-        console.log("Summarization failed (expected if Ollama not running):", result.error);
+        console.log(
+          "Summarization failed (expected if Ollama not running):",
+          result.error,
+        );
       }
     } finally {
       // Clean up test environment
@@ -138,7 +137,10 @@ Deno.test({
         langSmithTracing: testConfig.langSmith.tracingEnabled,
       };
 
-      const result = await summarizeContent("Test content for options validation", options);
+      const result = await summarizeContent(
+        "Test content for options validation",
+        options,
+      );
 
       // Should handle options without throwing errors
       assertExists(result);

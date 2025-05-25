@@ -1,83 +1,146 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Sample Article for Testing</title>
-  <meta name="description" content="A sample article for testing the HTML summarizer">
-  <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-    .container { max-width: 800px; margin: 0 auto; }
-    header { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
-    footer { border-top: 1px solid #eee; padding-top: 10px; margin-top: 20px; color: #666; }
-    h1 { color: #333; }
-    p { line-height: 1.6; }
-    .highlight { background-color: #ffffd0; padding: 10px; border-radius: 5px; }
-  </style>
-  <script>
-    // This script content should be removed during extraction
-    function logPageView() {
-      console.log("Page viewed");
-      return "This should not appear in extraction";
-    }
-    window.onload = logPageView;
-  </script>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <nav>
-        <a href="/">Home</a> |
-        <a href="/articles">Articles</a> |
-        <a href="/about">About</a>
-      </nav>
-    </header>
-    
-    <main>
-      <article>
-        <h1>Understanding Test-Driven Development</h1>
-        
-        <p>Test-Driven Development (TDD) is a software development approach where tests are written before the code they are testing. This article explores the benefits and challenges of implementing TDD in modern software projects.</p>
-        
-        <h2>The TDD Process</h2>
-        <p>The TDD process typically follows these steps:</p>
-        <ol>
-          <li>Write a failing test that defines a function or improvements of a function</li>
-          <li>Write the minimum amount of code necessary to make the test pass</li>
-          <li>Refactor the code while ensuring the test still passes</li>
-        </ol>
-        
-        <p>This cycle is often referred to as <strong>"Red-Green-Refactor"</strong> because of the status colors used by most testing frameworks.</p>
-        
-        <h2>Benefits of TDD</h2>
-        <p>Implementing TDD offers several advantages:</p>
-        <ul>
-          <li>Improved code quality and reduced bugs</li>
-          <li>Better code design and architecture</li>
-          <li>Documentation through tests</li>
-          <li>Confidence when refactoring</li>
-        </ul>
-        
-        <div class="highlight">
-          <p>A key insight: TDD is not just about testing, but about design. Writing tests first forces you to think about the interface and behavior of your code before implementation details.</p>
-        </div>
-        
-        <h2>Challenges and Considerations</h2>
-        <p>Despite its benefits, TDD comes with challenges:</p>
-        <ul>
-          <li>Initial learning curve and slower development pace</li>
-          <li>Difficulty writing tests for certain types of code (UI, legacy systems)</li>
-          <li>Risk of focusing too much on unit tests at the expense of integration testing</li>
-        </ul>
-        
-        <p>When implementing TDD, it's important to find the right balance and adapt the approach to your specific project needs.</p>
-        
-        <h2>Conclusion</h2>
-        <p>Test-Driven Development provides a structured approach to writing reliable, maintainable code. While it requires discipline and practice, the long-term benefits often outweigh the initial investment in learning and implementing the methodology.</p>
-      </article>
-    </main>
-    
-    <footer>
-      <p>&copy; 2025 Test Site | <a href="/privacy">Privacy Policy</a> | <a href="/terms">Terms of Service</a></p>
-    </footer>
-  </div>
-</body>
+  <head>
+    <title>Sample Article for Testing</title>
+    <meta
+      name="description"
+      content="A sample article for testing the HTML summarizer"
+    >
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      header {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+      footer {
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+        margin-top: 20px;
+        color: #666;
+      }
+      h1 {
+        color: #333;
+      }
+      p {
+        line-height: 1.6;
+      }
+      .highlight {
+        background-color: #ffffd0;
+        padding: 10px;
+        border-radius: 5px;
+      }
+    </style>
+    <script>
+      // This script content should be removed during extraction
+      function logPageView() {
+        console.log("Page viewed");
+        return "This should not appear in extraction";
+      }
+      window.onload = logPageView;
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <nav>
+          <a href="/">Home</a> |
+          <a href="/articles">Articles</a> |
+          <a href="/about">About</a>
+        </nav>
+      </header>
+
+      <main>
+        <article>
+          <h1>Understanding Test-Driven Development</h1>
+
+          <p>
+            Test-Driven Development (TDD) is a software development approach
+            where tests are written before the code they are testing. This
+            article explores the benefits and challenges of implementing TDD in
+            modern software projects.
+          </p>
+
+          <h2>The TDD Process</h2>
+          <p>The TDD process typically follows these steps:</p>
+          <ol>
+            <li>
+              Write a failing test that defines a function or improvements of a
+              function
+            </li>
+            <li>
+              Write the minimum amount of code necessary to make the test pass
+            </li>
+            <li>Refactor the code while ensuring the test still passes</li>
+          </ol>
+
+          <p>
+            This cycle is often referred to as <strong
+            >"Red-Green-Refactor"</strong> because of the status colors used by
+            most testing frameworks.
+          </p>
+
+          <h2>Benefits of TDD</h2>
+          <p>Implementing TDD offers several advantages:</p>
+          <ul>
+            <li>Improved code quality and reduced bugs</li>
+            <li>Better code design and architecture</li>
+            <li>Documentation through tests</li>
+            <li>Confidence when refactoring</li>
+          </ul>
+
+          <div class="highlight">
+            <p>
+              A key insight: TDD is not just about testing, but about design.
+              Writing tests first forces you to think about the interface and
+              behavior of your code before implementation details.
+            </p>
+          </div>
+
+          <h2>Challenges and Considerations</h2>
+          <p>Despite its benefits, TDD comes with challenges:</p>
+          <ul>
+            <li>Initial learning curve and slower development pace</li>
+            <li>
+              Difficulty writing tests for certain types of code (UI, legacy
+              systems)
+            </li>
+            <li>
+              Risk of focusing too much on unit tests at the expense of
+              integration testing
+            </li>
+          </ul>
+
+          <p>
+            When implementing TDD, it's important to find the right balance and
+            adapt the approach to your specific project needs.
+          </p>
+
+          <h2>Conclusion</h2>
+          <p>
+            Test-Driven Development provides a structured approach to writing
+            reliable, maintainable code. While it requires discipline and
+            practice, the long-term benefits often outweigh the initial
+            investment in learning and implementing the methodology.
+          </p>
+        </article>
+      </main>
+
+      <footer>
+        <p>
+          &copy; 2025 Test Site | <a href="/privacy">Privacy Policy</a> | <a
+            href="/terms"
+          >Terms of Service</a>
+        </p>
+      </footer>
+    </div>
+  </body>
 </html>

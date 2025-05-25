@@ -152,7 +152,8 @@ export const MALFORMED_HTML = `
 /**
  * Expected extraction results for the simple HTML
  */
-export const SIMPLE_HTML_EXTRACTED = "Simple Article This is a simple test article with minimal content. It has just two paragraphs for basic testing.";
+export const SIMPLE_HTML_EXTRACTED =
+  "Simple Article This is a simple test article with minimal content. It has just two paragraphs for basic testing.";
 
 /**
  * Expected extraction results for the complex HTML (partial match)
@@ -165,13 +166,14 @@ export const COMPLEX_HTML_EXTRACTED_PARTS = [
   "This is a section of the article with more detailed content.",
   "List item one",
   "List item two with formatting",
-  "This is a blockquote with important information that should be extracted."
+  "This is a blockquote with important information that should be extracted.",
 ];
 
 /**
  * Expected extraction results for the special characters HTML
  */
-export const SPECIAL_CHARS_HTML_EXTRACTED = "Special & Characters This page tests special characters: <tag> \"quotes\" & ampersands. It also includes numeric entities: 'apostrophe' and — em dash.";
+export const SPECIAL_CHARS_HTML_EXTRACTED =
+  "Special & Characters This page tests special characters: <tag> \"quotes\" & ampersands. It also includes numeric entities: 'apostrophe' and — em dash.";
 
 // ============================================================================
 // Mock Summaries
@@ -180,12 +182,14 @@ export const SPECIAL_CHARS_HTML_EXTRACTED = "Special & Characters This page test
 /**
  * Mock summary for the simple HTML
  */
-export const SIMPLE_HTML_SUMMARY = "This is a simple test article with minimal content. It contains two paragraphs for basic testing purposes.";
+export const SIMPLE_HTML_SUMMARY =
+  "This is a simple test article with minimal content. It contains two paragraphs for basic testing purposes.";
 
 /**
  * Mock summary for the complex HTML
  */
-export const COMPLEX_HTML_SUMMARY = `The article titled "Complex Article Title" discusses a topic with several key points.
+export const COMPLEX_HTML_SUMMARY =
+  `The article titled "Complex Article Title" discusses a topic with several key points.
 
 The content is organized into sections, with the main section providing an overview of the topic. It includes formatted text elements like bold and emphasized text, as well as links to external resources.
 
@@ -194,7 +198,8 @@ A secondary section labeled "Article Section" provides more detailed information
 /**
  * Mock summary for the special characters HTML
  */
-export const SPECIAL_CHARS_HTML_SUMMARY = "This page demonstrates the use of special characters and HTML entities in web content. It shows how characters like angle brackets, quotes, ampersands, apostrophes, and em dashes can be properly encoded and displayed in HTML documents.";
+export const SPECIAL_CHARS_HTML_SUMMARY =
+  "This page demonstrates the use of special characters and HTML entities in web content. It shows how characters like angle brackets, quotes, ampersands, apostrophes, and em dashes can be properly encoded and displayed in HTML documents.";
 
 // ============================================================================
 // Mock Functions
@@ -261,7 +266,7 @@ export function setupFileMocks(htmlContent: string = SIMPLE_HTML) {
       gid: 0,
       rdev: 0,
       blksize: 0,
-      blocks: 0
+      blocks: 0,
     } as unknown as Deno.FileInfo);
   };
 
@@ -274,7 +279,7 @@ export function setupFileMocks(htmlContent: string = SIMPLE_HTML) {
       Deno.writeTextFile = originalWriteTextFile;
       Deno.mkdir = originalMkdir;
       Deno.stat = originalStat;
-    }
+    },
   };
 }
 
@@ -304,22 +309,24 @@ export function setupOllamaMock(mockSummary: string) {
       }
 
       // Check if this is a chat completion request
-      if (requestBody && 'messages' in requestBody) {
+      if (requestBody && "messages" in requestBody) {
         return Promise.resolve({
           ok: true,
           status: 200,
-          json: () => Promise.resolve({
-            message: { content: mockSummary }
-          }),
+          json: () =>
+            Promise.resolve({
+              message: { content: mockSummary },
+            }),
         } as Response);
       } else {
         // For other Ollama API calls
         return Promise.resolve({
           ok: true,
           status: 200,
-          json: () => Promise.resolve({
-            response: mockSummary
-          }),
+          json: () =>
+            Promise.resolve({
+              response: mockSummary,
+            }),
         } as Response);
       }
     }
@@ -332,6 +339,6 @@ export function setupOllamaMock(mockSummary: string) {
   return {
     restore: () => {
       globalThis.fetch = originalFetch;
-    }
+    },
   };
 }

@@ -1,6 +1,9 @@
 # OPML Lab
 
-This is an experimental OPML (Outline Processor Markup Language) processor for the Lens project. It provides functionality to parse OPML files, extract feed information, and integrate with the RSS client to fetch and process feeds defined in OPML files.
+This is an experimental OPML (Outline Processor Markup Language) processor for
+the Lens project. It provides functionality to parse OPML files, extract feed
+information, and integrate with the RSS client to fetch and process feeds
+defined in OPML files.
 
 ## Features
 
@@ -14,7 +17,10 @@ This is an experimental OPML (Outline Processor Markup Language) processor for t
 
 ## What is OPML?
 
-OPML (Outline Processor Markup Language) is an XML format for outlines. In the context of RSS feeds, it's commonly used to exchange lists of feed subscriptions between feed readers. OPML files can organize feeds into categories and store metadata about each feed.
+OPML (Outline Processor Markup Language) is an XML format for outlines. In the
+context of RSS feeds, it's commonly used to exchange lists of feed subscriptions
+between feed readers. OPML files can organize feeds into categories and store
+metadata about each feed.
 
 ## Usage
 
@@ -38,17 +44,17 @@ The script will:
 ### As a Module
 
 ```typescript
-import { 
-  loadOpmlFile, 
-  fetchFeedsFromOpml, 
-  fetchAndSaveFeedsFromOpml 
+import {
+  fetchAndSaveFeedsFromOpml,
+  fetchFeedsFromOpml,
+  loadOpmlFile,
 } from "./opml_client.ts";
 
 import {
-  parseOpml,
   extractFeeds,
+  generateOpml,
   getFeedsByCategory,
-  generateOpml
+  parseOpml,
 } from "./opml_parser.ts";
 
 // Load and parse an OPML file
@@ -67,16 +73,16 @@ console.log(`Technology feeds: ${techFeeds.length}`);
 // Fetch feeds from the OPML file
 const results = await fetchFeedsFromOpml(
   { path: "./tmp/data/opml/paz.opml" },
-  { categoryFilter: "Technology", maxConcurrent: 3 }
+  { categoryFilter: "Technology", maxConcurrent: 3 },
 );
-console.log(`Successfully fetched: ${results.filter(r => r.feed).length}`);
-console.log(`Failed: ${results.filter(r => r.error).length}`);
+console.log(`Successfully fetched: ${results.filter((r) => r.feed).length}`);
+console.log(`Failed: ${results.filter((r) => r.error).length}`);
 
 // Fetch and save feeds
 await fetchAndSaveFeedsFromOpml(
   { path: "./tmp/data/opml/paz.opml" },
   { categoryFilter: "Technology" },
-  "./tmp/data/feeds"
+  "./tmp/data/feeds",
 );
 
 // Generate OPML from structured data
@@ -96,10 +102,14 @@ await Deno.writeTextFile("./tmp/data/opml/exported.opml", newOpml);
 
 #### Functions
 
-- `parseOpml(xml: string): OpmlDocument`: Parses an OPML XML string into an OpmlDocument object
-- `extractFeeds(document: OpmlDocument): FeedSource[]`: Extracts feed sources from an OPML document
-- `getFeedsByCategory(document: OpmlDocument, categoryName: string): FeedSource[]`: Gets feeds from a specific category
-- `generateOpml(document: OpmlDocument): string`: Generates OPML XML from an OpmlDocument object
+- `parseOpml(xml: string): OpmlDocument`: Parses an OPML XML string into an
+  OpmlDocument object
+- `extractFeeds(document: OpmlDocument): FeedSource[]`: Extracts feed sources
+  from an OPML document
+- `getFeedsByCategory(document: OpmlDocument, categoryName: string): FeedSource[]`:
+  Gets feeds from a specific category
+- `generateOpml(document: OpmlDocument): string`: Generates OPML XML from an
+  OpmlDocument object
 
 ### OPML Client Module
 
@@ -111,9 +121,12 @@ await Deno.writeTextFile("./tmp/data/opml/exported.opml", newOpml);
 
 #### Functions
 
-- `loadOpmlFile(options: OpmlLoadOptions): Promise<OpmlDocument>`: Loads and parses an OPML file
-- `fetchFeedsFromOpml(opmlOptions: OpmlLoadOptions, fetchOptions?: OpmlFetchOptions): Promise<FeedFetchResult[]>`: Fetches RSS feeds defined in an OPML file
-- `fetchAndSaveFeedsFromOpml(opmlOptions: OpmlLoadOptions, fetchOptions?: OpmlFetchOptions, saveDir: string): Promise<FeedFetchResult[]>`: Fetches and saves RSS feeds defined in an OPML file
+- `loadOpmlFile(options: OpmlLoadOptions): Promise<OpmlDocument>`: Loads and
+  parses an OPML file
+- `fetchFeedsFromOpml(opmlOptions: OpmlLoadOptions, fetchOptions?: OpmlFetchOptions): Promise<FeedFetchResult[]>`:
+  Fetches RSS feeds defined in an OPML file
+- `fetchAndSaveFeedsFromOpml(opmlOptions: OpmlLoadOptions, fetchOptions?: OpmlFetchOptions, saveDir: string): Promise<FeedFetchResult[]>`:
+  Fetches and saves RSS feeds defined in an OPML file
 
 ## Running Tests
 
@@ -127,12 +140,17 @@ deno test --allow-net --allow-read --allow-write src/feeds/lab/test/opml_client_
 
 ## Integration with RSS Client
 
-The OPML client integrates with the existing RSS client to fetch and process feeds. It uses the RSS client's functions for fetching, parsing, and saving RSS feeds, while adding the ability to work with collections of feeds organized in OPML files.
+The OPML client integrates with the existing RSS client to fetch and process
+feeds. It uses the RSS client's functions for fetching, parsing, and saving RSS
+feeds, while adding the ability to work with collections of feeds organized in
+OPML files.
 
 ## Future Enhancements
 
 - Add support for OPML discovery (finding OPML files on websites)
-- Implement subscription management (tracking which feeds the user is subscribed to)
-- Add differential updates (updating only changed feeds when importing a new OPML file)
+- Implement subscription management (tracking which feeds the user is subscribed
+  to)
+- Add differential updates (updating only changed feeds when importing a new
+  OPML file)
 - Develop feed recommendations based on existing subscriptions
 - Implement category-based content analysis

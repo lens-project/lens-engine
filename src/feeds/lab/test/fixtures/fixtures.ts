@@ -215,7 +215,10 @@ export const MALFORMED_RSS = `<?xml version="1.0" encoding="UTF-8"?>
  * @param rssContent The RSS content to return from readTextFile for RSS files
  * @returns Object with captured write information and restore function
  */
-export function setupFileMocks(opmlContent: string = COMPLEX_OPML, rssContent: string = SIMPLE_RSS) {
+export function setupFileMocks(
+  opmlContent: string = COMPLEX_OPML,
+  rssContent: string = SIMPLE_RSS,
+) {
   // Store original functions
   const originalReadTextFile = Deno.readTextFile;
   const originalWriteTextFile = Deno.writeTextFile;
@@ -231,13 +234,13 @@ export function setupFileMocks(opmlContent: string = COMPLEX_OPML, rssContent: s
   Deno.readTextFile = (path) => {
     const pathStr = String(path);
 
-    if (pathStr.endsWith('.opml')) {
+    if (pathStr.endsWith(".opml")) {
       return Promise.resolve(opmlContent);
-    } else if (pathStr.endsWith('.xml') || pathStr.endsWith('.rss')) {
+    } else if (pathStr.endsWith(".xml") || pathStr.endsWith(".rss")) {
       return Promise.resolve(rssContent);
-    } else if (pathStr.endsWith('.json')) {
+    } else if (pathStr.endsWith(".json")) {
       // Return empty JSON object for JSON files
-      return Promise.resolve('{}');
+      return Promise.resolve("{}");
     } else {
       throw new Deno.errors.NotFound(`File not found: ${pathStr}`);
     }
@@ -282,7 +285,7 @@ export function setupFileMocks(opmlContent: string = COMPLEX_OPML, rssContent: s
         gid: 0,
         rdev: 0,
         blksize: 0,
-        blocks: 0
+        blocks: 0,
       } as unknown as Deno.FileInfo);
     }
 
@@ -304,7 +307,7 @@ export function setupFileMocks(opmlContent: string = COMPLEX_OPML, rssContent: s
         gid: 0,
         rdev: 0,
         blksize: 0,
-        blocks: 0
+        blocks: 0,
       } as unknown as Deno.FileInfo);
     }
 
@@ -321,7 +324,7 @@ export function setupFileMocks(opmlContent: string = COMPLEX_OPML, rssContent: s
       Deno.writeTextFile = originalWriteTextFile;
       Deno.mkdir = originalMkdir;
       Deno.stat = originalStat;
-    }
+    },
   };
 }
 
@@ -343,7 +346,7 @@ export function setupNetworkMocks(responseMap: Record<string, {
   const defaultResponse = {
     content: SIMPLE_RSS,
     status: 200,
-    ok: true
+    ok: true,
   };
 
   // Mock fetch to return responses from the map
@@ -352,7 +355,9 @@ export function setupNetworkMocks(responseMap: Record<string, {
     const urlStr = String(url);
 
     // Find the closest matching URL in the map
-    const matchingUrl = Object.keys(responseMap).find(key => urlStr.includes(key));
+    const matchingUrl = Object.keys(responseMap).find((key) =>
+      urlStr.includes(key)
+    );
     const response = matchingUrl ? responseMap[matchingUrl] : defaultResponse;
 
     return Promise.resolve({
@@ -367,7 +372,7 @@ export function setupNetworkMocks(responseMap: Record<string, {
   return {
     restore: () => {
       globalThis.fetch = originalFetch;
-    }
+    },
   };
 }
 
@@ -399,7 +404,7 @@ export function setupEnvMocks(envVars: Record<string, string> = {}) {
     restore: () => {
       Deno.env.get = originalGet;
       Deno.env.set = originalSet;
-    }
+    },
   };
 }
 
@@ -441,7 +446,7 @@ export function setupEnsureDirMock(dirExists = true, isDirectory = true) {
       gid: 0,
       rdev: 0,
       blksize: 0,
-      blocks: 0
+      blocks: 0,
     } as unknown as Deno.FileInfo);
   };
 
@@ -460,7 +465,7 @@ export function setupEnsureDirMock(dirExists = true, isDirectory = true) {
     restore: () => {
       Deno.stat = originalStat;
       Deno.mkdir = originalMkdir;
-    }
+    },
   };
 }
 
@@ -480,7 +485,7 @@ export const EXPECTED_PARSED_OPML = {
           title: "TechCrunch",
           xmlUrl: "https://techcrunch.com/feed/",
           htmlUrl: "https://techcrunch.com",
-          children: []
+          children: [],
         },
         {
           type: "rss",
@@ -488,7 +493,7 @@ export const EXPECTED_PARSED_OPML = {
           title: "Wired",
           xmlUrl: "https://www.wired.com/feed/rss",
           htmlUrl: "https://www.wired.com",
-          children: []
+          children: [],
         },
         {
           title: "Programming",
@@ -500,7 +505,7 @@ export const EXPECTED_PARSED_OPML = {
               title: "Hacker News",
               xmlUrl: "https://news.ycombinator.com/rss",
               htmlUrl: "https://news.ycombinator.com",
-              children: []
+              children: [],
             },
             {
               type: "rss",
@@ -508,11 +513,11 @@ export const EXPECTED_PARSED_OPML = {
               title: "Dev.to",
               xmlUrl: "https://dev.to/feed",
               htmlUrl: "https://dev.to",
-              children: []
-            }
-          ]
-        }
-      ]
+              children: [],
+            },
+          ],
+        },
+      ],
     },
     {
       title: "News",
@@ -524,7 +529,7 @@ export const EXPECTED_PARSED_OPML = {
           title: "BBC News",
           xmlUrl: "http://feeds.bbci.co.uk/news/rss.xml",
           htmlUrl: "https://www.bbc.com/news",
-          children: []
+          children: [],
         },
         {
           type: "rss",
@@ -532,9 +537,9 @@ export const EXPECTED_PARSED_OPML = {
           title: "CNN",
           xmlUrl: "http://rss.cnn.com/rss/edition.rss",
           htmlUrl: "https://www.cnn.com",
-          children: []
-        }
-      ]
+          children: [],
+        },
+      ],
     },
     {
       title: "Personal",
@@ -546,11 +551,11 @@ export const EXPECTED_PARSED_OPML = {
           title: "Austin Kleon",
           xmlUrl: "https://austinkleon.com/feed/",
           htmlUrl: "https://austinkleon.com",
-          children: []
-        }
-      ]
-    }
-  ]
+          children: [],
+        },
+      ],
+    },
+  ],
 };
 
 /**
@@ -563,7 +568,7 @@ export const EXPECTED_EXTRACTED_FEEDS = [
     title: "TechCrunch",
     xmlUrl: "https://techcrunch.com/feed/",
     htmlUrl: "https://techcrunch.com",
-    category: ["Technology"]
+    category: ["Technology"],
   },
   {
     type: "rss",
@@ -571,7 +576,7 @@ export const EXPECTED_EXTRACTED_FEEDS = [
     title: "Wired",
     xmlUrl: "https://www.wired.com/feed/rss",
     htmlUrl: "https://www.wired.com",
-    category: ["Technology"]
+    category: ["Technology"],
   },
   {
     type: "rss",
@@ -579,7 +584,7 @@ export const EXPECTED_EXTRACTED_FEEDS = [
     title: "Hacker News",
     xmlUrl: "https://news.ycombinator.com/rss",
     htmlUrl: "https://news.ycombinator.com",
-    category: ["Technology", "Programming"]
+    category: ["Technology", "Programming"],
   },
   {
     type: "rss",
@@ -587,7 +592,7 @@ export const EXPECTED_EXTRACTED_FEEDS = [
     title: "Dev.to",
     xmlUrl: "https://dev.to/feed",
     htmlUrl: "https://dev.to",
-    category: ["Technology", "Programming"]
+    category: ["Technology", "Programming"],
   },
   {
     type: "rss",
@@ -595,7 +600,7 @@ export const EXPECTED_EXTRACTED_FEEDS = [
     title: "BBC News",
     xmlUrl: "http://feeds.bbci.co.uk/news/rss.xml",
     htmlUrl: "https://www.bbc.com/news",
-    category: ["News"]
+    category: ["News"],
   },
   {
     type: "rss",
@@ -603,7 +608,7 @@ export const EXPECTED_EXTRACTED_FEEDS = [
     title: "CNN",
     xmlUrl: "http://rss.cnn.com/rss/edition.rss",
     htmlUrl: "https://www.cnn.com",
-    category: ["News"]
+    category: ["News"],
   },
   {
     type: "rss",
@@ -611,6 +616,6 @@ export const EXPECTED_EXTRACTED_FEEDS = [
     title: "Austin Kleon",
     xmlUrl: "https://austinkleon.com/feed/",
     htmlUrl: "https://austinkleon.com",
-    category: ["Personal"]
-  }
+    category: ["Personal"],
+  },
 ];

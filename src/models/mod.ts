@@ -1,6 +1,6 @@
 /**
  * Models Module
- * 
+ *
  * Exports all models functionality including providers and controllers.
  */
 
@@ -13,11 +13,11 @@ export {
 
 // Providers
 export {
-  validateOllamaConnection,
+  type ChatResponse,
   chatWithOllama,
   chatWithOllamaConfig,
+  validateOllamaConnection,
   type ValidationResponse,
-  type ChatResponse,
 } from "./src/providers/ollama/client.ts";
 
 // Future exports:
