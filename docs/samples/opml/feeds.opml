@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+<head>
+<title>Sample Feeds</title>
+</head>
+<body>
+<outline title="Blogs" text="Blogs">
+  <outline type="rss" title="Austin Kleon" htmlUrl="https://austinkleon.com" text="Austin Kleon" xmlUrl="https://austinkleon.com/feed/" />
+  <outline type="rss" title="CSS-Tricks" htmlUrl="https://css-tricks.com" text="CSS-Tricks" xmlUrl="https://css-tricks.com/feed/" />
+  <outline type="rss" title="Deno Blog" htmlUrl="https://deno.com/blog" text="Deno Blog" xmlUrl="https://deno.com/feed" />
+</outline>
+<outline title="Tech" text="Tech">
+  <outline type="rss" title="Hacker News" htmlUrl="https://news.ycombinator.com/" text="Hacker News" xmlUrl="https://news.ycombinator.com/rss" />
+  <outline type="rss" title="The Verge" htmlUrl="https://www.theverge.com/" text="The Verge" xmlUrl="https://www.theverge.com/rss/index.xml" />
+</outline>
+<outline title="Videos" text="Videos">
+  <outline type="rss" title="LangChain" htmlUrl="https://www.youtube.com/channel/UCC-lyoTfSrcJzA1ab3APAgw" text="LangChain" xmlUrl="https://www.youtube.com/feeds/videos.xml?channel_id=UCC-lyoTfSrcJzA1ab3APAgw" />
+</outline>
+</body>
+</opml>

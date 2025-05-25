@@ -1,5 +1,7 @@
 # Lens: Content-Aware Feed Aggregator
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/lens-project/lens-engine)
+
 ## Overview
 
 Lens is a next-generation feed aggregator that uses local AI models to intelligently filter, rank, and recommend content from RSS feeds based on user interests. The system distinguishes between different content types (particularly video vs. article content) and uses specialized processing paths for each, learning user preferences for topics and content formats over time.
@@ -60,6 +62,13 @@ The sample data includes:
 The samples feature real, accessible content from Austin Kleon's blog, allowing developers to see the complete journey from feed subscription to processed content with actual working endpoints.
 
 For detailed information on the sample data structure and how to use it in development, see the [Sample Data Guide](docs/samples/README.md).
+
+To run the sample script to initialize the sample data, run the following command from the scripts directory:
+
+```bash
+cd scripts
+setup-example.sh
+```
 
 ## Architecture
 
