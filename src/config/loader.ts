@@ -120,3 +120,25 @@ export async function getConfig(): Promise<AppConfig> {
 
   return configResult.unwrap();
 }
+
+/**
+ * Get configuration with test mode support
+ *
+ * This function provides a test-friendly way to get configuration:
+ * - In test environments: returns test configuration
+ * - In production: loads and validates real configuration
+ *
+ * @param testConfig Optional test configuration to use in test mode
+ * @returns Configuration object
+ */
+export async function getConfigWithTestSupport(testConfig?: AppConfig): Promise<AppConfig> {
+  // Import test utilities dynamically to avoid circular dependencies
+  const { isTestEnvironment } = await import("./test-config.ts");
+
+  if (isTestEnvironment() && testConfig) {
+    return testConfig;
+  }
+
+  // Production mode: use regular config loading with fail-fast behavior
+  return await getConfig();
+}

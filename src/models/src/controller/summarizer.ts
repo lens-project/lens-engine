@@ -7,10 +7,7 @@
  * Adapted from lab implementation in src/processors/lab/html_summarizer.ts
  */
 
-import { ChatOllama } from "@langchain/community/chat_models/ollama";
-import { StringOutputParser } from "@langchain/core/output_parsers";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { getConfig } from "../../../config/mod.ts";
+import { chatWithOllamaCustomPrompt } from "../providers/ollama/client.ts";
 
 // ============================================================================
 // Types
@@ -68,80 +65,36 @@ export async function summarizeContent(
   const startTime = Date.now();
 
   try {
-    // If LangSmith tracing is explicitly disabled, skip config loading
-    if (options.langSmithTracing === false) {
-      // Explicitly disable tracing
-      Deno.env.set("LANGCHAIN_TRACING_V2", "false");
-    } else {
-      try {
-        // Configure LangSmith tracing
-        const config = await getConfig();
+    // Load the prompt template from file
+    const promptPath = new URL("../../prompts/summarize-brief.txt", import.meta.url);
+    const promptTemplate = await Deno.readTextFile(promptPath);
 
-        if (config.langSmith.tracingEnabled) {
-          Deno.env.set("LANGCHAIN_TRACING_V2", "true");
-          Deno.env.set("LANGCHAIN_API_KEY", config.langSmith.apiKey);
-          Deno.env.set("LANGCHAIN_PROJECT", config.langSmith.project);
-        } else {
-          Deno.env.set("LANGCHAIN_TRACING_V2", "false");
-        }
-      } catch (configError) {
-        // If config loading fails, disable tracing and continue
-        console.warn("Failed to load config for LangSmith, disabling tracing:", configError);
-        Deno.env.set("LANGCHAIN_TRACING_V2", "false");
-      }
+    // Use the Ollama client with custom prompt
+    // The client will handle LangSmith tracing configuration
+    const result = await chatWithOllamaCustomPrompt(
+      promptTemplate,
+      { content },
+      {
+        modelName: options.modelName,
+        baseUrl: options.baseUrl,
+        temperature: options.temperature,
+        langSmithTracing: options.langSmithTracing,
+        langSmithApiKey: options.langSmithApiKey,
+        langSmithProject: options.langSmithProject,
+      },
+    );
+
+    if (!result.success) {
+      throw new Error(result.error || "Unknown error from Ollama client");
     }
-
-    // Get configuration for defaults
-    let config;
-    try {
-      config = await getConfig();
-    } catch (configError) {
-      // If config fails, use provided options or defaults
-      console.warn("Failed to load config, using provided options or defaults:", configError);
-    }
-
-    // Set up model parameters
-    const modelName = options.modelName || config?.llm.llmModel || "llama3.2";
-    const baseUrl = options.baseUrl || config?.llm.ollamaBaseUrl || "http://localhost:11434";
-    const temperature = options.temperature ?? 0.7;
-
-    // Create the chat model
-    const model = new ChatOllama({
-      baseUrl,
-      model: modelName,
-      temperature,
-    });
-
-    // Create the prompt template (copied from lab implementation)
-    const prompt = ChatPromptTemplate.fromTemplate(`
-You are an expert content summarizer. Your task is to create a concise, informative summary of the provided content.
-
-Guidelines:
-- Create a summary that captures the main points and key insights
-- Keep the summary concise but comprehensive
-- Focus on the most important information
-- Maintain the original tone and context
-- Include any relevant URLs or references mentioned
-
-Content to summarize:
-{content}
-
-Please provide a clear, well-structured summary:
-    `);
-
-    // Create the chain
-    const chain = prompt.pipe(model).pipe(new StringOutputParser());
-
-    // Invoke the chain
-    const summary = await chain.invoke({ content });
 
     const processingTime = Date.now() - startTime;
 
     return {
       success: true,
-      content: summary,
+      content: result.content,
       metadata: {
-        model: modelName,
+        model: result.metadata?.model,
         processingTime,
       },
     };

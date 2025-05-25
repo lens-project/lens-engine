@@ -12,4 +12,17 @@ export * from "./types.ts";
 export { defaultDataDir } from "./defaults.ts";
 
 // Re-export loader functions
-export { getConfig, loadConfig, validateConfig } from "./loader.ts";
+export { getConfig, getConfigWithTestSupport, loadConfig, validateConfig } from "./loader.ts";
+
+// Re-export test configuration utilities
+export {
+  createTestConfig,
+  isTestEnvironment,
+  isTestConfig,
+  setupTestEnvironment,
+  cleanupTestEnvironment,
+  configureTest,
+  TEST_CONFIG_PRESETS,
+  type TestConfig,
+  type TestConfigOverrides,
+} from "./test-config.ts";

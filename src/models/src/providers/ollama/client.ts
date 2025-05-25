@@ -23,6 +23,10 @@ export interface ChatResponse {
   success: boolean;
   content?: string;
   error?: string;
+  metadata?: {
+    model?: string;
+    processingTime?: number;
+  };
 }
 
 /**
@@ -172,6 +176,134 @@ export async function chatWithOllamaConfig(
     return {
       success: false,
       error: `Failed to chat with Ollama: ${errorMessage}`,
+    };
+  }
+}
+
+// ============================================================================
+// Custom Prompt Integration
+// ============================================================================
+
+/**
+ * Options for custom prompt chat
+ */
+export interface CustomPromptOptions {
+  /** Custom temperature override (defaults to 0.7) */
+  temperature?: number;
+  /** Custom model override (uses config if not provided) */
+  modelName?: string;
+  /** Custom base URL override (uses config if not provided) */
+  baseUrl?: string;
+  /** Whether to enable LangSmith tracing (uses config if not provided) */
+  langSmithTracing?: boolean;
+  /** LangSmith API key (if not using config) */
+  langSmithApiKey?: string;
+  /** LangSmith project name (if not using config) */
+  langSmithProject?: string;
+}
+
+/**
+ * Send a message to Ollama using a custom prompt template with configuration from the config system
+ *
+ * This function allows using custom prompts (like those from prompt files) while still
+ * leveraging the centralized Ollama client configuration and error handling.
+ *
+ * @param promptTemplate The prompt template string (can contain variables like {content})
+ * @param variables Object containing variables to substitute in the template
+ * @param options Optional overrides for model parameters
+ * @returns Object with success status and either response content or error message
+ */
+export async function chatWithOllamaCustomPrompt(
+  promptTemplate: string,
+  variables: Record<string, string>,
+  options: CustomPromptOptions = {},
+): Promise<ChatResponse> {
+  const startTime = Date.now();
+
+  try {
+    // Configure LangSmith tracing first
+    if (options.langSmithTracing === false) {
+      // Explicitly disable tracing - no config needed
+      Deno.env.set("LANGCHAIN_TRACING_V2", "false");
+    } else {
+      // Need to check config for tracing settings
+      try {
+        const config = await getConfig();
+
+        // Use provided options or fall back to config
+        const tracingEnabled = options.langSmithTracing ?? config.langSmith.tracingEnabled;
+        const apiKey = options.langSmithApiKey || config.langSmith.apiKey;
+        const project = options.langSmithProject || config.langSmith.project;
+
+        if (tracingEnabled) {
+          Deno.env.set("LANGCHAIN_TRACING_V2", "true");
+          Deno.env.set("LANGCHAIN_API_KEY", apiKey);
+          Deno.env.set("LANGCHAIN_PROJECT", project);
+        } else {
+          Deno.env.set("LANGCHAIN_TRACING_V2", "false");
+        }
+      } catch (configError) {
+        // If config loading fails, disable tracing and continue
+        console.warn("Failed to load config for LangSmith, disabling tracing:", configError);
+        Deno.env.set("LANGCHAIN_TRACING_V2", "false");
+      }
+    }
+
+    // Handle model settings - try to use provided options first to avoid config loading
+    let modelName = options.modelName;
+    let baseUrl = options.baseUrl;
+    const temperature = options.temperature ?? 0.7;
+
+    // Only load config if we're missing required options
+    if (!modelName || !baseUrl) {
+      try {
+        const config = await getConfig();
+        modelName = modelName || config.llm.llmModel;
+        baseUrl = baseUrl || config.llm.ollamaBaseUrl;
+      } catch (configError) {
+        // If config loading fails, use defaults
+        console.warn("Failed to load config for model settings, using defaults:", configError);
+        modelName = modelName || "llama3.2";
+        baseUrl = baseUrl || "http://localhost:11434";
+      }
+    }
+
+    // Create the chat model using configuration values
+    const model = new ChatOllama({
+      baseUrl,
+      model: modelName,
+      temperature,
+    });
+
+    // Create prompt template from the provided string
+    const prompt = ChatPromptTemplate.fromTemplate(promptTemplate);
+
+    // Create the chain
+    const chain = prompt.pipe(model).pipe(new StringOutputParser());
+
+    // Invoke the chain with the provided variables
+    const response = await chain.invoke(variables);
+
+    const processingTime = Date.now() - startTime;
+
+    return {
+      success: true,
+      content: response,
+      metadata: {
+        model: modelName,
+        processingTime,
+      },
+    };
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const processingTime = Date.now() - startTime;
+
+    return {
+      success: false,
+      error: `Failed to chat with Ollama using custom prompt: ${errorMessage}`,
+      metadata: {
+        processingTime,
+      },
     };
   }
 }
