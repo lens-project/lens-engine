@@ -11,37 +11,37 @@
 
 import {
   assertEquals,
-  assertExists,
+  assertExists as _assertExists,
   assertStringIncludes,
 } from "https://deno.land/std@0.224.0/assert/mod.ts";
-import { assertSpyCall, spy } from "https://deno.land/std@0.224.0/testing/mock.ts";
+import { assertSpyCall as _assertSpyCall, spy as _spy } from "https://deno.land/std@0.224.0/testing/mock.ts";
 import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
-import { ensureDir, ensureFile } from "https://deno.land/std@0.224.0/fs/mod.ts";
+import { ensureDir, ensureFile as _ensureFile } from "https://deno.land/std@0.224.0/fs/mod.ts";
 import { exists } from "https://deno.land/std@0.224.0/fs/exists.ts";
 
 import {
   createOutputFilename,
   processMarkdownContent,
-  processMarkdownFile,
-  processMarkdownDirectory,
-  summarizeContent,
+  processMarkdownFile as _processMarkdownFile,
+  processMarkdownDirectory as _processMarkdownDirectory,
+  summarizeContent as _summarizeContent,
   saveProcessedContent,
   SummaryResponse,
-  ProcessOptions
+  ProcessOptions as _ProcessOptions
 } from "../markdown_summarizer.ts";
 
 // Import test fixtures
 import {
-  SIMPLE_MARKDOWN,
+  SIMPLE_MARKDOWN as _SIMPLE_MARKDOWN,
   MARKDOWN_WITH_FRONTMATTER,
-  COMPLEX_MARKDOWN,
-  SPECIAL_CHARS_MARKDOWN,
-  EMPTY_MARKDOWN,
-  COMPLEX_MARKDOWN_PROCESSED_PARTS,
-  SIMPLE_MARKDOWN_SUMMARY,
-  COMPLEX_MARKDOWN_SUMMARY,
-  setupFileMocks,
-  setupOllamaMock,
+  COMPLEX_MARKDOWN as _COMPLEX_MARKDOWN,
+  SPECIAL_CHARS_MARKDOWN as _SPECIAL_CHARS_MARKDOWN,
+  EMPTY_MARKDOWN as _EMPTY_MARKDOWN,
+  COMPLEX_MARKDOWN_PROCESSED_PARTS as _COMPLEX_MARKDOWN_PROCESSED_PARTS,
+  SIMPLE_MARKDOWN_SUMMARY as _SIMPLE_MARKDOWN_SUMMARY,
+  COMPLEX_MARKDOWN_SUMMARY as _COMPLEX_MARKDOWN_SUMMARY,
+  setupFileMocks as _setupFileMocks,
+  setupOllamaMock as _setupOllamaMock,
 } from "./fixtures/markdown_fixtures.ts";
 
 // IMPORTANT: Disable LangSmith tracing for tests
@@ -76,11 +76,11 @@ async function createTestMarkdownFile(filename: string, content: string): Promis
 }
 
 // Mock for summarizeContent function
-async function mockSummarizeContent(_content: string): Promise<SummaryResponse> {
-  return {
+function _mockSummarizeContent(_content: string): Promise<SummaryResponse> {
+  return Promise.resolve({
     success: true,
     content: "This is a mock summary of the content."
-  };
+  });
 }
 
 // Tests
@@ -203,7 +203,7 @@ Deno.test("processMarkdownFile should process file and save summary", async () =
   // that directly processes the file and saves the content
 
   // Process the markdown content
-  const processed = processMarkdownContent(testContent);
+  const _processed = processMarkdownContent(testContent);
 
   // Create the output filename
   const outputFilename = createOutputFilename(inputPath);

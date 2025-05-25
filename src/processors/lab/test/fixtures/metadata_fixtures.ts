@@ -196,7 +196,7 @@ export const AI_TECHNOLOGY_METADATA = {
  * @param mockMetadata The metadata to return
  * @returns Object with restore function to reset the mock
  */
-export function setupOllamaMock(mockMetadata: any) {
+export function setupOllamaMock(mockMetadata: Record<string, unknown>) {
   const originalFetch = globalThis.fetch;
 
   // Mock the fetch function

@@ -11,11 +11,8 @@
  * 3. Standardize metadata format for consistent use
  */
 
-import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
 import { ensureDir } from "https://deno.land/std@0.224.0/fs/ensure_dir.ts";
-import { ChatOllama } from "@langchain/community/chat_models/ollama";
-import { StringOutputParser } from "@langchain/core/output_parsers";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
 import { getConfig } from "../../config/mod.ts";
 
 // ============================================================================
