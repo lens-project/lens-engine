@@ -40,12 +40,22 @@ By participating in this project, you agree to maintain a respectful and inclusi
    deno test
    ```
 
-5. **Push your branch** to your fork:
+5. **Format your code** to ensure consistent style:
+   ```bash
+   deno fmt
+   ```
+
+6. **Lint your code** to ensure it adheres to the project's coding standards:
+   ```bash
+   deno lint
+   ```
+
+7. **Push your branch** to your fork:
    ```bash
    git push origin feature/your-feature-name
    ```
 
-6. **Submit a pull request** to the main repository
+8. **Submit a pull request** to the main repository
 
 ## Testing Requirements
 

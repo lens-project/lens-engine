@@ -30,12 +30,12 @@ jobs:
         with:
           deno-version: v2.x
 
-      # Uncomment this step to verify the use of 'deno fmt' on each commit.
-      # - name: Verify formatting
-      #   run: deno fmt --check
+      - name: Verify formatting
+        run: deno fmt --check
 
       - name: Run linter
         run: deno lint
 
       # - name: Run tests
-      #   run: deno test -A
+      #   run: deno task test
+      # since tests require ollama, we are not running them in the CI pipeline
