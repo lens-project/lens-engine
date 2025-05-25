@@ -661,6 +661,7 @@
     "https://deno.land/std@0.224.0/path/windows/to_file_url.ts": "40e560ee4854fe5a3d4d12976cef2f4e8914125c81b11f1108e127934ced502e",
     "https://deno.land/std@0.224.0/path/windows/to_namespaced_path.ts": "4ffa4fb6fae321448d5fe810b3ca741d84df4d7897e61ee29be961a6aac89a4c",
     "https://deno.land/std@0.224.0/testing/asserts.ts": "d0cdbabadc49cc4247a50732ee0df1403fdcd0f95360294ad448ae8c240f3f5c",
+    "https://deno.land/std@0.224.0/testing/mock.ts": "a963181c2860b6ba3eb60e08b62c164d33cf5da7cd445893499b2efda20074db",
     "https://deno.land/x/monads@v0.5.10/either/either.ts": "89f539c7d50bd0ee8d9b902f37ef16687c19b62cc9dd23454029c97fbfc15cc6",
     "https://deno.land/x/monads@v0.5.10/index.ts": "f0e90b8c1dd767efca137d682ac1a19b2dbae4d1990b8a79a40b4e054c69b3d6",
     "https://deno.land/x/monads@v0.5.10/mod.ts": "f1b16a34d47e58fdf9f1f54c49d2fe6df67b3d2e077e21638f25fbe080eee6cf",

@@ -1,16 +1,16 @@
 /**
- * HTML Content Summarizer Lab
+ * Markdown Content Summarizer Lab
  *
- * This module provides functionality to extract text from HTML files,
+ * This module provides functionality to process markdown files,
  * summarize the content using Ollama, and save the processed results.
  *
  * It uses a functional programming approach with pure functions and composition.
  *
  * Key features:
- * 1. Extract text content from HTML files
+ * 1. Process markdown content
  * 2. Summarize content using Ollama
  * 3. Save processed content to files
- * 4. Process HTML files in a single operation
+ * 4. Process markdown files in a single operation
  */
 
 import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
@@ -52,7 +52,7 @@ export interface SummaryResponse {
 }
 
 /**
- * Options for processing an HTML file
+ * Options for processing a markdown file
  */
 export interface ProcessOptions extends SummaryOptions {
   /** The input file path */
@@ -64,89 +64,77 @@ export interface ProcessOptions extends SummaryOptions {
 }
 
 // ============================================================================
-// HTML Processing Functions
+// Markdown Processing Functions
 // ============================================================================
 
 /**
- * Extract text content from HTML
+ * Process markdown content
  *
- * This function extracts the main text content from HTML, focusing on
- * paragraphs, headings, and other text elements while removing navigation,
- * sidebars, and other non-content elements.
+ * This function processes markdown content, removing any front matter
+ * and preparing it for summarization.
  *
- * @param html The HTML content to process
- * @returns The extracted text content
+ * @param markdown The markdown content to process
+ * @returns The processed text content
  */
-export function extractTextFromHtml(html: string): string {
-  // Simple extraction of text from HTML
-  // This is a basic implementation for lab purposes
-  // A more robust solution would use a proper HTML parser
-
+export function processMarkdownContent(markdown: string): string {
   try {
-    // Remove script and style elements
-    let text = html.replace(
-      /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-      " ",
-    );
-    text = text.replace(
-      /<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi,
-      " ",
-    );
+    // Remove YAML front matter if present
+    // This pattern matches front matter at the beginning of the document
+    let text = markdown.replace(/^\s*---\s*\n[\s\S]*?\n\s*---\s*\n/, "");
 
-    // Extract content from body if present
-    const bodyMatch = text.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-    if (bodyMatch && bodyMatch[1]) {
-      text = bodyMatch[1];
-    }
+    // Remove HTML comments
+    text = text.replace(/<!--[\s\S]*?-->/g, "");
 
-    // Extract URLs from anchor tags
+    // Remove code blocks
+    text = text.replace(/```[\s\S]*?```/g, "");
+
+    // Extract URLs from markdown links and preserve them
     const urls: string[] = [];
-    const anchorRegex = /<a\s+(?:[^>]*?\s+)?href="([^"]*)"[^>]*>(.*?)<\/a>/gi;
-    let anchorMatch;
+    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+    let match;
 
-    // First, collect all URLs from anchor tags
-    while ((anchorMatch = anchorRegex.exec(text)) !== null) {
-      const url = anchorMatch[1];
+    // First, collect all URLs
+    while ((match = linkRegex.exec(markdown)) !== null) {
+      // We only need the URL (match[2]), not the link text (match[1])
+      const url = match[2];
       if (url && url.startsWith('http')) {
         urls.push(url);
       }
     }
 
-    // Remove HTML tags but preserve content
-    // First, replace specific tags that shouldn't add spaces
-    text = text.replace(/<(strong|em|b|i|span)[^>]*>/gi, "");
-    text = text.replace(/<\/(strong|em|b|i|span)[^>]*>/gi, "");
-
-    // Replace anchor tags with just their text content
-    text = text.replace(/<a\s+(?:[^>]*?\s+)?href="[^"]*"[^>]*>(.*?)<\/a>/gi, "$1");
-
-    // Then replace other tags with spaces
-    text = text.replace(/<[^>]+>/g, " ");
+    // Then replace markdown links with just the text
+    text = text.replace(linkRegex, "$1");
 
     // Add a URLs section at the end if any were found
     if (urls.length > 0) {
       text += "\n\nRelevant URLs:\n" + urls.map(url => `- ${url}`).join("\n");
     }
 
+    // Remove image references
+    text = text.replace(/!\[[^\]]*\]\([^)]+\)/g, "");
+
+    // Remove bold and italic formatting but keep the text
+    text = text.replace(/\*\*(.*?)\*\*/g, "$1"); // Bold
+    text = text.replace(/\*(.*?)\*/g, "$1");     // Italic
+    text = text.replace(/__(.*?)__/g, "$1");     // Bold
+    text = text.replace(/_(.*?)_/g, "$1");       // Italic
+
+    // Remove inline code but keep the text
+    text = text.replace(/`([^`]+)`/g, "$1");
+
+    // Replace special characters that might cause issues
+    text = text.replace(/[{}]/g, ""); // Remove curly braces
+    text = text.replace(/\\/g, "");   // Remove backslashes
+
     // Normalize whitespace
     text = text.replace(/\s+/g, " ");
-
-    // Decode HTML entities
-    text = text.replace(/&nbsp;/g, " ");
-    text = text.replace(/&amp;/g, "&");
-    text = text.replace(/&lt;/g, "<");
-    text = text.replace(/&gt;/g, ">");
-    text = text.replace(/&quot;/g, '"');
-    text = text.replace(/&#39;/g, "'");
-
-    // Whitespace already normalized above
 
     // Trim the text
     text = text.trim();
 
     return text;
   } catch (error) {
-    console.error("Error extracting text from HTML:", error);
+    console.error("Error processing markdown content:", error);
     return "";
   }
 }
@@ -220,7 +208,7 @@ export async function summarizeContent(
     // Create the chain
     const chain = prompt.pipe(model).pipe(new StringOutputParser());
 
-    // Invoke the chain
+    // Invoke the chain (content is already in the prompt)
     const summary = await chain.invoke({});
 
     return {
@@ -304,20 +292,20 @@ export function createOutputFilename(inputPath: string): string {
 // ============================================================================
 
 /**
- * Process an HTML file: extract text, summarize, and save
+ * Process a markdown file: extract text, summarize, and save
  *
- * @param options Options for processing the HTML file
+ * @param options Options for processing the markdown file
  * @returns Object with success status and either summary content or error message
  */
-export async function processHtmlFile(
+export async function processMarkdownFile(
   options: ProcessOptions,
 ): Promise<SummaryResponse> {
   try {
-    // Read the HTML file
-    const html = await Deno.readTextFile(options.inputPath);
+    // Read the markdown file
+    const markdown = await Deno.readTextFile(options.inputPath);
 
-    // Extract text from HTML
-    const text = extractTextFromHtml(html);
+    // Process markdown content
+    const text = processMarkdownContent(markdown);
 
     // Summarize the content
     const summary = await summarizeContent(text, {
@@ -350,24 +338,24 @@ export async function processHtmlFile(
 
     return {
       success: false,
-      error: `Failed to process HTML file: ${errorMessage}`,
+      error: `Failed to process markdown file: ${errorMessage}`,
     };
   }
 }
 
 // ============================================================================
-// Example Usage
+// Directory Processing Function
 // ============================================================================
 
 /**
- * Process all HTML files in a directory
+ * Process all markdown files in a directory
  *
- * @param inputDir Directory containing HTML files to process
+ * @param inputDir Directory containing markdown files to process
  * @param outputDir Directory to save processed files to
  * @param options Additional processing options
  * @returns Summary of processing results
  */
-export async function processHtmlDirectory(
+export async function processMarkdownDirectory(
   inputDir: string,
   outputDir: string,
   options: SummaryOptions = {},
@@ -382,15 +370,15 @@ export async function processHtmlDirectory(
     await ensureDir(inputDir);
     await ensureDir(outputDir);
 
-    // Get all HTML files in the input directory
+    // Get all markdown files in the input directory
     const files: string[] = [];
     for await (const entry of Deno.readDir(inputDir)) {
-      if (entry.isFile && (entry.name.endsWith(".html") || entry.name.endsWith(".htm"))) {
+      if (entry.isFile && (entry.name.endsWith(".md") || entry.name.endsWith(".markdown"))) {
         files.push(entry.name);
       }
     }
 
-    console.log(`Found ${files.length} HTML files in ${inputDir}`);
+    console.log(`Found ${files.length} markdown files in ${inputDir}`);
 
     // Process each file
     const results = [];
@@ -402,7 +390,7 @@ export async function processHtmlDirectory(
       console.log(`Processing ${inputPath}...`);
 
       try {
-        const result = await processHtmlFile({
+        const result = await processMarkdownFile({
           inputPath,
           outputDir,
           ...options,
@@ -433,13 +421,13 @@ export async function processHtmlDirectory(
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    throw new Error(`Failed to process HTML directory: ${errorMessage}`);
+    throw new Error(`Failed to process markdown directory: ${errorMessage}`);
   }
 }
 
 // Example usage when run directly
 if (import.meta.main) {
-  console.log("HTML Content Summarizer");
+  console.log("Markdown Content Summarizer");
 
   try {
     // Load configuration to get data directory
@@ -447,32 +435,105 @@ if (import.meta.main) {
     const dataDir = config.core.dataDir;
 
     // Use the data directory from configuration
-    const inputDir = join(dataDir, "fetched");
+    const inputDir = join(dataDir, "clippings");
     const outputDir = join(dataDir, "processed");
 
     console.log(`Using data directory: ${dataDir}`);
     console.log(`Input directory: ${inputDir}`);
     console.log(`Output directory: ${outputDir}`);
 
-    // Process all HTML files in the fetched directory
-    const summary = await processHtmlDirectory(
-      inputDir,
-      outputDir,
-      {
-        modelName: config.llm.llmModel, // Use model from config
-        temperature: 0.5,
-        langSmithTracing: config.langSmith.tracingEnabled, // Use tracing setting from config
+    // Ensure directories exist
+    try {
+      await ensureDir(inputDir);
+      await ensureDir(outputDir);
+    } catch (dirError) {
+      console.error(`Error creating directories: ${dirError instanceof Error ? dirError.message : String(dirError)}`);
+      Deno.exit(1);
+    }
+
+    // Get all markdown files in the input directory
+    const files: string[] = [];
+    try {
+      for await (const entry of Deno.readDir(inputDir)) {
+        if (entry.isFile && (entry.name.endsWith(".md") || entry.name.endsWith(".markdown"))) {
+          files.push(entry.name);
+        }
       }
-    );
+    } catch (readError) {
+      console.error(`Error reading directory: ${readError instanceof Error ? readError.message : String(readError)}`);
+      Deno.exit(1);
+    }
+
+    console.log(`Found ${files.length} markdown files in ${inputDir}`);
+
+    if (files.length === 0) {
+      console.log("No markdown files found to process.");
+      Deno.exit(0);
+    }
+
+    // Process each file individually to isolate errors
+    const results = [];
+    let successCount = 0;
+    let failureCount = 0;
+
+    for (const file of files) {
+      const inputPath = join(inputDir, file);
+      console.log(`Processing ${inputPath}...`);
+
+      try {
+        // Read the file content
+        const markdown = await Deno.readTextFile(inputPath);
+        console.log(`Read ${markdown.length} characters from ${file}`);
+
+        // Process markdown content
+        const text = processMarkdownContent(markdown);
+        console.log(`Processed to ${text.length} characters`);
+
+        // Create output filename
+        const outputFilename = createOutputFilename(inputPath);
+        const outputPath = join(outputDir, outputFilename);
+
+        // Summarize content
+        try {
+          const summary = await summarizeContent(text, {
+            modelName: config.llm.llmModel,
+            temperature: 0.5,
+            langSmithTracing: config.langSmith.tracingEnabled,
+          });
+
+          if (summary.success && summary.content) {
+            // Save the processed content
+            await saveProcessedContent(summary.content, outputPath, true);
+            successCount++;
+            results.push({ file, success: true });
+            console.log(`✅ Successfully processed ${file}`);
+          } else {
+            failureCount++;
+            results.push({ file, success: false, error: summary.error });
+            console.error(`❌ Failed to summarize ${file}: ${summary.error}`);
+          }
+        } catch (summaryError) {
+          failureCount++;
+          const errorMessage = summaryError instanceof Error ? summaryError.message : String(summaryError);
+          results.push({ file, success: false, error: `Summarization error: ${errorMessage}` });
+          console.error(`❌ Error summarizing ${file}: ${errorMessage}`);
+        }
+      } catch (fileError) {
+        failureCount++;
+        const errorMessage = fileError instanceof Error ? fileError.message : String(fileError);
+        results.push({ file, success: false, error: `File processing error: ${errorMessage}` });
+        console.error(`❌ Error processing ${file}: ${errorMessage}`);
+      }
+    }
 
     console.log("\nProcessing Summary:");
-    console.log(`Total files: ${summary.totalFiles}`);
-    console.log(`Successfully processed: ${summary.successCount}`);
-    console.log(`Failed to process: ${summary.failureCount}`);
+    console.log(`Total files: ${files.length}`);
+    console.log(`Successfully processed: ${successCount}`);
+    console.log(`Failed to process: ${failureCount}`);
 
-    if (summary.failureCount > 0) {
+    if (failureCount > 0) {
       console.log("\nFailed files:");
-      summary.results
+      results
         .filter(r => !r.success)
         .forEach(r => console.log(`- ${r.file}: ${r.error}`));
     }

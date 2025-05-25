@@ -34,7 +34,7 @@ import {
   COMPLEX_HTML_SUMMARY,
   setupFileMocks,
   setupOllamaMock,
-} from "./fixtures/fixtures.ts";
+} from "./fixtures/html_fixtures.ts";
 
 // IMPORTANT: Disable LangSmith tracing for tests
 // This prevents network dependencies and config validation issues in test environments
