@@ -85,7 +85,8 @@ export function parseOpml(xml: string): OpmlDocument {
  */
 function parseOutlines(content: string): OpmlOutline[] {
   const outlines: OpmlOutline[] = [];
-  const outlineRegex = /<outline\s+(.*?)(?:>(?:([\s\S]*?)<\/outline>)|(?:\/>))/g;
+  const outlineRegex =
+    /<outline\s+(.*?)(?:>(?:([\s\S]*?)<\/outline>)|(?:\/>))/g;
 
   let match;
   while ((match = outlineRegex.exec(content)) !== null) {
@@ -122,7 +123,10 @@ function parseOutlines(content: string): OpmlOutline[] {
  * @param name - The name of the attribute to extract
  * @returns The attribute value or undefined if not found
  */
-function extractAttribute(attributesStr: string, name: string): string | undefined {
+function extractAttribute(
+  attributesStr: string,
+  name: string,
+): string | undefined {
   const regex = new RegExp(`${name}="(.*?)"`, "i");
   const match = attributesStr.match(regex);
   return match ? match[1] : undefined;
@@ -136,7 +140,7 @@ function extractAttribute(attributesStr: string, name: string): string | undefin
  */
 export function extractFeeds(document: OpmlDocument): FeedSource[] {
   const feeds: FeedSource[] = [];
-  
+
   function processOutline(outline: OpmlOutline, categories: string[] = []) {
     // If this is a feed (has xmlUrl), add it to the list
     if (outline.xmlUrl) {
@@ -147,25 +151,25 @@ export function extractFeeds(document: OpmlDocument): FeedSource[] {
         category: [...categories],
       });
     }
-    
+
     // If this is a category (has children), process them
     if (outline.children && outline.children.length > 0) {
       const newCategories = [...categories];
       if (outline.title) {
         newCategories.push(outline.title);
       }
-      
+
       for (const child of outline.children) {
         processOutline(child, newCategories);
       }
     }
   }
-  
+
   // Process all top-level outlines
   for (const outline of document.outlines) {
     processOutline(outline);
   }
-  
+
   return feeds;
 }
 
@@ -176,9 +180,12 @@ export function extractFeeds(document: OpmlDocument): FeedSource[] {
  * @param categoryName - The category name to filter by
  * @returns An array of feed sources in the specified category
  */
-export function getFeedsByCategory(document: OpmlDocument, categoryName: string): FeedSource[] {
+export function getFeedsByCategory(
+  document: OpmlDocument,
+  categoryName: string,
+): FeedSource[] {
   const allFeeds = extractFeeds(document);
-  return allFeeds.filter(feed => feed.category.includes(categoryName));
+  return allFeeds.filter((feed) => feed.category.includes(categoryName));
 }
 
 /**
@@ -190,17 +197,18 @@ export function getFeedsByCategory(document: OpmlDocument, categoryName: string)
 export function generateOpml(document: OpmlDocument): string {
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml += '<opml version="2.0">\n';
-  xml += '<head>\n';
+  xml += "<head>\n";
   xml += `  <title>${escapeXml(document.title)}</title>\n`;
-  xml += '</head>\n';
-  xml += '<body>\n';
-  
+  xml += "</head>\n";
+  xml += "<body>\n";
+
   // Generate outline elements
-  xml += document.outlines.map(outline => generateOutlineXml(outline, 1)).join('');
-  
-  xml += '</body>\n';
-  xml += '</opml>';
-  
+  xml += document.outlines.map((outline) => generateOutlineXml(outline, 1))
+    .join("");
+
+  xml += "</body>\n";
+  xml += "</opml>";
+
   return xml;
 }
 
@@ -212,27 +220,27 @@ export function generateOpml(document: OpmlDocument): string {
  * @returns The generated XML for the outline element
  */
 function generateOutlineXml(outline: OpmlOutline, indent: number): string {
-  const spaces = '  '.repeat(indent);
+  const spaces = "  ".repeat(indent);
   let xml = `${spaces}<outline`;
-  
+
   // Add attributes
   if (outline.title) xml += ` title="${escapeXml(outline.title)}"`;
   if (outline.text) xml += ` text="${escapeXml(outline.text)}"`;
   if (outline.type) xml += ` type="${escapeXml(outline.type)}"`;
   if (outline.xmlUrl) xml += ` xmlUrl="${escapeXml(outline.xmlUrl)}"`;
   if (outline.htmlUrl) xml += ` htmlUrl="${escapeXml(outline.htmlUrl)}"`;
-  
+
   // Handle children
   if (outline.children && outline.children.length > 0) {
-    xml += '>\n';
+    xml += ">\n";
     for (const child of outline.children) {
       xml += generateOutlineXml(child, indent + 1);
     }
     xml += `${spaces}</outline>\n`;
   } else {
-    xml += ' />\n';
+    xml += " />\n";
   }
-  
+
   return xml;
 }
 
@@ -244,9 +252,9 @@ function generateOutlineXml(outline: OpmlOutline, indent: number): string {
  */
 function escapeXml(str: string): string {
   return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
 }

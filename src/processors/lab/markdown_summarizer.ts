@@ -97,7 +97,7 @@ export function processMarkdownContent(markdown: string): string {
     while ((match = linkRegex.exec(markdown)) !== null) {
       // We only need the URL (match[2]), not the link text (match[1])
       const url = match[2];
-      if (url && url.startsWith('http')) {
+      if (url && url.startsWith("http")) {
         urls.push(url);
       }
     }
@@ -107,7 +107,7 @@ export function processMarkdownContent(markdown: string): string {
 
     // Add a URLs section at the end if any were found
     if (urls.length > 0) {
-      text += "\n\nRelevant URLs:\n" + urls.map(url => `- ${url}`).join("\n");
+      text += "\n\nRelevant URLs:\n" + urls.map((url) => `- ${url}`).join("\n");
     }
 
     // Remove image references
@@ -115,16 +115,16 @@ export function processMarkdownContent(markdown: string): string {
 
     // Remove bold and italic formatting but keep the text
     text = text.replace(/\*\*(.*?)\*\*/g, "$1"); // Bold
-    text = text.replace(/\*(.*?)\*/g, "$1");     // Italic
-    text = text.replace(/__(.*?)__/g, "$1");     // Bold
-    text = text.replace(/_(.*?)_/g, "$1");       // Italic
+    text = text.replace(/\*(.*?)\*/g, "$1"); // Italic
+    text = text.replace(/__(.*?)__/g, "$1"); // Bold
+    text = text.replace(/_(.*?)_/g, "$1"); // Italic
 
     // Remove inline code but keep the text
     text = text.replace(/`([^`]+)`/g, "$1");
 
     // Replace special characters that might cause issues
     text = text.replace(/[{}]/g, ""); // Remove curly braces
-    text = text.replace(/\\/g, "");   // Remove backslashes
+    text = text.replace(/\\/g, ""); // Remove backslashes
 
     // Normalize whitespace
     text = text.replace(/\s+/g, " ");
@@ -373,7 +373,10 @@ export async function processMarkdownDirectory(
     // Get all markdown files in the input directory
     const files: string[] = [];
     for await (const entry of Deno.readDir(inputDir)) {
-      if (entry.isFile && (entry.name.endsWith(".md") || entry.name.endsWith(".markdown"))) {
+      if (
+        entry.isFile &&
+        (entry.name.endsWith(".md") || entry.name.endsWith(".markdown"))
+      ) {
         files.push(entry.name);
       }
     }
@@ -406,7 +409,9 @@ export async function processMarkdownDirectory(
           console.error(`❌ Failed to process ${file}: ${result.error}`);
         }
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
+        const errorMessage = error instanceof Error
+          ? error.message
+          : String(error);
         failureCount++;
         results.push({ file, success: false, error: errorMessage });
         console.error(`❌ Error processing ${file}: ${errorMessage}`);
@@ -447,7 +452,11 @@ if (import.meta.main) {
       await ensureDir(inputDir);
       await ensureDir(outputDir);
     } catch (dirError) {
-      console.error(`Error creating directories: ${dirError instanceof Error ? dirError.message : String(dirError)}`);
+      console.error(
+        `Error creating directories: ${
+          dirError instanceof Error ? dirError.message : String(dirError)
+        }`,
+      );
       Deno.exit(1);
     }
 
@@ -455,12 +464,19 @@ if (import.meta.main) {
     const files: string[] = [];
     try {
       for await (const entry of Deno.readDir(inputDir)) {
-        if (entry.isFile && (entry.name.endsWith(".md") || entry.name.endsWith(".markdown"))) {
+        if (
+          entry.isFile &&
+          (entry.name.endsWith(".md") || entry.name.endsWith(".markdown"))
+        ) {
           files.push(entry.name);
         }
       }
     } catch (readError) {
-      console.error(`Error reading directory: ${readError instanceof Error ? readError.message : String(readError)}`);
+      console.error(
+        `Error reading directory: ${
+          readError instanceof Error ? readError.message : String(readError)
+        }`,
+      );
       Deno.exit(1);
     }
 
@@ -514,14 +530,26 @@ if (import.meta.main) {
           }
         } catch (summaryError) {
           failureCount++;
-          const errorMessage = summaryError instanceof Error ? summaryError.message : String(summaryError);
-          results.push({ file, success: false, error: `Summarization error: ${errorMessage}` });
+          const errorMessage = summaryError instanceof Error
+            ? summaryError.message
+            : String(summaryError);
+          results.push({
+            file,
+            success: false,
+            error: `Summarization error: ${errorMessage}`,
+          });
           console.error(`❌ Error summarizing ${file}: ${errorMessage}`);
         }
       } catch (fileError) {
         failureCount++;
-        const errorMessage = fileError instanceof Error ? fileError.message : String(fileError);
-        results.push({ file, success: false, error: `File processing error: ${errorMessage}` });
+        const errorMessage = fileError instanceof Error
+          ? fileError.message
+          : String(fileError);
+        results.push({
+          file,
+          success: false,
+          error: `File processing error: ${errorMessage}`,
+        });
         console.error(`❌ Error processing ${file}: ${errorMessage}`);
       }
     }
@@ -534,8 +562,8 @@ if (import.meta.main) {
     if (failureCount > 0) {
       console.log("\nFailed files:");
       results
-        .filter(r => !r.success)
-        .forEach(r => console.log(`- ${r.file}: ${r.error}`));
+        .filter((r) => !r.success)
+        .forEach((r) => console.log(`- ${r.file}: ${r.error}`));
     }
   } catch (error) {
     console.error(

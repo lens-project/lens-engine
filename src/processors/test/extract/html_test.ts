@@ -1,4 +1,7 @@
-import { assertEquals, assertExists } from "https://deno.land/std@0.224.0/assert/mod.ts";
+import {
+  assertEquals,
+  assertExists,
+} from "https://deno.land/std@0.224.0/assert/mod.ts";
 import { extractFromHtml, extractFromHtmlFile } from "../../src/extract/mod.ts";
 import type { HtmlExtractResult } from "../../src/extract/mod.ts";
 
@@ -11,12 +14,12 @@ Deno.test("HTML Extractor - module exists and exports", () => {
 Deno.test("HTML Extractor - basic extraction", () => {
   const html = "<h1>Test Title</h1><p>Test content</p>";
   const result: HtmlExtractResult = extractFromHtml(html);
-  
+
   // Verify basic structure
   assertEquals(typeof result.text, "string");
   assertEquals(typeof result.wordCount, "number");
   assertEquals(Array.isArray(result.urls), true);
-  
+
   // Basic functionality test
   assertEquals(result.text.includes("Test Title"), true);
   assertEquals(result.text.includes("Test content"), true);
@@ -32,11 +35,11 @@ Deno.test("HTML Extractor - empty input", () => {
 
 Deno.test("HTML Extractor - with options", () => {
   const html = "<h1>Title</h1><p>Content</p>";
-  const result = extractFromHtml(html, { 
+  const result = extractFromHtml(html, {
     preserveUrls: true,
-    preserveHeadings: true 
+    preserveHeadings: true,
   });
-  
+
   // Just verify options are accepted without error
   assertExists(result);
   assertEquals(typeof result.text, "string");

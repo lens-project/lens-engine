@@ -80,7 +80,10 @@ Deno.test({
       assertEquals(result.content.length > 0, true);
       assertEquals(result.error, undefined);
 
-      console.log("Extracted topics:", result.content.substring(0, 100) + "...");
+      console.log(
+        "Extracted topics:",
+        result.content.substring(0, 100) + "...",
+      );
 
       // Try to parse the JSON response
       try {
@@ -135,7 +138,8 @@ Deno.test({
     });
 
     const query = "how to use typescript with deno";
-    const userContext = "Intermediate TypeScript developer interested in server-side development";
+    const userContext =
+      "Intermediate TypeScript developer interested in server-side development";
     const domain = "programming";
 
     const result = await client.reformulateQuery(query, userContext, domain);
@@ -148,7 +152,10 @@ Deno.test({
       assertEquals(result.content.length > 0, true);
       assertEquals(result.error, undefined);
 
-      console.log("Reformulated query:", result.content.substring(0, 100) + "...");
+      console.log(
+        "Reformulated query:",
+        result.content.substring(0, 100) + "...",
+      );
 
       // Try to parse the JSON response
       try {

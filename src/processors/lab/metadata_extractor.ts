@@ -24,25 +24,25 @@ import { getConfig } from "../../config/mod.ts";
  */
 export interface ContentMetadata {
   // Core metadata
-  title: string;                  // Original title of the content
-  summary: string;                // Brief 1-2 sentence summary
+  title: string; // Original title of the content
+  summary: string; // Brief 1-2 sentence summary
 
   // Classification
-  topics: string[];               // Main topics covered (e.g., "AI", "Coding", "Development")
-  technologies: string[];         // Technologies mentioned (e.g., "Claude", "GitHub", "Terminal")
+  topics: string[]; // Main topics covered (e.g., "AI", "Coding", "Development")
+  technologies: string[]; // Technologies mentioned (e.g., "Claude", "GitHub", "Terminal")
 
   // Content attributes
-  contentType: string;            // Type of content (e.g., "Tutorial", "Overview", "Deep Dive")
-  difficultyLevel: string;        // Estimated difficulty (e.g., "Beginner", "Intermediate", "Advanced")
+  contentType: string; // Type of content (e.g., "Tutorial", "Overview", "Deep Dive")
+  difficultyLevel: string; // Estimated difficulty (e.g., "Beginner", "Intermediate", "Advanced")
 
   // Additional metadata
-  keywords: string[];             // Important keywords for search
-  estimatedReadingTime: number;   // In minutes
+  keywords: string[]; // Important keywords for search
+  estimatedReadingTime: number; // In minutes
 
   // Optional metadata
-  author?: string;                // Author of the original content
-  publicationDate?: string;       // When the content was published
-  url?: string;                   // Source URL if available
+  author?: string; // Author of the original content
+  publicationDate?: string; // When the content was published
+  url?: string; // Source URL if available
 }
 
 /**
@@ -62,7 +62,7 @@ export interface MetadataExtractionOptions {
   /** LangSmith project name (if not using config) */
   langSmithProject?: string;
   /** Output format (json or md) */
-  format?: 'json' | 'md';
+  format?: "json" | "md";
 }
 
 /**
@@ -85,7 +85,7 @@ export interface ProcessOptions extends MetadataExtractionOptions {
   /** Whether to overwrite existing metadata files */
   overwrite?: boolean;
   /** Output format (json or md) */
-  format?: 'json' | 'md';
+  format?: "json" | "md";
 }
 
 // ============================================================================
@@ -150,9 +150,11 @@ export async function extractMetadata(
     console.log(`Using Ollama model: ${modelName}`);
 
     // Create the system and user messages
-    const systemMessage = "You are a metadata extraction assistant that analyzes content summaries and extracts structured metadata. Pay special attention to extracting or inferring URLs to the original content, as these are critical for linking back to the source.";
+    const systemMessage =
+      "You are a metadata extraction assistant that analyzes content summaries and extracts structured metadata. Pay special attention to extracting or inferring URLs to the original content, as these are critical for linking back to the source.";
 
-    const userMessage = `Please extract metadata from the following content summary with title "${title}":\n\n${content}\n\n` +
+    const userMessage =
+      `Please extract metadata from the following content summary with title "${title}":\n\n${content}\n\n` +
       `Extract the following metadata fields:\n` +
       `1. A concise 1-2 sentence summary of the content\n` +
       `2. Main topics covered (2-5 topics)\n` +
@@ -193,25 +195,27 @@ export async function extractMetadata(
       model: modelName,
       messages: [
         { role: "system", content: systemMessage },
-        { role: "user", content: userMessage }
+        { role: "user", content: userMessage },
       ],
       temperature: temperature,
-      stream: false
+      stream: false,
     };
 
     // Make the API call
     const response = await fetch(`${baseUrl}/api/chat`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(requestBody)
+      body: JSON.stringify(requestBody),
     });
 
     // Check if the request was successful
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Ollama API error: ${response.status} ${response.statusText} - ${errorText}`);
+      throw new Error(
+        `Ollama API error: ${response.status} ${response.statusText} - ${errorText}`,
+      );
     }
 
     // Parse the response
@@ -249,7 +253,7 @@ export async function extractMetadata(
         const topicMatches = topicsStr.match(/"([^"]*)"/g);
         if (topicMatches) {
           topicMatches.forEach((topic: string) => {
-            topics.push(topic.replace(/"/g, ''));
+            topics.push(topic.replace(/"/g, ""));
           });
         }
       }
@@ -262,7 +266,7 @@ export async function extractMetadata(
         const technologyMatches = technologiesStr.match(/"([^"]*)"/g);
         if (technologyMatches) {
           technologyMatches.forEach((tech: string) => {
-            technologies.push(tech.replace(/"/g, ''));
+            technologies.push(tech.replace(/"/g, ""));
           });
         }
       }
@@ -275,22 +279,29 @@ export async function extractMetadata(
         const keywordMatches = keywordsStr.match(/"([^"]*)"/g);
         if (keywordMatches) {
           keywordMatches.forEach((keyword: string) => {
-            keywords.push(keyword.replace(/"/g, ''));
+            keywords.push(keyword.replace(/"/g, ""));
           });
         }
       }
 
       // Extract reading time
       let estimatedReadingTime = 5; // Default
-      const readingTimeMatch = jsonStr.match(/"estimatedReadingTime"\s*:\s*(\d+)/);
+      const readingTimeMatch = jsonStr.match(
+        /"estimatedReadingTime"\s*:\s*(\d+)/,
+      );
       if (readingTimeMatch && readingTimeMatch[1]) {
         estimatedReadingTime = parseInt(readingTimeMatch[1], 10);
       }
 
       // Extract publication date
       let publicationDate: string | undefined = undefined;
-      const publicationDateMatch = jsonStr.match(/"publicationDate"\s*:\s*"([^"]*)"/);
-      if (publicationDateMatch && publicationDateMatch[1] && publicationDateMatch[1] !== "null") {
+      const publicationDateMatch = jsonStr.match(
+        /"publicationDate"\s*:\s*"([^"]*)"/,
+      );
+      if (
+        publicationDateMatch && publicationDateMatch[1] &&
+        publicationDateMatch[1] !== "null"
+      ) {
         publicationDate = publicationDateMatch[1];
       }
 
@@ -300,13 +311,17 @@ export async function extractMetadata(
         summary: summaryMatch && summaryMatch[1] ? summaryMatch[1] : "",
         topics: topics.length > 0 ? topics : [],
         technologies: technologies.length > 0 ? technologies : [],
-        contentType: contentTypeMatch && contentTypeMatch[1] ? contentTypeMatch[1] : "Article",
+        contentType: contentTypeMatch && contentTypeMatch[1]
+          ? contentTypeMatch[1]
+          : "Article",
         difficultyLevel: "Intermediate", // Default
         keywords: keywords.length > 0 ? keywords : [],
-        estimatedReadingTime: isNaN(estimatedReadingTime) ? 5 : estimatedReadingTime,
+        estimatedReadingTime: isNaN(estimatedReadingTime)
+          ? 5
+          : estimatedReadingTime,
         author: authorMatch && authorMatch[1] ? authorMatch[1] : undefined,
         publicationDate: publicationDate,
-        url: url
+        url: url,
       };
 
       // Validate the metadata structure
@@ -319,15 +334,18 @@ export async function extractMetadata(
         title: metadata.title || title,
         summary: metadata.summary || "",
         topics: Array.isArray(metadata.topics) ? metadata.topics : [],
-        technologies: Array.isArray(metadata.technologies) ? metadata.technologies : [],
+        technologies: Array.isArray(metadata.technologies)
+          ? metadata.technologies
+          : [],
         contentType: metadata.contentType || "Article",
         difficultyLevel: metadata.difficultyLevel || "Intermediate",
         keywords: Array.isArray(metadata.keywords) ? metadata.keywords : [],
-        estimatedReadingTime: typeof metadata.estimatedReadingTime === 'number' ?
-          metadata.estimatedReadingTime : 5,
+        estimatedReadingTime: typeof metadata.estimatedReadingTime === "number"
+          ? metadata.estimatedReadingTime
+          : 5,
         author: metadata.author || undefined,
         publicationDate: metadata.publicationDate || undefined,
-        url: metadata.url || undefined
+        url: metadata.url || undefined,
       };
 
       return {
@@ -338,7 +356,9 @@ export async function extractMetadata(
       console.error("Raw result:", result);
       return {
         success: false,
-        error: `Failed to parse metadata: ${parseError instanceof Error ? parseError.message : String(parseError)}`,
+        error: `Failed to parse metadata: ${
+          parseError instanceof Error ? parseError.message : String(parseError)
+        }`,
       };
     }
   } catch (error: unknown) {
@@ -390,7 +410,7 @@ export async function saveMetadata(
   metadata: ContentMetadata,
   outputPath: string,
   overwrite: boolean = false,
-  format: 'json' | 'md' = 'md',
+  format: "json" | "md" = "md",
 ): Promise<void> {
   try {
     // Check if file exists and we're not overwriting
@@ -412,7 +432,7 @@ export async function saveMetadata(
     // Prepare the content based on the format
     let content: string;
 
-    if (format === 'json') {
+    if (format === "json") {
       // JSON format
       content = JSON.stringify(metadata, null, 2);
     } else {
@@ -423,29 +443,35 @@ export async function saveMetadata(
 ${metadata.summary}
 
 ## Topics
-${metadata.topics.map(topic => `- ${topic}`).join('\n')}
+${metadata.topics.map((topic) => `- ${topic}`).join("\n")}
 
 ## Technologies
-${metadata.technologies.length > 0
-  ? metadata.technologies.map(tech => `- ${tech}`).join('\n')
-  : '_No specific technologies mentioned_'}
+${
+        metadata.technologies.length > 0
+          ? metadata.technologies.map((tech) => `- ${tech}`).join("\n")
+          : "_No specific technologies mentioned_"
+      }
 
 ## Content Type
 ${metadata.contentType}
 
 ## Difficulty Level
-${metadata.difficultyLevel || 'Not specified'}
+${metadata.difficultyLevel || "Not specified"}
 
 ## Keywords
-${metadata.keywords.map(keyword => `- ${keyword}`).join('\n')}
+${metadata.keywords.map((keyword) => `- ${keyword}`).join("\n")}
 
 ## Estimated Reading Time
-${metadata.estimatedReadingTime !== undefined ? `${metadata.estimatedReadingTime} minutes` : 'Not specified'}
+${
+        metadata.estimatedReadingTime !== undefined
+          ? `${metadata.estimatedReadingTime} minutes`
+          : "Not specified"
+      }
 
 ## Author
-${metadata.author || 'Not specified'}
+${metadata.author || "Not specified"}
 
-${metadata.url ? `## Original URL\n[${metadata.title}](${metadata.url})` : ''}
+${metadata.url ? `## Original URL\n[${metadata.title}](${metadata.url})` : ""}
 
 ---
 _Metadata extracted by Lens Engine_
@@ -472,13 +498,16 @@ _Metadata extracted by Lens Engine_
  * @param format The output format (json or md)
  * @returns The output filename
  */
-export function createMetadataFilename(inputPath: string, format: 'json' | 'md' = 'md'): string {
+export function createMetadataFilename(
+  inputPath: string,
+  format: "json" | "md" = "md",
+): string {
   // Get the base filename without extension
   const filename = inputPath.split("/").pop() || "unknown";
   const baseFilename = filename.replace(/\.[^/.]+$/, "");
 
   // Create the output filename with the appropriate extension
-  const extension = format === 'json' ? 'json' : 'md';
+  const extension = format === "json" ? "json" : "md";
   return `${baseFilename}-metadata.${extension}`;
 }
 
@@ -519,7 +548,7 @@ export async function processSummaryFile(
     }
 
     // Determine the output format (default to markdown)
-    const format = options.format || 'md';
+    const format = options.format || "md";
 
     // Create the output filename
     const outputFilename = createMetadataFilename(options.inputPath, format);
@@ -605,7 +634,9 @@ export async function processSummaryDirectory(
           console.error(`❌ Failed to process ${file}: ${result.error}`);
         }
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
+        const errorMessage = error instanceof Error
+          ? error.message
+          : String(error);
         failureCount++;
         results.push({ file, success: false, error: errorMessage });
         console.error(`❌ Error processing ${file}: ${errorMessage}`);
@@ -650,9 +681,9 @@ if (import.meta.main) {
     // Get command line arguments
     const args = Deno.args;
     const processAll = args.includes("--all");
-    const specificFile = args.find(arg => arg.endsWith(".md"));
+    const specificFile = args.find((arg) => arg.endsWith(".md"));
     const useJsonFormat = args.includes("--json");
-    const format = useJsonFormat ? 'json' : 'md';
+    const format = useJsonFormat ? "json" : "md";
 
     // Determine which file to process
     let testFile: string;
@@ -697,7 +728,7 @@ if (import.meta.main) {
       temperature: 0.2,
       langSmithTracing: false, // Disable tracing for better performance
       overwrite: true,
-      format: format // Use the format from command line args
+      format: format, // Use the format from command line args
     });
 
     if (result.success) {
@@ -705,7 +736,11 @@ if (import.meta.main) {
       console.log("----------------------------------------");
       console.log(JSON.stringify(result.metadata, null, 2));
       console.log("----------------------------------------");
-      console.log(`Metadata saved to: ${join(outputDir, createMetadataFilename(testInputPath))}`);
+      console.log(
+        `Metadata saved to: ${
+          join(outputDir, createMetadataFilename(testInputPath))
+        }`,
+      );
 
       // Process all files if requested
       if (processAll) {
@@ -719,8 +754,8 @@ if (import.meta.main) {
             modelName: config.llm.llmModel,
             temperature: 0.2,
             langSmithTracing: false, // Disable tracing for better performance
-            format: format // Use the format from command line args
-          }
+            format: format, // Use the format from command line args
+          },
         );
 
         console.log("\nProcessing Summary:");
@@ -731,12 +766,14 @@ if (import.meta.main) {
         if (summary.failureCount > 0) {
           console.log("\nFailed files:");
           summary.results
-            .filter(r => !r.success)
-            .forEach(r => console.log(`- ${r.file}: ${r.error}`));
+            .filter((r) => !r.success)
+            .forEach((r) => console.log(`- ${r.file}: ${r.error}`));
         }
       } else {
         console.log("\nTo process all files, run with --all flag:");
-        console.log("deno run --allow-net --allow-read --allow-write --allow-env --env src/processors/lab/metadata_extractor.ts --all");
+        console.log(
+          "deno run --allow-net --allow-read --allow-write --allow-env --env src/processors/lab/metadata_extractor.ts --all",
+        );
       }
     } else {
       console.error(`\n❌ Failed to extract metadata: ${result.error}`);
@@ -753,6 +790,8 @@ if (import.meta.main) {
     console.error("1. Make sure Ollama is running (ollama serve)");
     console.error("2. Check that the model is available (ollama list)");
     console.error("3. Verify your data directory in .env file");
-    console.error("4. Ensure you have summary files in the processed directory");
+    console.error(
+      "4. Ensure you have summary files in the processed directory",
+    );
   }
 }

@@ -7,7 +7,10 @@
 
 import { extractFromHtml, type HtmlExtractResult } from "../../extract/mod.ts";
 import type { ProcessingOptions, ProcessingResult } from "../types.ts";
-import { summarizeContent, type SummaryOptions } from "../../../../models/mod.ts";
+import {
+  summarizeContent,
+  type SummaryOptions,
+} from "../../../../models/mod.ts";
 import { getConfig } from "../../../../config/mod.ts";
 
 /**
@@ -41,7 +44,7 @@ export interface HtmlProcessingOptions extends ProcessingOptions {
 export async function processHtmlContent(
   html: string,
   identifier: string,
-  options: HtmlProcessingOptions = {}
+  options: HtmlProcessingOptions = {},
 ): Promise<ProcessingResult> {
   try {
     // Extract content using our HTML extractor
@@ -51,7 +54,7 @@ export async function processHtmlContent(
     });
 
     // Initialize metadata with extraction results
-    const metadata: ProcessingResult['metadata'] = {
+    const metadata: ProcessingResult["metadata"] = {
       wordCount: extracted.wordCount,
       urls: extracted.urls,
       title: extracted.title,
@@ -71,16 +74,22 @@ export async function processHtmlContent(
         };
 
         // Summarize the extracted content
-        const summaryResult = await summarizeContent(extracted.text, summaryOptions);
+        const summaryResult = await summarizeContent(
+          extracted.text,
+          summaryOptions,
+        );
 
         if (summaryResult.success && summaryResult.content) {
           // Add summary to metadata
           metadata.summary = summaryResult.content;
           metadata.summaryModel = summaryResult.metadata?.model;
-          metadata.summaryProcessingTime = summaryResult.metadata?.processingTime;
+          metadata.summaryProcessingTime = summaryResult.metadata
+            ?.processingTime;
         } else {
           // Log summarization failure but don't fail the entire operation
-          console.warn(`Summarization failed for ${identifier}: ${summaryResult.error}`);
+          console.warn(
+            `Summarization failed for ${identifier}: ${summaryResult.error}`,
+          );
         }
       } catch (summaryError) {
         // Log error but don't fail the entire operation
@@ -113,7 +122,7 @@ export async function processHtmlContent(
  */
 export async function processHtmlFile(
   filePath: string,
-  options: HtmlProcessingOptions = {}
+  options: HtmlProcessingOptions = {},
 ): Promise<ProcessingResult> {
   try {
     const html = await Deno.readTextFile(filePath);

@@ -12,19 +12,19 @@
 
 import { ensureDir } from "./rss_client.ts";
 import {
+  type FetchOptions as _FetchOptions,
   fetchRssFeed,
   parseRssFeed,
-  saveRssFeed,
   type RssFeed,
-  type FetchOptions as _FetchOptions,
-  type SaveOptions as _SaveOptions
+  type SaveOptions as _SaveOptions,
+  saveRssFeed,
 } from "./rss_client.ts";
 import {
-  parseOpml,
   extractFeeds,
+  type FeedSource,
   getFeedsByCategory,
   type OpmlDocument,
-  type FeedSource
+  parseOpml,
 } from "./opml_parser.ts";
 
 /**
@@ -58,7 +58,9 @@ export interface FeedFetchResult {
  * @param options - Options for loading the OPML file
  * @returns A promise that resolves to the parsed OPML document
  */
-export async function loadOpmlFile(options: OpmlLoadOptions): Promise<OpmlDocument> {
+export async function loadOpmlFile(
+  options: OpmlLoadOptions,
+): Promise<OpmlDocument> {
   try {
     const xml = await Deno.readTextFile(options.path);
     return parseOpml(xml);
@@ -66,7 +68,7 @@ export async function loadOpmlFile(options: OpmlLoadOptions): Promise<OpmlDocume
     throw new Error(
       `Error loading OPML file: ${
         error instanceof Error ? error.message : String(error)
-      }`
+      }`,
     );
   }
 }
@@ -80,7 +82,7 @@ export async function loadOpmlFile(options: OpmlLoadOptions): Promise<OpmlDocume
  */
 export async function fetchFeedsFromOpml(
   opmlOptions: OpmlLoadOptions,
-  fetchOptions: OpmlFetchOptions = {}
+  fetchOptions: OpmlFetchOptions = {},
 ): Promise<FeedFetchResult[]> {
   try {
     // Load and parse the OPML file
@@ -89,7 +91,10 @@ export async function fetchFeedsFromOpml(
     // Extract feeds, optionally filtering by category
     let feedSources: FeedSource[];
     if (fetchOptions.categoryFilter) {
-      feedSources = getFeedsByCategory(opmlDocument, fetchOptions.categoryFilter);
+      feedSources = getFeedsByCategory(
+        opmlDocument,
+        fetchOptions.categoryFilter,
+      );
     } else {
       feedSources = extractFeeds(opmlDocument);
     }
@@ -113,14 +118,14 @@ export async function fetchFeedsFromOpml(
             } catch {
               return i;
             }
-          })
+          }),
         );
         pendingPromises.splice(completedIndex, 1);
       }
 
       // Create a new promise for this feed
       const promise = fetchSingleFeed(source, fetchOptions)
-        .then(result => {
+        .then((result) => {
           results.push(result);
         });
 
@@ -135,7 +140,7 @@ export async function fetchFeedsFromOpml(
     throw new Error(
       `Error fetching feeds from OPML: ${
         error instanceof Error ? error.message : String(error)
-      }`
+      }`,
     );
   }
 }
@@ -149,24 +154,24 @@ export async function fetchFeedsFromOpml(
  */
 async function fetchSingleFeed(
   source: FeedSource,
-  options: OpmlFetchOptions
+  options: OpmlFetchOptions,
 ): Promise<FeedFetchResult> {
   try {
     const xml = await fetchRssFeed({
       url: source.xmlUrl,
-      timeout: options.timeout
+      timeout: options.timeout,
     });
 
     const feed = parseRssFeed(xml);
 
     return {
       source,
-      feed
+      feed,
     };
   } catch (error) {
     return {
       source,
-      error: error instanceof Error ? error.message : String(error)
+      error: error instanceof Error ? error.message : String(error),
     };
   }
 }
@@ -182,7 +187,7 @@ async function fetchSingleFeed(
 export async function fetchAndSaveFeedsFromOpml(
   opmlOptions: OpmlLoadOptions,
   fetchOptions: OpmlFetchOptions = {},
-  saveDir: string
+  saveDir: string,
 ): Promise<FeedFetchResult[]> {
   try {
     // Ensure the save directory exists
@@ -194,9 +199,11 @@ export async function fetchAndSaveFeedsFromOpml(
     // Save each successfully fetched feed
     for (const result of results) {
       if (result.feed) {
-        const fileName = sanitizeFileName(result.feed.title || result.source.title);
+        const fileName = sanitizeFileName(
+          result.feed.title || result.source.title,
+        );
         await saveRssFeed(result.feed, {
-          path: `${saveDir}/${fileName}.json`
+          path: `${saveDir}/${fileName}.json`,
         });
       }
     }
@@ -206,7 +213,7 @@ export async function fetchAndSaveFeedsFromOpml(
     throw new Error(
       `Error fetching and saving feeds from OPML: ${
         error instanceof Error ? error.message : String(error)
-      }`
+      }`,
     );
   }
 }
@@ -239,7 +246,7 @@ if (import.meta.main) {
     // Create fetch options with category filter if provided
     const fetchOptions: OpmlFetchOptions = {
       timeout: 10000,
-      maxConcurrent: 3
+      maxConcurrent: 3,
     };
 
     if (category) {
@@ -251,12 +258,12 @@ if (import.meta.main) {
     const results = await fetchAndSaveFeedsFromOpml(
       { path: opmlPath },
       fetchOptions,
-      saveDir
+      saveDir,
     );
 
     // Print summary
-    const successful = results.filter(r => r.feed).length;
-    const failed = results.filter(r => r.error).length;
+    const successful = results.filter((r) => r.feed).length;
+    const failed = results.filter((r) => r.error).length;
 
     console.log(`\nFeed fetching complete:`);
     console.log(`- Total feeds: ${results.length}`);
@@ -268,8 +275,8 @@ if (import.meta.main) {
     if (failed > 0) {
       console.log("\nErrors:");
       results
-        .filter(r => r.error)
-        .forEach(r => {
+        .filter((r) => r.error)
+        .forEach((r) => {
           console.log(`- ${r.source.title}: ${r.error}`);
         });
     }

@@ -448,7 +448,9 @@ if (import.meta.main) {
 
         try {
           await Deno.stat(pazJsonPath);
-          console.log(`Feed file not found at ${jsonPath}, using ${pazJsonPath} instead`);
+          console.log(
+            `Feed file not found at ${jsonPath}, using ${pazJsonPath} instead`,
+          );
           jsonPath = pazJsonPath;
         } catch (_innerError) {
           // If the file doesn't exist in either location, warn the user

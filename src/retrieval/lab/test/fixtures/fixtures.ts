@@ -223,7 +223,10 @@ import { ensureDir } from "https://deno.land/std@0.224.0/fs/mod.ts";
  * @param htmlContent The HTML content to return from readTextFile for HTML files
  * @returns Object with captured write information and restore function
  */
-export function setupFileMocks(jsonContent: Record<string, unknown> = SIMPLE_FEED, htmlContent: string = SIMPLE_HTML) {
+export function setupFileMocks(
+  jsonContent: Record<string, unknown> = SIMPLE_FEED,
+  htmlContent: string = SIMPLE_HTML,
+) {
   // Store original functions
   const originalReadTextFile = Deno.readTextFile;
   const originalWriteTextFile = Deno.writeTextFile;
@@ -240,9 +243,9 @@ export function setupFileMocks(jsonContent: Record<string, unknown> = SIMPLE_FEE
   Deno.readTextFile = (path) => {
     const pathStr = String(path);
 
-    if (pathStr.endsWith('.json')) {
+    if (pathStr.endsWith(".json")) {
       return Promise.resolve(JSON.stringify(jsonContent));
-    } else if (pathStr.endsWith('.html') || pathStr.endsWith('.htm')) {
+    } else if (pathStr.endsWith(".html") || pathStr.endsWith(".htm")) {
       return Promise.resolve(htmlContent);
     } else {
       throw new Deno.errors.NotFound(`File not found: ${pathStr}`);
@@ -288,7 +291,7 @@ export function setupFileMocks(jsonContent: Record<string, unknown> = SIMPLE_FEE
         gid: 0,
         rdev: 0,
         blksize: 0,
-        blocks: 0
+        blocks: 0,
       } as unknown as Deno.FileInfo);
     }
 
@@ -310,7 +313,7 @@ export function setupFileMocks(jsonContent: Record<string, unknown> = SIMPLE_FEE
         gid: 0,
         rdev: 0,
         blksize: 0,
-        blocks: 0
+        blocks: 0,
       } as unknown as Deno.FileInfo);
     }
 
@@ -337,7 +340,7 @@ export function setupFileMocks(jsonContent: Record<string, unknown> = SIMPLE_FEE
       Deno.stat = originalStat;
       // @ts-ignore: Restoring global function
       delete globalThis.ensureDir;
-    }
+    },
   };
 }
 
@@ -359,7 +362,7 @@ export function setupNetworkMocks(responseMap: Record<string, {
   const defaultResponse = {
     content: SIMPLE_HTML,
     status: 200,
-    ok: true
+    ok: true,
   };
 
   // Mock fetch to return responses from the map
@@ -368,7 +371,9 @@ export function setupNetworkMocks(responseMap: Record<string, {
     const urlStr = String(url);
 
     // Find the closest matching URL in the map
-    const matchingUrl = Object.keys(responseMap).find(key => urlStr.includes(key));
+    const matchingUrl = Object.keys(responseMap).find((key) =>
+      urlStr.includes(key)
+    );
     const response = matchingUrl ? responseMap[matchingUrl] : defaultResponse;
 
     return Promise.resolve({
@@ -383,7 +388,7 @@ export function setupNetworkMocks(responseMap: Record<string, {
   return {
     restore: () => {
       globalThis.fetch = originalFetch;
-    }
+    },
   };
 }
 
@@ -415,6 +420,6 @@ export function setupEnvMocks(envVars: Record<string, string> = {}) {
     restore: () => {
       Deno.env.get = originalGet;
       Deno.env.set = originalSet;
-    }
+    },
   };
 }

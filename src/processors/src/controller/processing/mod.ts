@@ -1,13 +1,13 @@
 /**
  * Processing Controllers Module
- * 
+ *
  * Exports all processing orchestration controllers.
  */
 
 export {
+  type BatchProcessingOptions,
   processHtmlBatch,
   processMixedBatch,
-  type BatchProcessingOptions,
 } from "./batch.ts";
 
 // Future exports:

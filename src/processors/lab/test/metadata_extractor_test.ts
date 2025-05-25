@@ -18,25 +18,25 @@ import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
 import { exists } from "https://deno.land/std@0.224.0/fs/exists.ts";
 
 import {
+  ContentMetadata,
+  createMetadataFilename,
   extractMetadata as _extractMetadata, // Prefix with underscore to indicate intentionally unused
   extractTitleFromFilename,
-  createMetadataFilename,
-  saveMetadata,
-  processSummaryFile as _processSummaryFile, // Prefix with underscore to indicate intentionally unused
-  ContentMetadata,
   MetadataExtractionOptions,
+  processSummaryFile as _processSummaryFile, // Prefix with underscore to indicate intentionally unused
+  saveMetadata,
 } from "../metadata_extractor.ts";
 
 // Import test fixtures
 import {
-  BLOG_POST_SUMMARY,
-  TECHNICAL_ARTICLE_SUMMARY,
+  AI_TECHNOLOGY_METADATA,
   AI_TECHNOLOGY_SUMMARY as _AI_TECHNOLOGY_SUMMARY, // Prefix with underscore to indicate intentionally unused
   BLOG_POST_METADATA,
-  TECHNICAL_ARTICLE_METADATA,
-  AI_TECHNOLOGY_METADATA,
-  setupOllamaMock as _setupOllamaMock, // Prefix with underscore to indicate intentionally unused
+  BLOG_POST_SUMMARY,
   setupFileMocks as _setupFileMocks, // Prefix with underscore to indicate intentionally unused
+  setupOllamaMock as _setupOllamaMock, // Prefix with underscore to indicate intentionally unused
+  TECHNICAL_ARTICLE_METADATA,
+  TECHNICAL_ARTICLE_SUMMARY,
 } from "./fixtures/metadata_fixtures.ts";
 
 // IMPORTANT: Disable LangSmith tracing for tests
@@ -68,7 +68,10 @@ async function teardown() {
 }
 
 // Helper function to create a test summary file (unused but kept for reference)
-async function _createTestSummaryFile(filename: string, content: string): Promise<string> {
+async function _createTestSummaryFile(
+  filename: string,
+  content: string,
+): Promise<string> {
   const filePath = join(TEST_DIR, filename);
   await Deno.writeTextFile(filePath, content);
   return filePath;
@@ -81,8 +84,14 @@ Deno.test({
     const testCases = [
       { filename: "test-document-summary.md", expected: "Test Document" },
       { filename: "hello-world-summary.md", expected: "Hello World" },
-      { filename: "API-testing-guide-summary.md", expected: "API Testing Guide" },
-      { filename: "the-AI-revolution-summary.md", expected: "The AI Revolution" },
+      {
+        filename: "API-testing-guide-summary.md",
+        expected: "API Testing Guide",
+      },
+      {
+        filename: "the-AI-revolution-summary.md",
+        expected: "The AI Revolution",
+      },
       { filename: "maycember-rage-summary.md", expected: "Maycember Rage" },
     ];
 
@@ -94,12 +103,22 @@ Deno.test({
 });
 
 Deno.test({
-  name: "createMetadataFilename - creates correct metadata filename with default format (md)",
+  name:
+    "createMetadataFilename - creates correct metadata filename with default format (md)",
   fn() {
     const testCases = [
-      { inputPath: "/path/to/test-document-summary.md", expected: "test-document-summary-metadata.md" },
-      { inputPath: "hello-world-summary.md", expected: "hello-world-summary-metadata.md" },
-      { inputPath: "./data/API-testing-guide-summary.md", expected: "API-testing-guide-summary-metadata.md" },
+      {
+        inputPath: "/path/to/test-document-summary.md",
+        expected: "test-document-summary-metadata.md",
+      },
+      {
+        inputPath: "hello-world-summary.md",
+        expected: "hello-world-summary-metadata.md",
+      },
+      {
+        inputPath: "./data/API-testing-guide-summary.md",
+        expected: "API-testing-guide-summary-metadata.md",
+      },
     ];
 
     for (const testCase of testCases) {
@@ -110,26 +129,27 @@ Deno.test({
 });
 
 Deno.test({
-  name: "createMetadataFilename - creates correct metadata filename with specified format",
+  name:
+    "createMetadataFilename - creates correct metadata filename with specified format",
   fn() {
     const testCases = [
       {
         inputPath: "/path/to/test-document-summary.md",
         expectedJson: "test-document-summary-metadata.json",
-        expectedMd: "test-document-summary-metadata.md"
+        expectedMd: "test-document-summary-metadata.md",
       },
       {
         inputPath: "hello-world-summary.md",
         expectedJson: "hello-world-summary-metadata.json",
-        expectedMd: "hello-world-summary-metadata.md"
+        expectedMd: "hello-world-summary-metadata.md",
       },
     ];
 
     for (const testCase of testCases) {
-      const jsonFilename = createMetadataFilename(testCase.inputPath, 'json');
+      const jsonFilename = createMetadataFilename(testCase.inputPath, "json");
       assertEquals(jsonFilename, testCase.expectedJson);
 
-      const mdFilename = createMetadataFilename(testCase.inputPath, 'md');
+      const mdFilename = createMetadataFilename(testCase.inputPath, "md");
       assertEquals(mdFilename, testCase.expectedMd);
     }
   },
@@ -153,7 +173,7 @@ Deno.test({
       url: "https://example.com/test-document",
     };
 
-    await saveMetadata(metadata, outputPath, true, 'json');
+    await saveMetadata(metadata, outputPath, true, "json");
 
     const fileExists = await exists(outputPath);
     assertEquals(fileExists, true);
@@ -165,11 +185,17 @@ Deno.test({
       assertEquals(savedMetadata.title, metadata.title);
       assertEquals(savedMetadata.summary, metadata.summary);
       assertEquals(savedMetadata.topics.length, metadata.topics.length);
-      assertEquals(savedMetadata.technologies.length, metadata.technologies.length);
+      assertEquals(
+        savedMetadata.technologies.length,
+        metadata.technologies.length,
+      );
       assertEquals(savedMetadata.contentType, metadata.contentType);
       assertEquals(savedMetadata.difficultyLevel, metadata.difficultyLevel);
       assertEquals(savedMetadata.keywords.length, metadata.keywords.length);
-      assertEquals(savedMetadata.estimatedReadingTime, metadata.estimatedReadingTime);
+      assertEquals(
+        savedMetadata.estimatedReadingTime,
+        metadata.estimatedReadingTime,
+      );
       assertEquals(savedMetadata.url, metadata.url);
     }
 
@@ -196,7 +222,7 @@ Deno.test({
       url: "https://example.com/test-document",
     };
 
-    await saveMetadata(metadata, outputPath, true, 'md');
+    await saveMetadata(metadata, outputPath, true, "md");
 
     const fileExists = await exists(outputPath);
     assertEquals(fileExists, true);
@@ -209,21 +235,30 @@ Deno.test({
       assertStringIncludes(savedContent, `## Summary\n${metadata.summary}`);
 
       // Check for topics
-      metadata.topics.forEach(topic => {
+      metadata.topics.forEach((topic) => {
         assertStringIncludes(savedContent, `- ${topic}`);
       });
 
       // Check for technologies
-      metadata.technologies.forEach(tech => {
+      metadata.technologies.forEach((tech) => {
         assertStringIncludes(savedContent, `- ${tech}`);
       });
 
       // Check for content type and difficulty level
-      assertStringIncludes(savedContent, `## Content Type\n${metadata.contentType}`);
-      assertStringIncludes(savedContent, `## Difficulty Level\n${metadata.difficultyLevel}`);
+      assertStringIncludes(
+        savedContent,
+        `## Content Type\n${metadata.contentType}`,
+      );
+      assertStringIncludes(
+        savedContent,
+        `## Difficulty Level\n${metadata.difficultyLevel}`,
+      );
 
       // Check for URL
-      assertStringIncludes(savedContent, `## Original URL\n[${metadata.title}](${metadata.url})`);
+      assertStringIncludes(
+        savedContent,
+        `## Original URL\n[${metadata.title}](${metadata.url})`,
+      );
 
       // Check for author
       assertStringIncludes(savedContent, `## Author\n${metadata.author}`);
@@ -234,7 +269,8 @@ Deno.test({
 });
 
 Deno.test({
-  name: "saveMetadata - does not overwrite existing file when overwrite is false (JSON format)",
+  name:
+    "saveMetadata - does not overwrite existing file when overwrite is false (JSON format)",
   async fn() {
     await setup();
 
@@ -253,7 +289,7 @@ Deno.test({
     };
 
     // Save initial metadata as JSON
-    await saveMetadata(initialMetadata, outputPath, true, 'json');
+    await saveMetadata(initialMetadata, outputPath, true, "json");
 
     // Create new metadata
     const newMetadata: ContentMetadata = {
@@ -268,7 +304,7 @@ Deno.test({
     };
 
     // Try to save new metadata with overwrite=false
-    await saveMetadata(newMetadata, outputPath, false, 'json');
+    await saveMetadata(newMetadata, outputPath, false, "json");
 
     // Check that the content wasn't changed
     const savedContent = await Deno.readTextFile(outputPath);
@@ -282,7 +318,8 @@ Deno.test({
 });
 
 Deno.test({
-  name: "saveMetadata - does not overwrite existing file when overwrite is false (Markdown format)",
+  name:
+    "saveMetadata - does not overwrite existing file when overwrite is false (Markdown format)",
   async fn() {
     await setup();
 
@@ -301,7 +338,7 @@ Deno.test({
     };
 
     // Save initial metadata as Markdown
-    await saveMetadata(initialMetadata, outputPath, true, 'md');
+    await saveMetadata(initialMetadata, outputPath, true, "md");
 
     // Create new metadata
     const newMetadata: ContentMetadata = {
@@ -316,7 +353,7 @@ Deno.test({
     };
 
     // Try to save new metadata with overwrite=false
-    await saveMetadata(newMetadata, outputPath, false, 'md');
+    await saveMetadata(newMetadata, outputPath, false, "md");
 
     // Check that the content wasn't changed
     const savedContent = await Deno.readTextFile(outputPath);
@@ -337,7 +374,7 @@ Deno.test({
 function mockExtractMetadata(
   _content: string,
   title: string,
-  _options: MetadataExtractionOptions = {}
+  _options: MetadataExtractionOptions = {},
 ): {
   success: boolean;
   metadata?: ContentMetadata;
@@ -352,7 +389,7 @@ function mockExtractMetadata(
     };
     return {
       success: true,
-      metadata
+      metadata,
     };
   } else if (title === "API Testing In The Vibe Coding Age") {
     // Convert null values to undefined for ContentMetadata compatibility
@@ -363,7 +400,7 @@ function mockExtractMetadata(
     };
     return {
       success: true,
-      metadata
+      metadata,
     };
   } else if (title === "The AI Agent Developer's Bible") {
     // Convert null values to undefined for ContentMetadata compatibility
@@ -373,7 +410,7 @@ function mockExtractMetadata(
     };
     return {
       success: true,
-      metadata
+      metadata,
     };
   } else {
     // Default metadata
@@ -387,8 +424,8 @@ function mockExtractMetadata(
         contentType: "Article",
         difficultyLevel: "Beginner",
         keywords: ["test", "keyword"],
-        estimatedReadingTime: 5
-      }
+        estimatedReadingTime: 5,
+      },
     };
   }
 }
@@ -403,7 +440,7 @@ Deno.test({
       {
         langSmithTracing: false,
         temperature: 0.1,
-      }
+      },
     );
 
     // Check the result
@@ -420,7 +457,7 @@ Deno.test({
     assertEquals(typeof metadata.estimatedReadingTime, "number");
 
     console.log("Extracted metadata:", JSON.stringify(metadata, null, 2));
-  }
+  },
 });
 
 Deno.test({
@@ -433,7 +470,7 @@ Deno.test({
       {
         langSmithTracing: false,
         temperature: 0.1,
-      }
+      },
     );
 
     // Check the result
@@ -448,7 +485,7 @@ Deno.test({
     assertEquals(metadata.difficultyLevel, "Intermediate");
 
     console.log("Extracted metadata:", JSON.stringify(metadata, null, 2));
-  }
+  },
 });
 
 // Mock implementation of processSummaryFile for testing
@@ -457,7 +494,7 @@ async function mockProcessSummaryFile(options: {
   outputDir: string;
   temperature?: number;
   langSmithTracing?: boolean;
-  format?: 'json' | 'md';
+  format?: "json" | "md";
   overwrite?: boolean;
 }): Promise<{
   success: boolean;
@@ -478,7 +515,7 @@ async function mockProcessSummaryFile(options: {
   }
 
   // Determine the format (default to markdown)
-  const format = options.format || 'md';
+  const format = options.format || "md";
 
   // Create the output filename
   const outputFilename = createMetadataFilename(options.inputPath, format);
@@ -489,15 +526,20 @@ async function mockProcessSummaryFile(options: {
     ...metadata,
     author: metadata.author || undefined,
     publicationDate: metadata.publicationDate || undefined,
-    url: metadata.url || undefined
+    url: metadata.url || undefined,
   };
 
   // Save the metadata
-  await saveMetadata(typedMetadata, outputPath, options.overwrite || false, format);
+  await saveMetadata(
+    typedMetadata,
+    outputPath,
+    options.overwrite || false,
+    format,
+  );
 
   return {
     success: true,
-    metadata: typedMetadata
+    metadata: typedMetadata,
   };
 }
 
@@ -513,7 +555,7 @@ Deno.test({
         outputDir: TEST_OUTPUT_DIR,
         temperature: 0.1,
         langSmithTracing: false,
-        format: 'md' // Use markdown format
+        format: "md", // Use markdown format
       });
 
       // Check the result
@@ -529,9 +571,9 @@ Deno.test({
       }
 
       assertEquals(files.length > 0, true);
-      assertEquals(files.some(f => f.includes("metadata.md")), true);
+      assertEquals(files.some((f) => f.includes("metadata.md")), true);
     } finally {
       await teardown();
     }
-  }
+  },
 });

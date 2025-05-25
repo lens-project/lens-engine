@@ -32,9 +32,9 @@ export interface TestConfig extends AppConfig {
  * Allows tests to specify only the parts they care about
  */
 export interface TestConfigOverrides {
-  llm?: Partial<AppConfig['llm']>;
-  langSmith?: Partial<AppConfig['langSmith']>;
-  core?: Partial<AppConfig['core']>;
+  llm?: Partial<AppConfig["llm"]>;
+  langSmith?: Partial<AppConfig["langSmith"]>;
+  core?: Partial<AppConfig["core"]>;
 }
 
 // ============================================================================
@@ -96,7 +96,9 @@ const DEFAULT_TEST_CONFIG: TestConfig = {
  * });
  * ```
  */
-export function createTestConfig(overrides: TestConfigOverrides = {}): TestConfig {
+export function createTestConfig(
+  overrides: TestConfigOverrides = {},
+): TestConfig {
   return {
     ...DEFAULT_TEST_CONFIG,
     core: {
@@ -139,7 +141,7 @@ export function isTestEnvironment(): boolean {
  * @returns true if this is a test configuration
  */
 export function isTestConfig(config: AppConfig): config is TestConfig {
-  return '_testMode' in config && config._testMode === true;
+  return "_testMode" in config && config._testMode === true;
 }
 
 // ============================================================================
@@ -153,42 +155,46 @@ export const TEST_CONFIG_PRESETS = {
   /**
    * Minimal configuration for basic unit tests
    */
-  minimal: (): TestConfig => createTestConfig({
-    langSmith: { tracingEnabled: false },
-    llm: { llmModel: "llama3.2" },
-  }),
+  minimal: (): TestConfig =>
+    createTestConfig({
+      langSmith: { tracingEnabled: false },
+      llm: { llmModel: "llama3.2" },
+    }),
 
   /**
    * Configuration for integration tests with tracing enabled
    */
-  integration: (): TestConfig => createTestConfig({
-    langSmith: {
-      tracingEnabled: true,
-      project: "integration-tests"
-    },
-  }),
+  integration: (): TestConfig =>
+    createTestConfig({
+      langSmith: {
+        tracingEnabled: true,
+        project: "integration-tests",
+      },
+    }),
 
   /**
    * Configuration for performance testing
    */
-  performance: (): TestConfig => createTestConfig({
-    llm: {
-      llmModel: "llama3.2",
-      ollamaBaseUrl: "http://localhost:11434"
-    },
-    langSmith: { tracingEnabled: false },
-  }),
+  performance: (): TestConfig =>
+    createTestConfig({
+      llm: {
+        llmModel: "llama3.2",
+        ollamaBaseUrl: "http://localhost:11434",
+      },
+      langSmith: { tracingEnabled: false },
+    }),
 
   /**
    * Configuration for model comparison tests (default model)
    */
-  modelComparison: (): TestConfig => createTestConfig({
-    llm: { llmModel: "llama3.2" },
-    langSmith: {
-      tracingEnabled: true,
-      project: "model-comparison-default"
-    },
-  }),
+  modelComparison: (): TestConfig =>
+    createTestConfig({
+      llm: { llmModel: "llama3.2" },
+      langSmith: {
+        tracingEnabled: true,
+        project: "model-comparison-default",
+      },
+    }),
 } as const;
 
 // ============================================================================
@@ -246,7 +252,7 @@ export function cleanupTestEnvironment(): void {
  * @returns Test configuration ready for use
  */
 export function configureTest(
-  scenario: keyof typeof TEST_CONFIG_PRESETS | TestConfigOverrides = "minimal"
+  scenario: keyof typeof TEST_CONFIG_PRESETS | TestConfigOverrides = "minimal",
 ): TestConfig {
   let config: TestConfig;
 

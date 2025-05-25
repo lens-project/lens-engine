@@ -50,7 +50,7 @@ export interface HtmlExtractResult {
  */
 export function extractFromHtml(
   html: string,
-  _options: HtmlExtractOptions = {}
+  _options: HtmlExtractOptions = {},
 ): HtmlExtractResult {
   // Bootstrap implementation - just basic tag stripping
   const text = html.replace(/<[^>]+>/g, " ")
@@ -76,7 +76,7 @@ export function extractFromHtml(
  */
 export async function extractFromHtmlFile(
   filePath: string,
-  options: HtmlExtractOptions = {}
+  options: HtmlExtractOptions = {},
 ): Promise<HtmlExtractResult> {
   const html = await Deno.readTextFile(filePath);
   return extractFromHtml(html, options);

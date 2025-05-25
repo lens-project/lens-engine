@@ -73,7 +73,7 @@ Deno.test({
   async fn() {
     const result = await processHtmlContent(TEST_HTML, "microservices.html", {
       skipSummarization: false,
-      summaryTemperature: 0.1,  // Low temperature for consistent results
+      summaryTemperature: 0.1, // Low temperature for consistent results
     });
 
     assertEquals(result.success, true);
@@ -91,8 +91,7 @@ Deno.test({
 
       // Check that summary contains relevant terms
       const summary = result.metadata.summary.toLowerCase();
-      const hasRelevantTerms =
-        summary.includes("microservices") ||
+      const hasRelevantTerms = summary.includes("microservices") ||
         summary.includes("services") ||
         summary.includes("architecture") ||
         summary.includes("application");
@@ -101,10 +100,14 @@ Deno.test({
 
       console.log("Integration test - Summary generated:");
       console.log(result.metadata.summary);
-      console.log(`Processing time: ${result.metadata.summaryProcessingTime}ms`);
+      console.log(
+        `Processing time: ${result.metadata.summaryProcessingTime}ms`,
+      );
       console.log(`Model used: ${result.metadata.summaryModel}`);
     } else {
-      console.log("Summarization skipped or failed (expected if Ollama not running)");
+      console.log(
+        "Summarization skipped or failed (expected if Ollama not running)",
+      );
     }
   },
   sanitizeResources: false,
@@ -116,13 +119,19 @@ Deno.test("Integration - Lab code preservation", async () => {
   // This test verifies that lab implementations still exist and are unchanged
   try {
     // Check that lab files still exist
-    const labHtmlSummarizerExists = await Deno.stat("src/processors/lab/html_summarizer.ts");
+    const labHtmlSummarizerExists = await Deno.stat(
+      "src/processors/lab/html_summarizer.ts",
+    );
     assertEquals(labHtmlSummarizerExists.isFile, true);
 
-    const labOllamaClientExists = await Deno.stat("src/models/lab/ollama_client.ts");
+    const labOllamaClientExists = await Deno.stat(
+      "src/models/lab/ollama_client.ts",
+    );
     assertEquals(labOllamaClientExists.isFile, true);
 
-    console.log("✅ Lab code preservation verified - all lab files remain intact");
+    console.log(
+      "✅ Lab code preservation verified - all lab files remain intact",
+    );
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     throw new Error(`Lab code preservation failed: ${errorMessage}`);

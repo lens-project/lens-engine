@@ -2,22 +2,28 @@
 
 ## Overview
 
-This document outlines the design decisions and implementation plan for promoting the processors lab functionality to production-ready code.
+This document outlines the design decisions and implementation plan for
+promoting the processors lab functionality to production-ready code.
 
 ## Key Design Decisions
 
 ### 1. Architecture Pattern
+
 - **Content Extraction Layer**: Format-specific extractors (HTML, Markdown, PDF)
-- **Text Processing Layer**: Format-agnostic processors (summarize, analyze, translate)
-- **Orchestration Layer**: Controllers for batch, real-time, and streaming execution
+- **Text Processing Layer**: Format-agnostic processors (summarize, analyze,
+  translate)
+- **Orchestration Layer**: Controllers for batch, real-time, and streaming
+  execution
 
 ### 2. Code Organization Strategy
+
 - Keep lab code intact as proven concepts with working tests
 - Build fresh production code incorporating lessons learned
 - Use shallow directory structure to avoid deep nesting
 - Maintain clear separation between experimental and production code
 
 ### 3. Execution Strategy
+
 - Start with batch processing as foundation
 - Build controller abstraction for future real-time and streaming capabilities
 - Use bootstrap approach with simple implementations and smoke tests
@@ -67,7 +73,7 @@ processors/
 ```typescript
 /**
  * Shared Controller Types
- * 
+ *
  * Common interfaces used across all controllers for consistent
  * processing workflows and result handling.
  */
@@ -121,15 +127,19 @@ export interface BatchResult {
 /**
  * Progress callback for batch processing
  */
-export type ProgressCallback = (completed: number, total: number, current?: string) => void;
+export type ProgressCallback = (
+  completed: number,
+  total: number,
+  current?: string,
+) => void;
 ```
 
 ### HTML Content Controller: `src/controller/content/html.ts`
 
-```typescript
+````typescript
 /**
  * HTML Content Processing Controller
- * 
+ *
  * Handles the complete processing workflow for HTML content:
  * extraction → processing → output generation
  */
@@ -151,12 +161,12 @@ export interface HtmlProcessingOptions extends ProcessingOptions {
 
 /**
  * Process HTML content through the complete workflow
- * 
+ *
  * @param html - HTML content to process
  * @param identifier - Identifier for this content (filename, url, etc.)
  * @param options - HTML processing options
  * @returns Processing result with extracted content
- * 
+ *
  * @example
  * ```typescript
  * const html = "<h1>Title</h1><p>Content</p>";
@@ -168,7 +178,7 @@ export interface HtmlProcessingOptions extends ProcessingOptions {
 export async function processHtmlContent(
   html: string,
   identifier: string,
-  options: HtmlProcessingOptions = {}
+  options: HtmlProcessingOptions = {},
 ): Promise<ProcessingResult> {
   try {
     // Extract content using our HTML extractor
@@ -181,7 +191,7 @@ export async function processHtmlContent(
     // Future: This would continue to summarization, analysis, etc.
     // const processed = await summarizeContent(extracted.text, summaryOptions);
     // const saved = await saveContent(processed, outputPath);
-    
+
     return {
       success: true,
       input: identifier,
@@ -193,7 +203,7 @@ export async function processHtmlContent(
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    
+
     return {
       success: false,
       input: identifier,
@@ -204,21 +214,21 @@ export async function processHtmlContent(
 
 /**
  * Process HTML file through the complete workflow
- * 
+ *
  * @param filePath - Path to HTML file
  * @param options - HTML processing options
  * @returns Processing result
  */
 export async function processHtmlFile(
   filePath: string,
-  options: HtmlProcessingOptions = {}
+  options: HtmlProcessingOptions = {},
 ): Promise<ProcessingResult> {
   try {
     const html = await Deno.readTextFile(filePath);
     return await processHtmlContent(html, filePath, options);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    
+
     return {
       success: false,
       input: filePath,
@@ -226,24 +236,24 @@ export async function processHtmlFile(
     };
   }
 }
-```
+````
 
 ### Batch Processing Controller: `src/controller/processing/batch.ts`
 
-```typescript
+````typescript
 /**
  * Batch Processing Controller
- * 
+ *
  * Orchestrates batch processing workflows across different content types.
  * Handles concurrency, progress tracking, and error aggregation.
  */
 
 import { processHtmlFile } from "../content/html.ts";
-import type { 
-  ProcessingOptions, 
-  ProcessingResult, 
-  BatchResult, 
-  ProgressCallback 
+import type {
+  BatchResult,
+  ProcessingOptions,
+  ProcessingResult,
+  ProgressCallback,
 } from "../types.ts";
 
 /**
@@ -258,11 +268,11 @@ export interface BatchProcessingOptions extends ProcessingOptions {
 
 /**
  * Process multiple HTML files in batch
- * 
+ *
  * @param filePaths - Array of HTML file paths to process
  * @param options - Batch processing options
  * @returns Batch processing results
- * 
+ *
  * @example
  * ```typescript
  * const files = ["doc1.html", "doc2.html"];
@@ -274,7 +284,7 @@ export interface BatchProcessingOptions extends ProcessingOptions {
  */
 export async function processHtmlBatch(
   filePaths: string[],
-  options: BatchProcessingOptions = {}
+  options: BatchProcessingOptions = {},
 ): Promise<BatchResult> {
   const results: ProcessingResult[] = [];
   let successCount = 0;
@@ -284,7 +294,7 @@ export async function processHtmlBatch(
   // Future: Add concurrency control with options.maxConcurrency
   for (let i = 0; i < filePaths.length; i++) {
     const filePath = filePaths[i];
-    
+
     // Report progress
     if (options.onProgress) {
       options.onProgress(i, filePaths.length, filePath);
@@ -292,12 +302,12 @@ export async function processHtmlBatch(
 
     const result = await processHtmlFile(filePath, options);
     results.push(result);
-    
+
     if (result.success) {
       successCount++;
     } else {
       failureCount++;
-      
+
       // Stop on first error if continueOnError is false
       if (!options.continueOnError) {
         break;
@@ -320,59 +330,61 @@ export async function processHtmlBatch(
 
 /**
  * Process mixed content types in batch
- * 
+ *
  * Bootstrap implementation - currently only handles HTML files.
  * Future: Auto-detect file types and route to appropriate processors.
- * 
+ *
  * @param filePaths - Array of file paths to process
  * @param options - Batch processing options
  * @returns Batch processing results
  */
 export async function processMixedBatch(
   filePaths: string[],
-  options: BatchProcessingOptions = {}
+  options: BatchProcessingOptions = {},
 ): Promise<BatchResult> {
   // Bootstrap: Only handle HTML files for now
-  const htmlFiles = filePaths.filter(path => 
-    path.toLowerCase().endsWith('.html') || path.toLowerCase().endsWith('.htm')
+  const htmlFiles = filePaths.filter((path) =>
+    path.toLowerCase().endsWith(".html") || path.toLowerCase().endsWith(".htm")
   );
 
   if (htmlFiles.length !== filePaths.length) {
-    console.warn(`Only processing ${htmlFiles.length} HTML files out of ${filePaths.length} total files`);
+    console.warn(
+      `Only processing ${htmlFiles.length} HTML files out of ${filePaths.length} total files`,
+    );
   }
 
   return await processHtmlBatch(htmlFiles, options);
 }
-```
+````
 
 ### Module Exports: `src/controller/mod.ts`
 
 ```typescript
 /**
  * Controller Module
- * 
+ *
  * Exports all controller functionality for content processing workflows.
  */
 
 // Content controllers
 export {
+  type HtmlProcessingOptions,
   processHtmlContent,
   processHtmlFile,
-  type HtmlProcessingOptions,
 } from "./content/html.ts";
 
-// Processing controllers  
+// Processing controllers
 export {
+  type BatchProcessingOptions,
   processHtmlBatch,
   processMixedBatch,
-  type BatchProcessingOptions,
 } from "./processing/batch.ts";
 
 // Shared types
 export type {
+  BatchResult,
   ProcessingOptions,
   ProcessingResult,
-  BatchResult,
   ProgressCallback,
 } from "./types.ts";
 ```
@@ -381,10 +393,10 @@ export type {
 
 ### Source Code Example: `src/extract/html.ts`
 
-```typescript
+````typescript
 /**
  * HTML Content Extractor
- * 
+ *
  * Extracts plain text content from HTML documents, focusing on main content
  * while preserving important metadata like URLs.
  */
@@ -417,14 +429,14 @@ export interface HtmlExtractResult {
 
 /**
  * Extract plain text content from HTML
- * 
+ *
  * This function processes HTML content to extract the main text while
  * removing navigation, scripts, styles, and other non-content elements.
- * 
+ *
  * @param html - The HTML content to process
  * @param options - Extraction options
  * @returns Extracted text content and metadata
- * 
+ *
  * @example
  * ```typescript
  * const html = "<h1>Title</h1><p>Content</p>";
@@ -434,13 +446,13 @@ export interface HtmlExtractResult {
  */
 export function extractFromHtml(
   html: string,
-  options: HtmlExtractOptions = {}
+  options: HtmlExtractOptions = {},
 ): HtmlExtractResult {
   // Bootstrap implementation - just basic tag stripping
   const text = html.replace(/<[^>]+>/g, " ")
     .replace(/\s+/g, " ")
     .trim();
-  
+
   return {
     text,
     urls: [],
@@ -450,31 +462,34 @@ export function extractFromHtml(
 
 /**
  * Extract text from HTML file
- * 
+ *
  * @param filePath - Path to HTML file
  * @param options - Extraction options
  * @returns Promise resolving to extracted content
  */
 export async function extractFromHtmlFile(
   filePath: string,
-  options: HtmlExtractOptions = {}
+  options: HtmlExtractOptions = {},
 ): Promise<HtmlExtractResult> {
   const html = await Deno.readTextFile(filePath);
   return extractFromHtml(html, options);
 }
-```
+````
 
 ### Updated Controller Tests: `test/controller_test.ts`
 
 ```typescript
-import { assertEquals, assertExists } from "https://deno.land/std@0.224.0/assert/mod.ts";
 import {
+  assertEquals,
+  assertExists,
+} from "https://deno.land/std@0.224.0/assert/mod.ts";
+import {
+  type BatchResult,
+  processHtmlBatch,
   processHtmlContent,
   processHtmlFile,
-  processHtmlBatch,
-  processMixedBatch,
   type ProcessingResult,
-  type BatchResult,
+  processMixedBatch,
 } from "../src/controller/mod.ts";
 
 // Content Controller Tests
@@ -486,7 +501,7 @@ Deno.test("HTML Controller - module exists and exports", () => {
 Deno.test("HTML Controller - processHtmlContent success", async () => {
   const html = "<h1>Test Title</h1><p>This is test content.</p>";
   const result: ProcessingResult = await processHtmlContent(html, "test.html");
-  
+
   assertEquals(result.success, true);
   assertEquals(result.input, "test.html");
   assertEquals(typeof result.metadata?.wordCount, "number");
@@ -499,16 +514,16 @@ Deno.test("HTML Controller - processHtmlContent with options", async () => {
   const result = await processHtmlContent(html, "test.html", {
     preserveUrls: true,
     preserveHeadings: true,
-    outputDir: "/tmp/test"
+    outputDir: "/tmp/test",
   });
-  
+
   assertEquals(result.success, true);
   assertEquals(result.input, "test.html");
 });
 
 Deno.test("HTML Controller - processHtmlFile nonexistent", async () => {
   const result = await processHtmlFile("nonexistent.html");
-  
+
   assertEquals(result.success, false);
   assertEquals(result.input, "nonexistent.html");
   assertEquals(typeof result.error, "string");
@@ -522,7 +537,7 @@ Deno.test("Batch Controller - module exists and exports", () => {
 
 Deno.test("Batch Controller - processHtmlBatch empty array", async () => {
   const result: BatchResult = await processHtmlBatch([]);
-  
+
   assertEquals(result.totalItems, 0);
   assertEquals(result.successCount, 0);
   assertEquals(result.failureCount, 0);
@@ -532,14 +547,14 @@ Deno.test("Batch Controller - processHtmlBatch empty array", async () => {
 Deno.test("Batch Controller - processHtmlBatch with progress", async () => {
   const files = ["missing1.html", "missing2.html"];
   const progressCalls: Array<[number, number, string?]> = [];
-  
+
   const result = await processHtmlBatch(files, {
     continueOnError: true,
     onProgress: (completed, total, current) => {
       progressCalls.push([completed, total, current]);
-    }
+    },
   });
-  
+
   assertEquals(result.totalItems, 2);
   assertEquals(result.failureCount, 2);
   assertEquals(progressCalls.length > 0, true);
@@ -548,9 +563,9 @@ Deno.test("Batch Controller - processHtmlBatch with progress", async () => {
 Deno.test("Batch Controller - processMixedBatch filters file types", async () => {
   const files = ["test.html", "test.pdf", "test.txt", "test.htm"];
   const result = await processMixedBatch(files);
-  
+
   // Should only process HTML files
-  assertEquals(result.totalItems, 4);  // All files counted
+  assertEquals(result.totalItems, 4); // All files counted
   // Results depend on whether files exist, but structure should be correct
   assertEquals(Array.isArray(result.results), true);
 });
@@ -559,8 +574,14 @@ Deno.test("Batch Controller - processMixedBatch filters file types", async () =>
 ### Test Example: `test/extract/html_test.ts`
 
 ```typescript
-import { assertEquals, assertExists } from "https://deno.land/std@0.224.0/assert/mod.ts";
-import { extractFromHtml, extractFromHtmlFile } from "../../src/extract/html.ts";
+import {
+  assertEquals,
+  assertExists,
+} from "https://deno.land/std@0.224.0/assert/mod.ts";
+import {
+  extractFromHtml,
+  extractFromHtmlFile,
+} from "../../src/extract/html.ts";
 import type { HtmlExtractResult } from "../../src/extract/html.ts";
 
 Deno.test("HTML Extractor - module exists and exports", () => {
@@ -572,12 +593,12 @@ Deno.test("HTML Extractor - module exists and exports", () => {
 Deno.test("HTML Extractor - basic extraction", () => {
   const html = "<h1>Test Title</h1><p>Test content</p>";
   const result: HtmlExtractResult = extractFromHtml(html);
-  
+
   // Verify basic structure
   assertEquals(typeof result.text, "string");
   assertEquals(typeof result.wordCount, "number");
   assertEquals(Array.isArray(result.urls), true);
-  
+
   // Basic functionality test
   assertEquals(result.text.includes("Test Title"), true);
   assertEquals(result.text.includes("Test content"), true);
@@ -593,11 +614,11 @@ Deno.test("HTML Extractor - empty input", () => {
 
 Deno.test("HTML Extractor - with options", () => {
   const html = "<h1>Title</h1><p>Content</p>";
-  const result = extractFromHtml(html, { 
+  const result = extractFromHtml(html, {
     preserveUrls: true,
-    preserveHeadings: true 
+    preserveHeadings: true,
   });
-  
+
   // Just verify options are accepted without error
   assertExists(result);
   assertEquals(typeof result.text, "string");
@@ -621,7 +642,7 @@ Deno.test("HTML Extractor - file extraction", async () => {
 ```typescript
 /**
  * Content Extraction Module
- * 
+ *
  * This module provides functions to extract plain text content from
  * various document formats while preserving important metadata.
  */
@@ -648,28 +669,32 @@ export {
 ## Implementation Plan
 
 ### Phase 1: Bootstrap Structure
+
 1. Create directory structure
 2. Add bootstrap implementations for:
    - `src/extract/html.ts` (basic implementation)
-   - `src/extract/markdown.ts` (basic implementation)  
+   - `src/extract/markdown.ts` (basic implementation)
    - `src/process/summarize.ts` (stub implementation)
    - `src/controllers.ts` (stub implementation)
 3. Add corresponding smoke tests
 4. Verify module imports and exports work
 
 ### Phase 2: Core Implementation
+
 1. Implement robust HTML extraction (using lab learnings)
 2. Implement robust Markdown extraction (using lab learnings)
 3. Implement summarization processor (using lab Ollama integration)
 4. Add comprehensive tests with fixtures
 
 ### Phase 3: Controller Implementation
+
 1. Build batch processing controller
 2. Add error handling and progress tracking
 3. Implement configuration management
 4. Add integration tests
 
 ### Phase 4: Additional Features
+
 1. Add PDF extraction
 2. Add additional processors (analyze, translate)
 3. Implement real-time processing capabilities
@@ -678,11 +703,13 @@ export {
 ## Key Principles
 
 1. **Keep Labs Intact**: Lab code remains as working reference implementations
-2. **Bootstrap First**: Establish structure with simple implementations before complexity
+2. **Bootstrap First**: Establish structure with simple implementations before
+   complexity
 3. **Test-Driven**: Every module has tests from the start
 4. **Document Interfaces**: JSDoc serves as implementation specification
 5. **Incremental Development**: Build one component at a time with confidence
-6. **Clean Architecture**: Clear separation between extraction, processing, and orchestration
+6. **Clean Architecture**: Clear separation between extraction, processing, and
+   orchestration
 
 ## Next Steps
 

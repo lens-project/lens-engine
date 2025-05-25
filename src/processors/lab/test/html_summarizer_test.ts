@@ -17,23 +17,23 @@ import {
 import {
   createOutputFilename,
   extractTextFromHtml,
-  processHtmlFile,
   processHtmlDirectory,
+  processHtmlFile,
   summarizeContent,
 } from "../html_summarizer.ts";
 
 // Import test fixtures
 import {
-  SIMPLE_HTML,
   COMPLEX_HTML,
-  SPECIAL_CHARS_HTML,
+  COMPLEX_HTML_EXTRACTED_PARTS,
+  COMPLEX_HTML_SUMMARY,
   EMPTY_HTML,
   MALFORMED_HTML,
-  COMPLEX_HTML_EXTRACTED_PARTS,
-  SIMPLE_HTML_SUMMARY,
-  COMPLEX_HTML_SUMMARY,
   setupFileMocks,
   setupOllamaMock,
+  SIMPLE_HTML,
+  SIMPLE_HTML_SUMMARY,
+  SPECIAL_CHARS_HTML,
 } from "./fixtures/html_fixtures.ts";
 
 // IMPORTANT: Disable LangSmith tracing for tests
@@ -53,7 +53,10 @@ Deno.test({
 
     // Check that the text contains the main content
     assertStringIncludes(text, "Simple Article");
-    assertStringIncludes(text, "This is a simple test article with minimal content");
+    assertStringIncludes(
+      text,
+      "This is a simple test article with minimal content",
+    );
     assertStringIncludes(text, "It has just two paragraphs for basic testing");
   },
 });
@@ -65,7 +68,10 @@ Deno.test({
     const text = extractTextFromHtml(COMPLEX_HTML);
 
     // Print the full extracted text for debugging
-    console.log("COMPLEX HTML EXTRACTED TEXT (first 100 chars):", text.substring(0, 100));
+    console.log(
+      "COMPLEX HTML EXTRACTED TEXT (first 100 chars):",
+      text.substring(0, 100),
+    );
 
     // Check that the text contains the main content parts
     for (const part of COMPLEX_HTML_EXTRACTED_PARTS) {
@@ -90,7 +96,7 @@ Deno.test({
     // Check that special characters are handled correctly
     assertStringIncludes(text, "Special & Characters");
     assertStringIncludes(text, "<tag>");
-    assertStringIncludes(text, "\"quotes\"");
+    assertStringIncludes(text, '"quotes"');
     assertStringIncludes(text, "'apostrophe'");
   },
 });
@@ -157,8 +163,7 @@ Deno.test({
       // Check that the content contains some expected keywords
       // The actual response might use different wording, so we check for common terms
       const resultContent = result.content.toLowerCase();
-      const hasExpectedTerms =
-        resultContent.includes("article") ||
+      const hasExpectedTerms = resultContent.includes("article") ||
         resultContent.includes("test") ||
         resultContent.includes("paragraph") ||
         resultContent.includes("content") ||
@@ -197,13 +202,19 @@ Deno.test({
       assertEquals(result.content.length > 0, true);
       assertEquals(result.error, undefined);
 
-      console.log("Real Ollama summary:", result.content?.substring(0, 100) + "...");
+      console.log(
+        "Real Ollama summary:",
+        result.content?.substring(0, 100) + "...",
+      );
     } else {
       assertEquals(result.success, false);
       assertExists(result.error);
       assertEquals(result.content, undefined);
 
-      console.log("Real Ollama summarization failed (expected if Ollama is not running):", result.error);
+      console.log(
+        "Real Ollama summarization failed (expected if Ollama is not running):",
+        result.error,
+      );
     }
   },
   sanitizeResources: false,
@@ -246,8 +257,7 @@ Deno.test({
       // Check that the content contains some expected keywords
       // The actual response might use different wording, so we check for common terms
       const content = result.content.toLowerCase();
-      const hasExpectedTerms =
-        content.includes("article") ||
+      const hasExpectedTerms = content.includes("article") ||
         content.includes("content") ||
         content.includes("complex") ||
         content.includes("section") ||
@@ -304,7 +314,7 @@ Deno.test({
         return Promise.resolve({
           isDirectory: () => true,
           isFile: false,
-          isSymlink: false
+          isSymlink: false,
         } as unknown as Deno.FileInfo);
       }
       return originalStat(path);
@@ -316,7 +326,9 @@ Deno.test({
     Deno.mkdir = () => Promise.resolve();
 
     // Setup Ollama mock with TDD-related content
-    const ollamaMock = setupOllamaMock("Summary of TDD article: Test-Driven Development is a software development approach where tests are written before code. The process follows a Red-Green-Refactor cycle. Benefits include improved code quality, better design, documentation through tests, and confidence when refactoring.");
+    const ollamaMock = setupOllamaMock(
+      "Summary of TDD article: Test-Driven Development is a software development approach where tests are written before code. The process follows a Red-Green-Refactor cycle. Benefits include improved code quality, better design, documentation through tests, and confidence when refactoring.",
+    );
 
     try {
       // Process the HTML file
@@ -366,9 +378,19 @@ Deno.test({
 
     // Mock directory entries
     const mockEntries = [
-      { name: "file1.html", isFile: true, isDirectory: false, isSymlink: false },
+      {
+        name: "file1.html",
+        isFile: true,
+        isDirectory: false,
+        isSymlink: false,
+      },
       { name: "file2.htm", isFile: true, isDirectory: false, isSymlink: false },
-      { name: "not-html.txt", isFile: true, isDirectory: false, isSymlink: false },
+      {
+        name: "not-html.txt",
+        isFile: true,
+        isDirectory: false,
+        isSymlink: false,
+      },
       { name: "subdir", isFile: false, isDirectory: true, isSymlink: false },
     ];
 
@@ -382,7 +404,10 @@ Deno.test({
       return {
         next() {
           if (index < mockEntries.length) {
-            return Promise.resolve({ value: mockEntries[index++], done: false });
+            return Promise.resolve({
+              value: mockEntries[index++],
+              done: false,
+            });
           }
           return Promise.resolve({ done: true });
         },
@@ -416,9 +441,25 @@ Deno.test({
 
     // Mock Deno.stat
     // @ts-ignore: Mocking for test purposes
-    Deno.stat = () => Promise.resolve({
-      isDirectory: () => true
-    } as Deno.FileInfo);
+    Deno.stat = () =>
+      Promise.resolve({
+        isFile: () => false,
+        isDirectory: () => true,
+        isSymlink: () => false,
+        size: 0,
+        mtime: new Date(),
+        atime: new Date(),
+        birthtime: new Date(),
+        dev: 0,
+        ino: 0,
+        mode: 0,
+        nlink: 0,
+        uid: 0,
+        gid: 0,
+        rdev: 0,
+        blksize: 0,
+        blocks: 0,
+      } as unknown as Deno.FileInfo);
 
     // Setup Ollama mock
     const ollamaMock = setupOllamaMock(SIMPLE_HTML_SUMMARY);
@@ -431,7 +472,7 @@ Deno.test({
         {
           temperature: 0.1,
           langSmithTracing: false,
-        }
+        },
       );
 
       // Check the result
@@ -441,11 +482,13 @@ Deno.test({
       assertEquals(result.results.length, 2);
 
       // Check that both HTML files were processed
-      assertEquals(processedFiles.some(p => p.includes("file1.html")), true);
-      assertEquals(processedFiles.some(p => p.includes("file2.htm")), true);
+      assertEquals(processedFiles.some((p) => p.includes("file1.html")), true);
+      assertEquals(processedFiles.some((p) => p.includes("file2.htm")), true);
 
       console.log("Processed HTML directory successfully");
-      console.log(`Total files: ${result.totalFiles}, Success: ${result.successCount}, Failure: ${result.failureCount}`);
+      console.log(
+        `Total files: ${result.totalFiles}, Success: ${result.successCount}, Failure: ${result.failureCount}`,
+      );
     } finally {
       // Restore original functions
       Deno.readDir = originalReadDir;

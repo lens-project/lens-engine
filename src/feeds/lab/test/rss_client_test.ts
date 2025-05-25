@@ -18,19 +18,19 @@ import {
 
 // Import test fixtures
 import {
-  SIMPLE_RSS,
   COMPLEX_RSS,
-  SPECIAL_CHARS_RSS,
   EMPTY_RSS,
   MALFORMED_RSS,
   setupFileMocks,
-  setupNetworkMocks
+  setupNetworkMocks,
+  SIMPLE_RSS,
+  SPECIAL_CHARS_RSS,
 } from "./fixtures/fixtures.ts";
 
 Deno.test("fetchRssFeed - should fetch RSS feed successfully", async () => {
   // Setup network mock to return simple RSS
   const networkMock = setupNetworkMocks({
-    "example.com/feed": { content: SIMPLE_RSS, status: 200, ok: true }
+    "example.com/feed": { content: SIMPLE_RSS, status: 200, ok: true },
   });
 
   try {
@@ -44,7 +44,7 @@ Deno.test("fetchRssFeed - should fetch RSS feed successfully", async () => {
 Deno.test("fetchRssFeed - should handle fetch errors", async () => {
   // Setup network mock to return an error
   const networkMock = setupNetworkMocks({
-    "example.com/feed": { content: "Not Found", status: 404, ok: false }
+    "example.com/feed": { content: "Not Found", status: 404, ok: false },
   });
 
   try {
@@ -94,10 +94,13 @@ Deno.test("parseRssFeed - should handle special characters in RSS", () => {
   const feed = parseRssFeed(SPECIAL_CHARS_RSS);
 
   // The XML parser might decode entities or keep them as-is, so we check for either
-  const titleIsValid =
-    feed.title === "Special & Characters Feed" ||
+  const titleIsValid = feed.title === "Special & Characters Feed" ||
     feed.title === "Special &amp; Characters Feed";
-  assertEquals(titleIsValid, true, `Expected title to be either "Special & Characters Feed" or "Special &amp; Characters Feed", got "${feed.title}"`);
+  assertEquals(
+    titleIsValid,
+    true,
+    `Expected title to be either "Special & Characters Feed" or "Special &amp; Characters Feed", got "${feed.title}"`,
+  );
 
   // Same for item title
   const itemTitleIsValid =
@@ -175,7 +178,7 @@ Deno.test("saveRssFeed - should save RSS feed to file", async () => {
 Deno.test("fetchAndSaveRssFeed - should fetch, parse and save RSS feed", async () => {
   // Setup network mock
   const networkMock = setupNetworkMocks({
-    "example.com/feed": { content: COMPLEX_RSS, status: 200, ok: true }
+    "example.com/feed": { content: COMPLEX_RSS, status: 200, ok: true },
   });
 
   // Setup file system mocks

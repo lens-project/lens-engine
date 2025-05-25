@@ -66,7 +66,10 @@ export async function summarizeContent(
 
   try {
     // Load the prompt template from file
-    const promptPath = new URL("../../prompts/summarize-brief.txt", import.meta.url);
+    const promptPath = new URL(
+      "../../prompts/summarize-brief.txt",
+      import.meta.url,
+    );
     const promptTemplate = await Deno.readTextFile(promptPath);
 
     // Use the Ollama client with custom prompt
