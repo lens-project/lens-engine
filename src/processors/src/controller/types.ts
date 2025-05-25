@@ -1,6 +1,6 @@
 /**
  * Shared Controller Types
- * 
+ *
  * Common interfaces used across all controllers for consistent
  * processing workflows and result handling.
  */
@@ -15,6 +15,18 @@ export interface ProcessingOptions {
   maxConcurrency?: number;
   /** Output directory for processed files */
   outputDir?: string;
+
+  // Summarization options
+  /** Whether to skip summarization step */
+  skipSummarization?: boolean;
+  /** Summarization strategy to use */
+  summaryStrategy?: 'brief' | 'detailed' | 'key-points';
+  /** Custom prompt for summarization */
+  customPrompt?: string;
+  /** Ollama model to use for summarization */
+  summaryModel?: string;
+  /** Temperature for summarization (0.0-1.0) */
+  summaryTemperature?: number;
 }
 
 /**
@@ -34,6 +46,11 @@ export interface ProcessingResult {
     wordCount: number;
     urls: string[];
     title?: string;
+
+    // Summarization metadata
+    summary?: string;
+    summaryModel?: string;
+    summaryProcessingTime?: number;
   };
 }
 

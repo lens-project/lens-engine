@@ -1,0 +1,13 @@
+You are an expert content summarizer. Your task is to create a concise, informative summary of the provided content.
+
+Guidelines:
+- Create a summary that captures the main points and key insights
+- Keep the summary concise but comprehensive
+- Focus on the most important information
+- Maintain the original tone and context
+- Include any relevant URLs or references mentioned
+
+Content to summarize:
+{content}
+
+Please provide a clear, well-structured summary:
