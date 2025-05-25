@@ -2,11 +2,11 @@
 
 <p align="center">
     <a href="https://deepwiki.com/lens-project/lens-engine" alt="Ask DeepWiki">
-        <img src="https://img.shields.io/badge/Ask-DeepWiki-blue?style=for-the-badge&logo=question" /></a>
+        <img src="https://img.shields.io/badge/Ask-DeepWiki-blue?style=for-the-badge&logo=question" style="margin: 0 5px;" /></a>
     <a href="https://github.com/lens-project/lens-engine/issues" alt="GitHub Issues">
-        <img src="https://img.shields.io/github/issues/lens-project/lens-engine?style=for-the-badge" /></a>
+        <img src="https://img.shields.io/github/issues/lens-project/lens-engine?style=for-the-badge" style="margin: 0 5px;" /></a>
     <a href="https://github.com/lens-project/lens-engine/actions" alt="GitHub Workflow Status">
-        <img src="https://img.shields.io/github/actions/workflow/status/lens-project/lens-engine/deno.yml?style=for-the-badge" /></a>
+        <img src="https://img.shields.io/github/actions/workflow/status/lens-project/lens-engine/deno.yml?style=for-the-badge" style="margin: 0 5px;" /></a>
 </p>
 
 ## Overview
