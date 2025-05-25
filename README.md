@@ -7,8 +7,6 @@
         <img src="https://img.shields.io/github/issues/lens-project/lens-engine?style=for-the-badge" /></a>
     <a href="https://github.com/lens-project/lens-engine/actions" alt="GitHub Workflow Status">
         <img src="https://img.shields.io/github/actions/workflow/status/lens-project/lens-engine/deno.yml?style=for-the-badge" /></a>
-    <a href="https://opensource.org/licenses/MIT" alt="License: MIT">
-        <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" /></a>
 </p>
 
 ## Overview
