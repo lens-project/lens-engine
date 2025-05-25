@@ -1,12 +1,18 @@
 # Lens: Content-Aware Feed Aggregator
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/lens-project/lens-engine)
-
 <p align="center">
+    <a href="https://deepwiki.com/lens-project/lens-engine" alt="Ask DeepWiki">
+        <img src="https://img.shields.io/badge/Ask-DeepWiki-blue?style=for-the-badge&logo=question" /></a>
+    <a href="https://deno.land/" alt="Deno">
+        <img src="https://img.shields.io/badge/deno-%23000000.svg?style=for-the-badge&logo=deno&logoColor=white" /></a>
+    <a href="https://www.typescriptlang.org/" alt="TypeScript">
+        <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white" /></a>
     <a href="https://github.com/lens-project/lens-engine/issues" alt="GitHub Issues">
         <img src="https://img.shields.io/github/issues/lens-project/lens-engine?style=for-the-badge" /></a>
     <a href="https://github.com/lens-project/lens-engine/actions" alt="GitHub Workflow Status">
         <img src="https://img.shields.io/github/actions/workflow/status/lens-project/lens-engine/deno.yml?style=for-the-badge" /></a>
+    <a href="https://opensource.org/licenses/MIT" alt="License: MIT">
+        <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" /></a>
 </p>
 
 ## Overview
