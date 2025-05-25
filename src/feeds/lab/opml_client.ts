@@ -11,20 +11,20 @@
  */
 
 import { ensureDir } from "./rss_client.ts";
-import { 
-  fetchRssFeed, 
-  parseRssFeed, 
-  saveRssFeed, 
+import {
+  fetchRssFeed,
+  parseRssFeed,
+  saveRssFeed,
   type RssFeed,
-  type FetchOptions,
-  type SaveOptions
+  type FetchOptions as _FetchOptions,
+  type SaveOptions as _SaveOptions
 } from "./rss_client.ts";
-import { 
-  parseOpml, 
-  extractFeeds, 
+import {
+  parseOpml,
+  extractFeeds,
   getFeedsByCategory,
-  type OpmlDocument, 
-  type FeedSource 
+  type OpmlDocument,
+  type FeedSource
 } from "./opml_parser.ts";
 
 /**
@@ -85,7 +85,7 @@ export async function fetchFeedsFromOpml(
   try {
     // Load and parse the OPML file
     const opmlDocument = await loadOpmlFile(opmlOptions);
-    
+
     // Extract feeds, optionally filtering by category
     let feedSources: FeedSource[];
     if (fetchOptions.categoryFilter) {
@@ -93,12 +93,12 @@ export async function fetchFeedsFromOpml(
     } else {
       feedSources = extractFeeds(opmlDocument);
     }
-    
+
     // Set up concurrency control
     const maxConcurrent = fetchOptions.maxConcurrent || 5;
     const results: FeedFetchResult[] = [];
     const pendingPromises: Promise<void>[] = [];
-    
+
     // Process feeds with concurrency limit
     for (const source of feedSources) {
       // If we've reached the concurrency limit, wait for one to complete
@@ -117,19 +117,19 @@ export async function fetchFeedsFromOpml(
         );
         pendingPromises.splice(completedIndex, 1);
       }
-      
+
       // Create a new promise for this feed
       const promise = fetchSingleFeed(source, fetchOptions)
         .then(result => {
           results.push(result);
         });
-      
+
       pendingPromises.push(promise);
     }
-    
+
     // Wait for all remaining promises to complete
     await Promise.all(pendingPromises);
-    
+
     return results;
   } catch (error) {
     throw new Error(
@@ -156,9 +156,9 @@ async function fetchSingleFeed(
       url: source.xmlUrl,
       timeout: options.timeout
     });
-    
+
     const feed = parseRssFeed(xml);
-    
+
     return {
       source,
       feed
@@ -187,10 +187,10 @@ export async function fetchAndSaveFeedsFromOpml(
   try {
     // Ensure the save directory exists
     await ensureDir(saveDir);
-    
+
     // Fetch the feeds
     const results = await fetchFeedsFromOpml(opmlOptions, fetchOptions);
-    
+
     // Save each successfully fetched feed
     for (const result of results) {
       if (result.feed) {
@@ -200,7 +200,7 @@ export async function fetchAndSaveFeedsFromOpml(
         });
       }
     }
-    
+
     return results;
   } catch (error) {
     throw new Error(
@@ -233,37 +233,37 @@ if (import.meta.main) {
     const opmlPath = Deno.args[0] || "./tmp/data/opml/paz.opml";
     const category = Deno.args[1]; // Optional category filter
     const saveDir = "./tmp/data/feeds";
-    
+
     console.log(`Loading OPML file from ${opmlPath}...`);
-    
+
     // Create fetch options with category filter if provided
     const fetchOptions: OpmlFetchOptions = {
       timeout: 10000,
       maxConcurrent: 3
     };
-    
+
     if (category) {
       fetchOptions.categoryFilter = category;
       console.log(`Filtering feeds by category: ${category}`);
     }
-    
+
     // Fetch and save the feeds
     const results = await fetchAndSaveFeedsFromOpml(
       { path: opmlPath },
       fetchOptions,
       saveDir
     );
-    
+
     // Print summary
     const successful = results.filter(r => r.feed).length;
     const failed = results.filter(r => r.error).length;
-    
+
     console.log(`\nFeed fetching complete:`);
     console.log(`- Total feeds: ${results.length}`);
     console.log(`- Successfully fetched: ${successful}`);
     console.log(`- Failed: ${failed}`);
     console.log(`\nFeeds saved to ${saveDir}`);
-    
+
     // Print errors if any
     if (failed > 0) {
       console.log("\nErrors:");

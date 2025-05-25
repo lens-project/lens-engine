@@ -14,7 +14,7 @@ export async function loadConfig(): Promise<Result<AppConfig, ConfigError>> {
     let dotEnvConfig: Record<string, string> = {};
     try {
       dotEnvConfig = await load();
-    } catch (error) {
+    } catch (_error) {
       // .env file doesn't exist or couldn't be read - that's fine
       console.log(
         "No .env file found, using environment variables and defaults only",

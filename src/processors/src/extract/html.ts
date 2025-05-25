@@ -1,6 +1,6 @@
 /**
  * HTML Content Extractor
- * 
+ *
  * Extracts plain text content from HTML documents, focusing on main content
  * while preserving important metadata like URLs.
  */
@@ -33,14 +33,14 @@ export interface HtmlExtractResult {
 
 /**
  * Extract plain text content from HTML
- * 
+ *
  * This function processes HTML content to extract the main text while
  * removing navigation, scripts, styles, and other non-content elements.
- * 
+ *
  * @param html - The HTML content to process
  * @param options - Extraction options
  * @returns Extracted text content and metadata
- * 
+ *
  * @example
  * ```typescript
  * const html = "<h1>Title</h1><p>Content</p>";
@@ -50,16 +50,16 @@ export interface HtmlExtractResult {
  */
 export function extractFromHtml(
   html: string,
-  options: HtmlExtractOptions = {}
+  _options: HtmlExtractOptions = {}
 ): HtmlExtractResult {
   // Bootstrap implementation - just basic tag stripping
   const text = html.replace(/<[^>]+>/g, " ")
     .replace(/\s+/g, " ")
     .trim();
-  
+
   // Fix word count for empty strings
   const wordCount = text === "" ? 0 : text.split(/\s+/).length;
-  
+
   return {
     text,
     urls: [],
@@ -69,7 +69,7 @@ export function extractFromHtml(
 
 /**
  * Extract text from HTML file
- * 
+ *
  * @param filePath - Path to HTML file
  * @param options - Extraction options
  * @returns Promise resolving to extracted content
