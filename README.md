@@ -36,16 +36,16 @@ Lens is a next-generation feed aggregator that uses local AI models to intellige
 
 ```bash
 # Clone the repository
-git clone https://github.com/mpazaryna/lens.git
-cd lens
+git clone https://github.com/lens-project/lens-engine
+cd lens-engine
 
 # Update environment variables in .env file
 cp .env.example .env
+```
 
-# Optional: Use sample data for development
-# Set LENS_DATA_DIR in .env to point to the samples directory:
-# LENS_DATA_DIR=/path/to/lens/docs/samples
+### Running Tests
 
+```bash
 # Run the tests
 deno task test
 ```
@@ -74,7 +74,7 @@ To run the sample script to initialize the sample data, run the following comman
 
 ```bash
 cd scripts
-setup-example.sh
+setup.sh
 ```
 
 ## Architecture
