@@ -176,15 +176,15 @@ read -p "Initialize now? (y/n): " INITIALIZE
 if [ "$INITIALIZE" = "y" ] || [ "$INITIALIZE" = "Y" ]; then
     # Process OPML
     echo -e "\n${GREEN}Initializing feeds from OPML...${NC}"
-    (cd .. && deno run --allow-net --allow-read --allow-write src/feeds/lab/opml_feed_processor.ts)
+    (cd .. && deno run --allow-net --allow-read --allow-write src/feeds/src/opml_feed_processor.ts)
 
     # Fetch content
     echo -e "\n${GREEN}Fetching content...${NC}"
-    (cd .. && deno run --allow-net --allow-read --allow-write --allow-env --env src/retrieval/lab/content_fetcher.ts)
+    (cd .. && deno run --allow-net --allow-read --allow-write --allow-env --env src/retrieval/src/content_fetcher.ts)
 
     # Process content
     echo -e "\n${GREEN}Processing content...${NC}"
-    (cd .. && deno run --allow-net --allow-read --allow-write src/processors/lab/html_summarizer.ts)
+    (cd .. && deno run --allow-net --allow-read --allow-write --allow-env --env src/processors/cli.ts --overwrite -v)
 
     echo -e "\n${GREEN}Setup complete and data pipeline initialized!${NC}"
     echo -e "Your data is available at: ${DATA_DIR}"

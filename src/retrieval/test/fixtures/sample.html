@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sample Article for Testing</title>
+    <meta
+      name="description"
+      content="A sample article for testing the content fetcher"
+    >
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      header {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+      footer {
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+        margin-top: 20px;
+        color: #666;
+      }
+      h1 {
+        color: #333;
+      }
+      p {
+        line-height: 1.6;
+      }
+      .highlight {
+        background-color: #ffffd0;
+        padding: 10px;
+        border-radius: 5px;
+      }
+    </style>
+    <script>
+      // This script content should be removed during extraction
+      function logPageView() {
+        console.log("Page viewed");
+        return "This should not appear in extraction";
+      }
+      window.onload = logPageView;
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <nav>
+          <a href="/">Home</a> |
+          <a href="/articles">Articles</a> |
+          <a href="/about">About</a>
+        </nav>
+      </header>
+
+      <main>
+        <article>
+          <h1>Content Fetching and Processing</h1>
+
+          <p>
+            Content fetching is an essential part of web scraping and data
+            collection. This article explores the techniques and best practices
+            for fetching content from websites and processing it for further
+            analysis.
+          </p>
+
+          <h2>Fetching Techniques</h2>
+          <p>There are several approaches to fetching content from websites:</p>
+          <ol>
+            <li>Using HTTP clients like fetch or axios</li>
+            <li>Using headless browsers for JavaScript-heavy sites</li>
+            <li>Using specialized scraping libraries</li>
+          </ol>
+
+          <p>
+            Each approach has its own <strong>advantages and
+              limitations</strong> depending on the target website.
+          </p>
+
+          <h2>Processing Content</h2>
+          <p>
+            Once content is fetched, it needs to be processed. Common processing
+            steps include:
+          </p>
+          <ul>
+            <li>HTML parsing and extraction</li>
+            <li>Text cleaning and normalization</li>
+            <li>Data structuring and storage</li>
+            <li>Content analysis and summarization</li>
+          </ul>
+
+          <div class="highlight">
+            <p>
+              A key insight: Effective content processing requires understanding
+              the structure of the source material and having clear goals for
+              what information needs to be extracted.
+            </p>
+          </div>
+
+          <h2>Ethical Considerations</h2>
+          <p>
+            When fetching content from websites, it's important to consider:
+          </p>
+          <ul>
+            <li>Respecting robots.txt and site terms of service</li>
+            <li>Rate limiting requests to avoid overloading servers</li>
+            <li>Proper attribution of content sources</li>
+            <li>Privacy and data protection regulations</li>
+          </ul>
+
+          <p>
+            Responsible content fetching ensures that websites can continue to
+            provide valuable information without being negatively impacted by
+            automated access.
+          </p>
+
+          <h2>Conclusion</h2>
+          <p>
+            Content fetching and processing are powerful techniques for data
+            collection and analysis. By following best practices and ethical
+            guidelines, developers can create valuable tools and insights while
+            respecting the websites they interact with.
+          </p>
+        </article>
+      </main>
+
+      <footer>
+        <p>
+          &copy; 2025 Test Site | <a href="/privacy">Privacy Policy</a> | <a
+            href="/terms"
+          >Terms of Service</a>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
