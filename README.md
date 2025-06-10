@@ -113,3 +113,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Built with [Deno](https://deno.land/)
 - AI capabilities powered by [Ollama](https://ollama.ai/)
 - Inspired by traditional RSS readers and modern AI assistants
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/lens-project/lens-engine)
