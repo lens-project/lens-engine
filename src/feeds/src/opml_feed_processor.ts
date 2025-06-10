@@ -15,17 +15,17 @@ import {
   parseRssFeed,
   type RssFeed,
   saveRssFeed,
-} from "./lab/rss_client.ts";
+} from "./rss_client.ts";
 
 import {
   extractFeeds,
   type FeedSource,
   getFeedsByCategory,
   parseOpml,
-} from "./lab/opml_parser.ts";
+} from "./opml_parser.ts";
 
 import { join } from "@std/path";
-import { getConfig } from "../config/mod.ts";
+import { getConfig } from "../../config/mod.ts";
 
 /**
  * Options for processing feeds from an OPML file
@@ -208,10 +208,10 @@ function cleanAndSanitizeFilename(input: string): string {
 function cleanFeedContent(feed: RssFeed): void {
   if (feed.items) {
     for (const item of feed.items) {
-      if (item.content) {
+      if (typeof item.content === 'string') {
         item.content = cleanCdata(item.content);
       }
-      if (item.contentSnippet) {
+      if (typeof item.contentSnippet === 'string') {
         item.contentSnippet = cleanCdata(item.contentSnippet);
       }
     }
@@ -264,7 +264,7 @@ if (import.meta.main) {
         );
         Deno.exit(1);
       } else {
-        console.error(`Error checking OPML file: ${error.message}`);
+        console.error(`Error checking OPML file: ${error instanceof Error ? error.message : String(error)}`);
         Deno.exit(1);
       }
     }
@@ -305,7 +305,7 @@ if (import.meta.main) {
     // Exit with appropriate code
     Deno.exit(summary.failureCount > 0 ? 1 : 0);
   } catch (error) {
-    console.error(`Error: ${error.message}`);
+    console.error(`Error: ${error instanceof Error ? error.message : String(error)}`);
     Deno.exit(1);
   }
 }

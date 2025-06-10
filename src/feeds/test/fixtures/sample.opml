@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <head>
+    <title>Sample Feed Collection</title>
+    <dateCreated>Sat, 01 Jan 2023 12:00:00 GMT</dateCreated>
+    <ownerName>Test User</ownerName>
+  </head>
+  <body>
+    <outline title="Technology" text="Technology">
+      <outline type="rss" text="TechCrunch" title="TechCrunch" xmlUrl="https://techcrunch.com/feed/" htmlUrl="https://techcrunch.com" />
+      <outline type="rss" text="Wired" title="Wired" xmlUrl="https://www.wired.com/feed/rss" htmlUrl="https://www.wired.com" />
+      <outline title="Programming" text="Programming">
+        <outline type="rss" text="Hacker News" title="Hacker News" xmlUrl="https://news.ycombinator.com/rss" htmlUrl="https://news.ycombinator.com" />
+        <outline type="rss" text="Dev.to" title="Dev.to" xmlUrl="https://dev.to/feed" htmlUrl="https://dev.to" />
+      </outline>
+    </outline>
+    <outline title="News" text="News">
+      <outline type="rss" text="BBC News" title="BBC News" xmlUrl="http://feeds.bbci.co.uk/news/rss.xml" htmlUrl="https://www.bbc.com/news" />
+      <outline type="rss" text="CNN" title="CNN" xmlUrl="http://rss.cnn.com/rss/edition.rss" htmlUrl="https://www.cnn.com" />
+    </outline>
+    <outline title="Personal" text="Personal">
+      <outline type="rss" text="Austin Kleon" title="Austin Kleon" xmlUrl="https://austinkleon.com/feed/" htmlUrl="https://austinkleon.com" />
+    </outline>
+  </body>
+</opml>

@@ -65,7 +65,7 @@ OPML Parser → RSS Client → Feed Content → AI Processing
 
 ```bash
 # Fetch a single feed
-deno run --allow-net --allow-write src/feeds/lab/rss_client.ts https://example.com/feed
+deno run --allow-net --allow-write src/feeds/lab/rss_client.ts https://integralyogamagazine.org/feed
 
 # Process all feeds from an OPML file
 deno run --allow-net --allow-read --allow-write src/feeds/lab/opml_feed_processor.ts ./tmp/data/opml/subscriptions.opml
