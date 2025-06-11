@@ -10,19 +10,22 @@
 import {
   assertEquals,
   assertExists,
-} from "https://deno.land/std@0.224.0/assert/mod.ts";
+} from "@std/assert"; 
+
+
 import {
   createFilenameFromUrl,
   extractUrls,
   fetchAllContent,
   fetchAndSaveContent,
   fetchContent,
-  FetchResult,
   loadJsonFile,
   processBatch,
   sanitizeFilename,
   saveContent,
 } from "../src/content_fetcher.ts";
+
+import { FetchResult } from "../types.ts";
 
 // Import test fixtures
 import {

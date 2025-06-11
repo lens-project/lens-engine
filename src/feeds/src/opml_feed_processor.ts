@@ -25,7 +25,7 @@ import {
 } from "./opml_parser.ts";
 
 import { join } from "@std/path";
-import { getConfig } from "../../config/mod.ts";
+import { getConfig } from "@src/config/mod.ts";
 
 /**
  * Options for processing feeds from an OPML file

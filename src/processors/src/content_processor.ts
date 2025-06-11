@@ -6,15 +6,20 @@
  * error handling. Can be used as a standalone CLI or called from other modules.
  */
 
-import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
-import { ensureDir, exists } from "https://deno.land/std@0.224.0/fs/mod.ts";
-import { getConfig } from "../../config/mod.ts";
+import { join } from "@std/path";
+import { ensureDir, exists } from "@std/fs";
+import { getConfig } from "@src/config/mod.ts";
+
 import {
   type BatchProcessingOptions,
   type BatchResult,
   processHtmlBatch,
   processMixedBatch,
 } from "./controller/mod.ts";
+
+
+//import { type BatchProcessingOptions } from "./controller/types.ts";
+
 
 /**
  * CLI options parsed from command line arguments

@@ -9,7 +9,7 @@
 export * from "./types.ts";
 
 // Re-export defaults
-export { defaultDataDir } from "./defaults.ts";
+export { defaultDataDir } from "./src/defaults.ts";
 
 // Re-export loader functions
 export {
@@ -17,7 +17,7 @@ export {
   getConfigWithTestSupport,
   loadConfig,
   validateConfig,
-} from "./loader.ts";
+} from "./src/loader.ts";
 
 // Re-export test configuration utilities
 export {

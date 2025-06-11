@@ -9,14 +9,14 @@ export {
   type HtmlProcessingOptions,
   processHtmlContent,
   processHtmlFile,
-} from "./content/mod.ts";
+} from "./content/html.ts";
 
 // Processing controllers
 export {
   type BatchProcessingOptions,
   processHtmlBatch,
   processMixedBatch,
-} from "./processing/mod.ts";
+} from "./processing/batch.ts";
 
 // Shared types
 export type {
