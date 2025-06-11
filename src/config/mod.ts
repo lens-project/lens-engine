@@ -30,4 +30,4 @@ export {
   TEST_CONFIG_PRESETS,
   type TestConfig,
   type TestConfigOverrides,
-} from "./test-config.ts";
+} from "./src/testing.ts";

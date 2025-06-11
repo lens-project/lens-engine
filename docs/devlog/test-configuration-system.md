@@ -57,7 +57,7 @@ interface TestConfig {
 ## Implementation Plan
 
 ### ✅ Phase 1: Create Test Config System - **COMPLETED**
-- [x] Create `src/config/test-config.ts` with test configuration utilities
+- [x] Create `src/config/testing.ts` with test configuration utilities
 - [x] Add `createTestConfig()` helper function
 - [x] Modify config loader to support test mode
 - [x] Add environment detection for test vs production
@@ -159,7 +159,7 @@ const DEFAULT_TEST_CONFIG: TestConfig = {
 ## Files to Modify
 
 ### Phase 1
-- `src/config/test-config.ts` (new)
+- `src/config/testing.ts` (new)
 - `src/config/loader.ts` (modify)
 - `src/config/mod.ts` (export test utilities)
 
@@ -179,7 +179,7 @@ The system is designed to be extensible - future phases can build upon this foun
 **Phases 1 & 2 Successfully Completed!**
 
 ### What We Built:
-1. **Complete Test Configuration System** (`src/config/test-config.ts`)
+1. **Complete Test Configuration System** (`src/config/testing.ts`)
    - Test environment detection
    - Configurable test presets (minimal, integration, performance, modelComparison)
    - Environment setup and cleanup utilities

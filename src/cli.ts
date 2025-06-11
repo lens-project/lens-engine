@@ -20,10 +20,7 @@ import {
   type ContentFetcherOptions,
   fetchAllContent,
 } from "@src/retrieval/mod.ts";
-import {
-  type CliOptions as ProcessorOptions,
-  processContent,
-} from "@src/processors/mod.ts";
+import { processContent, type ProcessingOptions } from "@src/processors/mod.ts";
 
 /**
  * CLI command options
@@ -298,7 +295,7 @@ async function runContentProcessing(options: CliOptions): Promise<boolean> {
       console.log(`LLM Model: ${config.llm.llmModel}`);
     }
 
-    const processOptions: Partial<ProcessorOptions> = {
+    const processOptions: Partial<ProcessingOptions> = {
       input: fetchedDir,
       output: processedDir,
       overwrite: options.overwrite,
