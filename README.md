@@ -106,21 +106,21 @@ Lens is currently in active development. See the [project roadmap](docs/prd/road
 
 Here's a clean step-by-step workflow:
 
-## Release Process with GitHub Codespaces
+### Release Process with GitHub Codespaces
 
-### 1. Create the tag on GitHub
+#### 1. Create the tag on GitHub
 - Go to your repository on GitHub.com
 - Click **"Releases"** → **"Create a new release"**
 - Enter your tag version (e.g., `v1.0.0`) in **"Tag version"**
 - Optionally mark as **"Draft"** if you want to polish it later
 - Click **"Publish release"** (or **"Save draft"**)
 
-### 2. Open Codespace from the tagged repository
+#### 2. Open Codespace from the tagged repository
 - Still on your GitHub repo page, click the **"Code"** button
 - Switch to **"Codespaces"** tab
 - Click **"Create codespace on main"**
 
-### 3. Update and verify in Codespace
+#### 3. Update and verify in Codespace
 
 ```bash
 # Make sure you have the latest changes
@@ -130,7 +130,7 @@ git pull origin main
 git tag --list | grep v1.0.0
 ```
 
-### 4. Generate and update changelog
+#### 4. Generate and update changelog
 
 ```bash
 # Run your changelog script with the new tag
@@ -145,7 +145,7 @@ git commit -m "Update changelog for v1.0.0"
 git push origin main
 ```
 
-### 5. Update release (optional)
+#### 5. Update release (optional)
 
 - Go back to your GitHub release
 - Edit it to include the new changelog content in the release notes
