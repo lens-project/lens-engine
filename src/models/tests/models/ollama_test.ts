@@ -15,7 +15,7 @@ import {
   chatWithOllamaCustomPrompt,
   validateOllamaConnection,
 } from "../../src/providers/ollama/client.ts";
-import { cleanupTestEnvironment, configureTest } from "../../../config/mod.ts";
+import { cleanupTestEnvironment, configureTest } from "@src/config/mod.ts";
 
 // Test 1: Basic Ollama API validation
 Deno.test({

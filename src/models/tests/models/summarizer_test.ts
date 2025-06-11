@@ -14,7 +14,7 @@ import {
   type SummaryOptions,
   type SummaryResponse,
 } from "../../src/controller/summarizer.ts";
-import { cleanupTestEnvironment, configureTest } from "../../../config/mod.ts";
+import { cleanupTestEnvironment, configureTest } from "@src/config/mod.ts";
 
 // Test content
 const TEST_CONTENT = `

@@ -2,8 +2,8 @@ import {
   assertEquals,
   assertExists,
 } from "https://deno.land/std@0.224.0/assert/mod.ts";
-import { extractFromHtml, extractFromHtmlFile } from "../../src/extract/mod.ts";
-import type { HtmlExtractResult } from "../../src/extract/mod.ts";
+import { extractFromHtml, extractFromHtmlFile } from "../src/extract.ts";
+import type { HtmlExtractResult } from "../src/extract.ts";
 
 Deno.test("HTML Extractor - module exists and exports", () => {
   // Smoke test - just verify the module loads and function exists

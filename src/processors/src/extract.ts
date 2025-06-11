@@ -57,27 +57,47 @@ export function extractFromHtml(
     .replace(/\s+/g, " ")
     .trim();
 
-  // Fix word count for empty strings
-  const wordCount = text === "" ? 0 : text.split(/\s+/).length;
+  // Extract URLs (basic implementation)
+  const urlMatches = html.match(/href=["']([^"']+)["']/g) || [];
+  const urls = urlMatches.map((match) => {
+    const url = match.match(/href=["']([^"']+)["']/);
+    return url ? url[1] : "";
+  }).filter(Boolean);
+
+  // Extract title (basic implementation)
+  const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+  const title = titleMatch ? titleMatch[1].trim() : undefined;
+
+  // Count words
+  const wordCount = text.split(/\s+/).filter(Boolean).length;
 
   return {
     text,
-    urls: [],
+    urls,
+    title,
     wordCount,
   };
 }
 
 /**
- * Extract text from HTML file
+ * Extract content from an HTML file
  *
- * @param filePath - Path to HTML file
+ * @param filePath - Path to the HTML file
  * @param options - Extraction options
- * @returns Promise resolving to extracted content
+ * @returns Extracted content and metadata
  */
 export async function extractFromHtmlFile(
   filePath: string,
   options: HtmlExtractOptions = {},
 ): Promise<HtmlExtractResult> {
-  const html = await Deno.readTextFile(filePath);
-  return extractFromHtml(html, options);
+  try {
+    const html = await Deno.readTextFile(filePath);
+    return extractFromHtml(html, options);
+  } catch (error) {
+    throw new Error(
+      `Failed to read HTML file "${filePath}": ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+  }
 }

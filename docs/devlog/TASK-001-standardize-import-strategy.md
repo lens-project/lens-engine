@@ -102,14 +102,33 @@ import { ensureDir } from "https://deno.land/std@0.224.0/fs/mod.ts";
 
 3. **Standard library** uses existing import map aliases:
    ```typescript
-   // Instead of full URLs:
+   // Current (inconsistent with import map):
    import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
-   
-   // Use import map:
+   import { ensureDir } from "https://deno.land/std@0.224.0/fs/mod.ts";
+
+   // Should use configured import map:
    import { join } from "@std/path";
+   import { ensureDir } from "@std/fs";  // Need to add @std/fs to deno.json
    ```
 
-#### Phase 3: Update Existing Files
+#### Phase 3: Update Import Map Configuration
+
+1. **Add missing standard library mappings** to `deno.json`:
+   ```json
+   {
+     "imports": {
+       "std/": "jsr:/@std/",
+       "@std/assert": "jsr:@std/assert@^1.0.0",
+       "@std/dotenv": "https://deno.land/std@0.208.0/dotenv/mod.ts",
+       "@std/path": "https://deno.land/std@0.208.0/path/mod.ts",
+       "@std/fs": "https://deno.land/std@0.208.0/fs/mod.ts",  // Add this
+       "@src/": "./src/",
+       "@prompts/": "./prompts/"
+     }
+   }
+   ```
+
+#### Phase 4: Update Existing Files
 
 1. **Identify all files with mixed import patterns**
 2. **Update imports following the standardized strategy**
@@ -157,7 +176,8 @@ From `deno.json`:
 - [ ] `src/processors/mod.ts` created with clean public API
 - [ ] All imports within processors module use consistent strategy
 - [ ] External consumers use `@src/processors` import
-- [ ] Standard library imports use `@std/` aliases
+- [ ] `deno.json` updated with all needed standard library mappings
+- [ ] Standard library imports use configured `@std/` aliases (not direct URLs)
 - [ ] No mixed import patterns remain in any single file
 - [ ] All tests pass after refactoring
 - [ ] IDE navigation and autocomplete work correctly

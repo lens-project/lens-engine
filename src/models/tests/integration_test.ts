@@ -9,7 +9,7 @@ import {
   assertEquals,
   assertExists,
 } from "https://deno.land/std@0.224.0/assert/mod.ts";
-import { processHtmlContent } from "../../processors/src/controller/mod.ts";
+import { processHtmlContent } from "../../processors/src/html.ts";
 
 // IMPORTANT: Disable LangSmith tracing for tests
 Deno.env.set("LANGCHAIN_TRACING_V2", "false");

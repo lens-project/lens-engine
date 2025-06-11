@@ -5,13 +5,21 @@
  * Handles concurrency, progress tracking, and error aggregation.
  */
 
-import { processHtmlFile } from "../content/html.ts";
+import { processHtmlFile } from "./html.ts";
 import type {
   BatchResult,
   ProcessingOptions,
   ProcessingResult,
   ProgressCallback,
-} from "../types.ts";
+} from "./types.ts";
+
+// Re-export types for convenience
+export type {
+  BatchResult,
+  ProcessingOptions,
+  ProcessingResult,
+  ProgressCallback,
+};
 
 /**
  * Batch processing options

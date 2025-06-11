@@ -10,24 +10,20 @@
  * interface for both individual operations and complete pipeline execution.
  */
 
-import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
-import { getConfig } from "./config/mod.ts";
-
-// Import the main functions from each module
+import { join } from "@std/path";
+import { getConfig } from "@src/config/mod.ts";
 import {
   processFeedsFromOpml,
   type ProcessOptions as FeedProcessOptions,
-} from "./feeds/src/opml_feed_processor.ts";
-
+} from "@src/feeds/mod.ts";
 import {
   type ContentFetcherOptions,
   fetchAllContent,
-} from "./retrieval/src/content_fetcher.ts";
-
+} from "@src/retrieval/mod.ts";
 import {
   type CliOptions as ProcessorOptions,
   processContent,
-} from "./processors/src/content_processor.ts";
+} from "@src/processors/mod.ts";
 
 /**
  * CLI command options

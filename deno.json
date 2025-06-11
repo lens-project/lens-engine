@@ -8,6 +8,7 @@
   "imports": {
     "std/": "jsr:/@std/",
     "@std/assert": "jsr:@std/assert@^1.0.0",
+    "@std/fs": "https://deno.land/std@0.208.0/fs/mod.ts",
     "@std/dotenv": "https://deno.land/std@0.208.0/dotenv/mod.ts",
     "@std/path": "https://deno.land/std@0.208.0/path/mod.ts",
     "@hono/hono": "https://deno.land/x/hono@v3.11.11/mod.ts",

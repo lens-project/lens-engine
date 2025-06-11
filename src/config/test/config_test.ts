@@ -1,8 +1,8 @@
 // src/config/test/config_test.ts
 import { assertEquals, assertExists } from "@std/assert";
-import { loadConfig, validateConfig } from "@src/config/loader.ts";
+import { loadConfig, validateConfig } from "../src/loader.ts";
 import { AppConfig } from "../types.ts";
-import { defaultDataDir } from "../defaults.ts";
+import { defaultDataDir } from "../src/defaults.ts";
 
 // Mock environment setup
 const mockEnv = {
