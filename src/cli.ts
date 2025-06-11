@@ -20,10 +20,7 @@ import {
   type ContentFetcherOptions,
   fetchAllContent,
 } from "@src/retrieval/mod.ts";
-import {
-  type ProcessingOptions,
-  processContent,
-} from "@src/processors/mod.ts";
+import { processContent, type ProcessingOptions } from "@src/processors/mod.ts";
 
 /**
  * CLI command options

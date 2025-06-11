@@ -122,13 +122,17 @@ function createProgressCallback(verbose: boolean) {
   return (completed: number, total: number, current?: string) => {
     const timestamp = getTimestamp();
     if (verbose && current) {
-      console.log(`[${timestamp}] [${completed + 1}/${total}] Processing: ${current}`);
+      console.log(
+        `[${timestamp}] [${completed + 1}/${total}] Processing: ${current}`,
+      );
     } else if (completed === total) {
       console.log(`[${timestamp}] ✅ Completed processing ${total} files`);
     } else {
       // Simple progress indicator using console.log for Deno compatibility
       const percentage = Math.round((completed / total) * 100);
-      console.log(`[${timestamp}] ⏳ Progress: ${completed}/${total} (${percentage}%)`);
+      console.log(
+        `[${timestamp}] ⏳ Progress: ${completed}/${total} (${percentage}%)`,
+      );
     }
   };
 }
@@ -154,7 +158,11 @@ export async function processContent(
 
   console.log(`[${getTimestamp()}] 📁 Input: ${inputPath}`);
   console.log(`[${getTimestamp()}] 📁 Output: ${outputPath}`);
-  console.log(`[${getTimestamp()}] 🔧 Mode: ${options.mixed ? 'Mixed batch' : 'HTML only'}`);
+  console.log(
+    `[${getTimestamp()}] 🔧 Mode: ${
+      options.mixed ? "Mixed batch" : "HTML only"
+    }`,
+  );
 
   // Ensure directories exist
   if (!(await exists(inputPath))) {
@@ -173,7 +181,11 @@ export async function processContent(
     throw new Error("No files found to process");
   }
 
-  console.log(`[${getTimestamp()}] 📋 Found ${files.length} files to process (scan took ${formatDuration(fileDiscoveryTime)})`);
+  console.log(
+    `[${getTimestamp()}] 📋 Found ${files.length} files to process (scan took ${
+      formatDuration(fileDiscoveryTime)
+    })`,
+  );
 
   // Prepare batch processing options
   const batchOptions: BatchProcessingOptions = {
@@ -192,7 +204,9 @@ export async function processContent(
   };
 
   // Process files
-  console.log(`[${getTimestamp()}] ⚡ Starting batch processing of ${files.length} files...`);
+  console.log(
+    `[${getTimestamp()}] ⚡ Starting batch processing of ${files.length} files...`,
+  );
   const batchProcessingStart = performance.now();
 
   const result = options.mixed
@@ -204,16 +218,28 @@ export async function processContent(
 
   // Final summary
   console.log(`[${getTimestamp()}] 📊 Batch processing completed:`);
-  console.log(`[${getTimestamp()}]   • Files processed: ${result.successCount}`);
+  console.log(
+    `[${getTimestamp()}]   • Files processed: ${result.successCount}`,
+  );
   console.log(`[${getTimestamp()}]   • Files failed: ${result.failureCount}`);
-  console.log(`[${getTimestamp()}]   • Processing time: ${formatDuration(batchProcessingTime)}`);
-  console.log(`[${getTimestamp()}]   • Total time: ${formatDuration(totalTime)}`);
+  console.log(
+    `[${getTimestamp()}]   • Processing time: ${
+      formatDuration(batchProcessingTime)
+    }`,
+  );
+  console.log(
+    `[${getTimestamp()}]   • Total time: ${formatDuration(totalTime)}`,
+  );
 
   if (result.failureCount > 0) {
     console.log(`[${getTimestamp()}] ⚠️  Failed files:`);
-    const failedResults = result.results.filter(r => !r.success);
-    failedResults.forEach(failure => {
-      console.log(`[${getTimestamp()}]   • ${failure.input}: ${failure.error || 'Unknown error'}`);
+    const failedResults = result.results.filter((r) => !r.success);
+    failedResults.forEach((failure) => {
+      console.log(
+        `[${getTimestamp()}]   • ${failure.input}: ${
+          failure.error || "Unknown error"
+        }`,
+      );
     });
   }
 

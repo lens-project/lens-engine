@@ -1,14 +1,14 @@
 // processors/mod.ts
 export {
-  type ProcessingOptions,
-  processContent,
   type BatchResult,
+  processContent,
+  type ProcessingOptions,
 } from "./src/batch_processor.ts";
 
 // Re-export other module functionality
 export {
-  type ProcessingResult,
   processHtmlBatch,
+  type ProcessingResult,
   processMixedBatch,
 } from "./src/batch.ts";
 

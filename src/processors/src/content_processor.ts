@@ -6,7 +6,7 @@
  */
 
 import { processContent as processContentModule } from "./batch_processor.ts";
-import type { ProcessingOptions, BatchResult } from "./batch_processor.ts";
+import type { BatchResult, ProcessingOptions } from "./batch_processor.ts";
 
 /**
  * CLI options parsed from command line arguments
@@ -202,8 +202,12 @@ async function main(): Promise<void> {
     console.log("====================");
 
     if (options.verbose) {
-      console.log(`Processing mode: ${options.mixed ? "Mixed file types" : "HTML only"}`);
-      console.log(`Continue on error: ${options.continueOnError ? "Yes" : "No"}`);
+      console.log(
+        `Processing mode: ${options.mixed ? "Mixed file types" : "HTML only"}`,
+      );
+      console.log(
+        `Continue on error: ${options.continueOnError ? "Yes" : "No"}`,
+      );
       console.log("");
     }
 

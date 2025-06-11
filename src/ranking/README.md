@@ -1,27 +1,33 @@
 # Ranking Module
 
-The ranking module scores articles by relevance to user interests, helping determine which content is worth reading vs skipping.
+The ranking module scores articles by relevance to user interests, helping
+determine which content is worth reading vs skipping.
 
 ## Purpose
 
-Rather than relying on clickbait headlines, this module analyzes article summaries to predict personal relevance. It's the core intelligence layer that transforms an RSS reader from a fire hose of content into a curated feed.
+Rather than relying on clickbait headlines, this module analyzes article
+summaries to predict personal relevance. It's the core intelligence layer that
+transforms an RSS reader from a fire hose of content into a curated feed.
 
 ## Architecture
 
 ### Hybrid Approach (3-Phase Strategy)
 
 **Phase 1: LLM-Based Scoring** (Current)
+
 - Prompt-based scoring using local Ollama models
 - Returns score (0-10) with reasoning
 - Collects training data for future phases
 - ~25 seconds per article (development acceptable)
 
 **Phase 2: Embedding-Based Scoring** (Planned)
+
 - Fast similarity scoring using collected training data
 - Sub-second scoring for bulk processing
 - Cosine similarity between liked articles and new content
 
 **Phase 3: Hybrid System** (Target)
+
 - Embeddings for high-confidence scoring
 - LLM for edge cases and detailed analysis
 - Best of both worlds: speed + accuracy
@@ -41,17 +47,17 @@ ranking/
 
 ```typescript
 interface ScoringResult {
-  score: number;           // 0-10 relevance score
-  confidence: number;      // 0-1 confidence in score
-  method: 'llm' | 'embedding' | 'hybrid';
-  reasoning?: string;      // LLM explanation
-  categories?: string[];   // Content categories
+  score: number; // 0-10 relevance score
+  confidence: number; // 0-1 confidence in score
+  method: "llm" | "embedding" | "hybrid";
+  reasoning?: string; // LLM explanation
+  categories?: string[]; // Content categories
 }
 
 interface RankingContext {
-  dayOfWeek: string;      // Sunday = lighter content
-  timeOfDay: string;      // Morning = quick reads
-  userMood?: string;      // focused | casual | learning
+  dayOfWeek: string; // Sunday = lighter content
+  timeOfDay: string; // Morning = quick reads
+  userMood?: string; // focused | casual | learning
 }
 ```
 
@@ -79,7 +85,7 @@ const summary = await processor.summarize(article);
 const ranking = await ranker.score({
   title: article.title,
   summary: summary.content,
-  url: article.url
+  url: article.url,
 }, context);
 
 // Decision logic
@@ -91,10 +97,12 @@ return "skip";
 ## Performance Goals
 
 **Current (Phase 1)**
+
 - LLM scoring: ~25 seconds per article
 - Quality: High accuracy with reasoning
 
 **Target (Phase 3)**
+
 - Bulk scoring: <1 second per article (embeddings)
 - Detailed analysis: <10 seconds (LLM for edge cases)
 - Accuracy: Maintain or improve current quality
@@ -104,8 +112,11 @@ return "skip";
 - **Multi-Profile Support**: Work vs personal interest profiles
 - **Temporal Learning**: Adapt to changing interests over time
 - **Collaborative Filtering**: Learn from similar users (privacy-preserving)
-- **Content Type Awareness**: Different scoring for news vs tutorials vs opinion pieces
+- **Content Type Awareness**: Different scoring for news vs tutorials vs opinion
+  pieces
 
 ---
 
-*The name "ranker" chosen with intentional humor - because yes, having an AI pre-screen all your content is a bit of digital wanking, and we're okay with that.*
+_The name "ranker" chosen with intentional humor - because yes, having an AI
+pre-screen all your content is a bit of digital wanking, and we're okay with
+that._
