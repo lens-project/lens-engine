@@ -27,7 +27,12 @@
 
 import { ensureDir } from "@std/fs";
 import { join } from "@std/path";
-import { FetchOptions, SaveOptions, ContentFetcherOptions, FetchResult } from "../types.ts"
+import {
+  ContentFetcherOptions,
+  FetchOptions,
+  FetchResult,
+  SaveOptions,
+} from "../types.ts";
 
 /**
  * Sanitize a filename by removing invalid characters

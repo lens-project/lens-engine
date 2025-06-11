@@ -1,5 +1,2 @@
 // processors/mod.ts
-export {
-  processContent,
-  type CliOptions,
-} from "./src/content_processor.ts";
+export { type CliOptions, processContent } from "./src/content_processor.ts";

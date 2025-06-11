@@ -15,11 +15,7 @@ import {
   type BatchResult,
   processHtmlBatch,
   processMixedBatch,
-} from "./controller/mod.ts";
-
-
-//import { type BatchProcessingOptions } from "./controller/types.ts";
-
+} from "./batch.ts";
 
 /**
  * CLI options parsed from command line arguments

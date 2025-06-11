@@ -10,11 +10,20 @@
  * interface for both individual operations and complete pipeline execution.
  */
 
-import { join } from "@std/path"; 
-import { getConfig } from "@src/config/mod.ts"; 
-import { processFeedsFromOpml, type ProcessOptions as FeedProcessOptions } from "@src/feeds/mod.ts"; 
-import { fetchAllContent, type ContentFetcherOptions } from "@src/retrieval/mod.ts"; 
-import { processContent, type CliOptions as ProcessorOptions } from "@src/processors/mod.ts"; 
+import { join } from "@std/path";
+import { getConfig } from "@src/config/mod.ts";
+import {
+  processFeedsFromOpml,
+  type ProcessOptions as FeedProcessOptions,
+} from "@src/feeds/mod.ts";
+import {
+  type ContentFetcherOptions,
+  fetchAllContent,
+} from "@src/retrieval/mod.ts";
+import {
+  type CliOptions as ProcessorOptions,
+  processContent,
+} from "@src/processors/mod.ts";
 
 /**
  * CLI command options

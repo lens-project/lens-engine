@@ -7,11 +7,7 @@
  * The tests use fixtures and mocks to avoid making actual network requests during testing.
  */
 
-import {
-  assertEquals,
-  assertExists,
-} from "@std/assert"; 
-
+import { assertEquals, assertExists } from "@std/assert";
 
 import {
   createFilenameFromUrl,
