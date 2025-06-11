@@ -10,8 +10,8 @@ import type { ProcessingOptions, ProcessingResult } from "../types.ts";
 import {
   summarizeContent,
   type SummaryOptions,
-} from "../../../../models/mod.ts";
-import { getConfig } from "../../../../config/mod.ts";
+} from "@src/models/mod.ts";
+import { getConfig } from "@src/config/mod.ts";
 import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
 import { ensureDir } from "https://deno.land/std@0.224.0/fs/mod.ts";
 
@@ -177,7 +177,7 @@ ${metadata.summary}
 
 ## URLs
 
-${metadata.urls.map(url => `- ${url}`).join('\n')}
+${metadata.urls.map((url) => `- ${url}`).join("\n")}
 
 ---
 *Generated from: ${identifier}*
@@ -197,7 +197,7 @@ ${extracted.text}
 
 ## URLs
 
-${metadata.urls.map(url => `- ${url}`).join('\n')}
+${metadata.urls.map((url) => `- ${url}`).join("\n")}
 
 ---
 *Generated from: ${identifier}*
@@ -205,8 +205,11 @@ ${metadata.urls.map(url => `- ${url}`).join('\n')}
         }
 
         // Save the content
-        await saveProcessedContent(contentToSave, outputPath, options.overwrite);
-
+        await saveProcessedContent(
+          contentToSave,
+          outputPath,
+          options.overwrite,
+        );
       } catch (saveError) {
         console.warn(`Failed to save content for ${identifier}:`, saveError);
         // Don't fail the entire operation if saving fails

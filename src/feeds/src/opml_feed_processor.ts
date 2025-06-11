@@ -208,10 +208,10 @@ function cleanAndSanitizeFilename(input: string): string {
 function cleanFeedContent(feed: RssFeed): void {
   if (feed.items) {
     for (const item of feed.items) {
-      if (typeof item.content === 'string') {
+      if (typeof item.content === "string") {
         item.content = cleanCdata(item.content);
       }
-      if (typeof item.contentSnippet === 'string') {
+      if (typeof item.contentSnippet === "string") {
         item.contentSnippet = cleanCdata(item.contentSnippet);
       }
     }
@@ -264,7 +264,11 @@ if (import.meta.main) {
         );
         Deno.exit(1);
       } else {
-        console.error(`Error checking OPML file: ${error instanceof Error ? error.message : String(error)}`);
+        console.error(
+          `Error checking OPML file: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+        );
         Deno.exit(1);
       }
     }
@@ -305,7 +309,9 @@ if (import.meta.main) {
     // Exit with appropriate code
     Deno.exit(summary.failureCount > 0 ? 1 : 0);
   } catch (error) {
-    console.error(`Error: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(
+      `Error: ${error instanceof Error ? error.message : String(error)}`,
+    );
     Deno.exit(1);
   }
 }
