@@ -1,6 +1,4 @@
 <p align="center">
-    <a href="https://deepwiki.com/lens-project/lens-engine" alt="Ask DeepWiki">
-        <img src="https://img.shields.io/badge/Ask-DeepWiki-blue?style=for-the-badge&logo=question" style="margin: 0 10px;" /></a>
     <a href="https://github.com/lens-project/lens-engine/issues" alt="GitHub Issues">
         <img src="https://img.shields.io/github/issues/lens-project/lens-engine?style=for-the-badge" style="margin: 0 10px;" /></a>
     <a href="https://github.com/lens-project/lens-engine/actions" alt="GitHub Workflow Status">
@@ -12,6 +10,10 @@
 ## Overview
 
 Lens is a next-generation feed aggregator that uses local AI models to intelligently filter, rank, and recommend content from RSS feeds based on user interests. The system distinguishes between different content types (particularly video vs. article content) and uses specialized processing paths for each, learning user preferences for topics and content formats over time.
+
+## Detailed Wiki
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/lens-project/lens-engine)
 
 ## Key Features
 
@@ -100,6 +102,56 @@ flowchart TD
 
 Lens is currently in active development. See the [project roadmap](docs/prd/roadmap.md) for more details on upcoming features and milestones.
 
+## Update the changelog
+
+Here's a clean step-by-step workflow:
+
+## Release Process with GitHub Codespaces
+
+### 1. Create the tag on GitHub
+- Go to your repository on GitHub.com
+- Click **"Releases"** → **"Create a new release"**
+- Enter your tag version (e.g., `v1.0.0`) in **"Tag version"**
+- Optionally mark as **"Draft"** if you want to polish it later
+- Click **"Publish release"** (or **"Save draft"**)
+
+### 2. Open Codespace from the tagged repository
+- Still on your GitHub repo page, click the **"Code"** button
+- Switch to **"Codespaces"** tab
+- Click **"Create codespace on main"**
+
+### 3. Update and verify in Codespace
+
+```bash
+# Make sure you have the latest changes
+git pull origin main
+
+# Verify your new tag is available
+git tag --list | grep v1.0.0
+```
+
+### 4. Generate and update changelog
+
+```bash
+# Run your changelog script with the new tag
+./scripts/changelog.sh v1.0.0
+
+# Copy the script output and paste it into CHANGELOG.md
+# (Edit CHANGELOG.md with the generated content)
+
+# Commit the updated changelog
+git add CHANGELOG.md
+git commit -m "Update changelog for v1.0.0"
+git push origin main
+```
+
+### 5. Update release (optional)
+
+- Go back to your GitHub release
+- Edit it to include the new changelog content in the release notes
+
+Done! Clean, simple, and no fork complications.
+
 ## Contributing
 
 Contributions are welcome! Please see our [contributing guidelines](CONTRIBUTING.md) for more information.
@@ -113,5 +165,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Built with [Deno](https://deno.land/)
 - AI capabilities powered by [Ollama](https://ollama.ai/)
 - Inspired by traditional RSS readers and modern AI assistants
-
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/lens-project/lens-engine)
