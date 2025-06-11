@@ -7,10 +7,7 @@
 
 import { extractFromHtml, type HtmlExtractResult } from "../../extract/mod.ts";
 import type { ProcessingOptions, ProcessingResult } from "../types.ts";
-import {
-  summarizeContent,
-  type SummaryOptions,
-} from "@src/models/mod.ts";
+import { summarizeContent, type SummaryOptions } from "@src/models/mod.ts";
 import { getConfig } from "@src/config/mod.ts";
 import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
 import { ensureDir } from "https://deno.land/std@0.224.0/fs/mod.ts";
