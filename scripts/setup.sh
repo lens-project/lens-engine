@@ -174,29 +174,21 @@ echo -e "\n${YELLOW}Would you like to initialize the data pipeline now?${NC}"
 read -p "Initialize now? (y/n): " INITIALIZE
 
 if [ "$INITIALIZE" = "y" ] || [ "$INITIALIZE" = "Y" ]; then
-    # Process OPML
-    echo -e "\n${GREEN}Initializing feeds from OPML...${NC}"
-    (cd .. && deno run --allow-net --allow-read --allow-write src/feeds/lab/opml_feed_processor.ts)
-
-    # Fetch content
-    echo -e "\n${GREEN}Fetching content...${NC}"
-    (cd .. && deno run --allow-net --allow-read --allow-write --allow-env --env src/retrieval/lab/content_fetcher.ts)
-
-    # Process content
-    echo -e "\n${GREEN}Processing content...${NC}"
-    (cd .. && deno run --allow-net --allow-read --allow-write src/processors/lab/html_summarizer.ts)
+    # Run the unified CLI pipeline
+    echo -e "\n${GREEN}Running complete data pipeline...${NC}"
+    (cd .. && deno run --allow-net --allow-read --allow-write --allow-env --env src/cli.ts --overwrite --verbose --continue-on-error)
 
     echo -e "\n${GREEN}Setup complete and data pipeline initialized!${NC}"
     echo -e "Your data is available at: ${DATA_DIR}"
 else
     echo -e "\n${GREEN}Setup complete!${NC}"
-    echo -e "To initialize your data pipeline later, run the following commands from the project root:"
-    echo -e "\n${BLUE}# Initialize feeds${NC}"
-    echo "deno run --allow-net --allow-read --allow-write src/feeds/lab/opml_feed_processor.ts"
-    echo -e "\n${BLUE}# Fetch content${NC}"
-    echo "deno run --allow-net --allow-read --allow-write --allow-env --env src/retrieval/lab/content_fetcher.ts"
-    echo -e "\n${BLUE}# Process content${NC}"
-    echo "deno run --allow-net --allow-read --allow-write src/processors/lab/html_summarizer.ts"
+    echo -e "To initialize your data pipeline later, run the following command from the project root:"
+    echo -e "\n${BLUE}# Run complete pipeline${NC}"
+    echo "deno run --allow-net --allow-read --allow-write --allow-env --env src/cli.ts"
+    echo -e "\n${BLUE}# Or run individual operations:${NC}"
+    echo "deno run --allow-net --allow-read --allow-write --allow-env --env src/cli.ts --feeds-only"
+    echo "deno run --allow-net --allow-read --allow-write --allow-env --env src/cli.ts --fetch-only"
+    echo "deno run --allow-net --allow-read --allow-write --allow-env --env src/cli.ts --process-only"
 fi
 
 echo -e "\n${BLUE}=================================================${NC}"

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Sample RSS Feed</title>
+    <link>https://example.com</link>
+    <description>A sample RSS feed for testing</description>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 03 Jan 2023 12:00:00 GMT</lastBuildDate>
+    <item>
+      <title>First Article</title>
+      <link>https://example.com/first-article</link>
+      <pubDate>Mon, 01 Jan 2023 12:00:00 GMT</pubDate>
+      <dc:creator>Test Author</dc:creator>
+      <category>Technology</category>
+      <category>Web</category>
+      <description>This is the first article in our sample feed.</description>
+      <content:encoded><![CDATA[<p>This is the full content of the first article with <strong>rich</strong> HTML formatting.</p><p>It includes multiple paragraphs and <a href="https://example.com">links</a>.</p>]]></content:encoded>
+      <guid isPermaLink="true">https://example.com/first-article</guid>
+    </item>
+    <item>
+      <title>Second Article</title>
+      <link>https://example.com/second-article</link>
+      <pubDate>Tue, 02 Jan 2023 12:00:00 GMT</pubDate>
+      <dc:creator>Another Author</dc:creator>
+      <category>Science</category>
+      <description>This is the second article in our sample feed.</description>
+      <content:encoded><![CDATA[<p>More rich content here for the second article.</p>]]></content:encoded>
+      <guid>unique-id-12345</guid>
+    </item>
+    <item>
+      <title>Third Article</title>
+      <link>https://example.com/third-article</link>
+      <pubDate>Wed, 03 Jan 2023 12:00:00 GMT</pubDate>
+      <dc:creator>Test Author</dc:creator>
+      <category>Technology</category>
+      <description>This is the third article in our sample feed.</description>
+      <content:encoded><![CDATA[<p>Content for the third article.</p>]]></content:encoded>
+      <guid isPermaLink="true">https://example.com/third-article</guid>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,49 @@
+{
+  "title": "Sample Test Feed",
+  "link": "https://example.com",
+  "description": "A sample feed for testing the content fetcher",
+  "language": "en",
+  "copyright": "Copyright 2025",
+  "items": [
+    {
+      "title": "Content Fetching and Processing",
+      "link": "https://example.com/content-fetching",
+      "pubDate": "2025-01-01",
+      "author": "Test Author",
+      "categories": ["Technology", "Web Development"],
+      "content": "An article about content fetching and processing techniques."
+    },
+    {
+      "title": "Web Scraping Best Practices",
+      "link": "https://example.com/web-scraping",
+      "pubDate": "2025-01-02",
+      "author": "Test Author",
+      "categories": ["Technology", "Data Collection"],
+      "content": "Learn about the best practices for web scraping."
+    },
+    {
+      "title": "Data Processing Pipelines",
+      "link": "https://example.com/data-processing",
+      "pubDate": "2025-01-03",
+      "author": "Test Author",
+      "categories": ["Technology", "Data Science"],
+      "content": "How to build effective data processing pipelines."
+    },
+    {
+      "title": "Ethical Web Scraping",
+      "link": "https://example.com/ethical-scraping",
+      "pubDate": "2025-01-04",
+      "author": "Test Author",
+      "categories": ["Technology", "Ethics"],
+      "content": "Ethical considerations for web scraping projects."
+    },
+    {
+      "title": "Content Analysis Techniques",
+      "link": "https://example.com/content-analysis",
+      "pubDate": "2025-01-05",
+      "author": "Test Author",
+      "categories": ["Technology", "Data Analysis"],
+      "content": "Techniques for analyzing and understanding web content."
+    }
+  ]
+}
