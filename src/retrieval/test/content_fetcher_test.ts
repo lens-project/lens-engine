@@ -7,22 +7,21 @@
  * The tests use fixtures and mocks to avoid making actual network requests during testing.
  */
 
-import {
-  assertEquals,
-  assertExists,
-} from "https://deno.land/std@0.224.0/assert/mod.ts";
+import { assertEquals, assertExists } from "@std/assert";
+
 import {
   createFilenameFromUrl,
   extractUrls,
   fetchAllContent,
   fetchAndSaveContent,
   fetchContent,
-  FetchResult,
   loadJsonFile,
   processBatch,
   sanitizeFilename,
   saveContent,
 } from "../src/content_fetcher.ts";
+
+import { FetchResult } from "../types.ts";
 
 // Import test fixtures
 import {

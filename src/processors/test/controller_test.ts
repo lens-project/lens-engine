@@ -5,11 +5,10 @@ import {
 import {
   type BatchResult,
   processHtmlBatch,
-  processHtmlContent,
-  processHtmlFile,
-  type ProcessingResult,
   processMixedBatch,
-} from "../../src/controller/mod.ts";
+} from "../src/batch.ts";
+import { processHtmlContent, processHtmlFile } from "../src/html.ts";
+import type { ProcessingResult } from "../src/types.ts";
 
 // Content Controller Tests
 Deno.test("HTML Controller - module exists and exports", () => {

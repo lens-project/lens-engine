@@ -2,7 +2,7 @@
 import { load } from "@std/dotenv";
 import { join } from "@std/path";
 import { Err, Ok, Result } from "@monads";
-import { AppConfig, ConfigError } from "./types.ts";
+import { AppConfig, ConfigError } from "../types.ts";
 import { defaultDataDir } from "./defaults.ts";
 
 /**
@@ -135,7 +135,7 @@ export async function getConfigWithTestSupport(
   testConfig?: AppConfig,
 ): Promise<AppConfig> {
   // Import test utilities dynamically to avoid circular dependencies
-  const { isTestEnvironment } = await import("./test-config.ts");
+  const { isTestEnvironment } = await import("../test-config.ts");
 
   if (isTestEnvironment() && testConfig) {
     return testConfig;

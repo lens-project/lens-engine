@@ -23,67 +23,16 @@
  *   concurrency: 3
  * });
  * ```
- *
- * @module content_fetcher
- * @lab Experimental content fetcher for downloading and storing web content
- * @version 0.1.0
- * @author Lens Team
  */
 
-import { ensureDir } from "https://deno.land/std@0.224.0/fs/mod.ts";
-import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
-
-/**
- * Options for fetching content
- */
-export interface FetchOptions {
-  /** URL to fetch content from */
-  url: string;
-  /** Timeout in milliseconds (default: 10000) */
-  timeout?: number;
-  /** User agent string to use for the request (default: Mozilla/5.0...) */
-  userAgent?: string;
-}
-
-/**
- * Options for saving content
- */
-export interface SaveOptions {
-  /** Path where the content should be saved */
-  path: string;
-  /** Whether to overwrite existing files (default: false) */
-  overwrite?: boolean;
-}
-
-/**
- * Options for the content fetcher
- */
-export interface ContentFetcherOptions {
-  /** Path to the JSON file containing URLs to fetch */
-  jsonPath: string;
-  /** Directory where fetched content should be saved */
-  outputDir: string;
-  /** Number of concurrent fetches (default: 2) */
-  concurrency?: number;
-  /** Whether to overwrite existing files (default: false) */
-  overwrite?: boolean;
-  /** Default timeout for fetch operations in milliseconds (default: 10000) */
-  timeout?: number;
-}
-
-/**
- * Result of a fetch operation
- */
-export interface FetchResult {
-  /** URL that was fetched */
-  url: string;
-  /** Whether the fetch was successful */
-  success: boolean;
-  /** Path where the content was saved (if successful) */
-  path?: string;
-  /** Error message (if unsuccessful) */
-  error?: string;
-}
+import { ensureDir } from "@std/fs";
+import { join } from "@std/path";
+import {
+  ContentFetcherOptions,
+  FetchOptions,
+  FetchResult,
+  SaveOptions,
+} from "../types.ts";
 
 /**
  * Sanitize a filename by removing invalid characters

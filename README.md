@@ -74,7 +74,7 @@ To run the sample script to initialize the sample data, run the following comman
 
 ```bash
 cd scripts
-setup.sh
+./setup.sh
 ```
 
 ## Architecture
