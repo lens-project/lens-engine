@@ -117,6 +117,8 @@ For detailed examples and explanations, see our [Functional Programming Guide](.
 - Follow the TypeScript best practices
 - Use consistent formatting (the project uses Deno's built-in formatter)
 - Run `deno fmt` before committing to ensure consistent formatting
+- Run `deno fmt --check` to verify formatting before committing
+- Run `deno lint` before committing to ensure code quality
 - Follow the existing code structure and patterns
 - Use meaningful variable and function names
 - Include comments for complex logic
