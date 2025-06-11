@@ -1,50 +1,19 @@
 /**
- * Content Processor Module
+ * Content Processor CLI
  *
- * Provides content processing functionality for the lens-engine system.
- * Supports HTML batch processing with progress tracking and comprehensive
- * error handling. Can be used as a standalone CLI or called from other modules.
+ * Standalone CLI for content processing operations.
+ * Wraps the batch_processor module with command-line interface.
  */
 
-import { join } from "@std/path";
-import { ensureDir, exists } from "@std/fs";
-import { getConfig } from "@src/config/mod.ts";
-
-import {
-  type BatchProcessingOptions,
-  type BatchResult,
-  processHtmlBatch,
-  processMixedBatch,
-} from "./batch.ts";
+import { processContent as processContentModule } from "./batch_processor.ts";
+import type { ProcessingOptions, BatchResult } from "./batch_processor.ts";
 
 /**
  * CLI options parsed from command line arguments
  */
-export interface CliOptions {
-  /** Input directory or file path */
-  input?: string;
-  /** Output directory path */
-  output?: string;
-  /** Whether to process all file types (mixed batch) */
-  mixed?: boolean;
-  /** Whether to continue processing after errors */
-  continueOnError?: boolean;
-  /** Maximum concurrency (future feature) */
-  maxConcurrency?: number;
-  /** Whether to overwrite existing files */
-  overwrite?: boolean;
+export interface CliOptions extends ProcessingOptions {
   /** Show help information */
   help?: boolean;
-  /** Enable verbose output */
-  verbose?: boolean;
-  /** Whether to skip summarization */
-  skipSummarization?: boolean;
-  /** Summarization strategy */
-  summaryStrategy?: "brief" | "detailed" | "key-points";
-  /** Custom model for summarization */
-  summaryModel?: string;
-  /** Temperature for summarization */
-  summaryTemperature?: number;
 }
 
 /**
@@ -168,67 +137,6 @@ CONFIGURATION:
 }
 
 /**
- * Get list of files to process from input path
- */
-async function getFilesToProcess(
-  inputPath: string,
-  mixed: boolean = false,
-): Promise<string[]> {
-  const files: string[] = [];
-
-  try {
-    const stat = await Deno.stat(inputPath);
-
-    if (stat.isFile) {
-      // Single file
-      files.push(inputPath);
-    } else if (stat.isDirectory) {
-      // Directory - scan for files
-      for await (const entry of Deno.readDir(inputPath)) {
-        if (entry.isFile) {
-          const filePath = join(inputPath, entry.name);
-
-          if (mixed) {
-            // Accept all files for mixed processing
-            files.push(filePath);
-          } else {
-            // Only HTML files for HTML-only processing
-            const ext = entry.name.toLowerCase();
-            if (ext.endsWith(".html") || ext.endsWith(".htm")) {
-              files.push(filePath);
-            }
-          }
-        }
-      }
-    }
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    throw new Error(
-      `Failed to read input path "${inputPath}": ${errorMessage}`,
-    );
-  }
-
-  return files.sort(); // Sort for consistent processing order
-}
-
-/**
- * Progress callback for batch processing
- */
-function createProgressCallback(verbose: boolean) {
-  return (completed: number, total: number, current?: string) => {
-    if (verbose && current) {
-      console.log(`[${completed + 1}/${total}] Processing: ${current}`);
-    } else if (completed === total) {
-      console.log(`✅ Completed processing ${total} files`);
-    } else {
-      // Simple progress indicator using console.log for Deno compatibility
-      const percentage = Math.round((completed / total) * 100);
-      console.log(`⏳ Progress: ${completed}/${total} (${percentage}%)`);
-    }
-  };
-}
-
-/**
  * Display batch processing results
  */
 function displayResults(result: BatchResult, verbose: boolean): void {
@@ -268,54 +176,12 @@ function displayResults(result: BatchResult, verbose: boolean): void {
 
 /**
  * Main processing function that can be called from other modules
+ * Delegates to the clean batch_processor module
  */
 export async function processContent(
-  options: Partial<CliOptions> = {},
+  options: Partial<ProcessingOptions> = {},
 ): Promise<BatchResult> {
-  // Load configuration
-  const config = await getConfig();
-  const dataDir = config.core.dataDir;
-
-  // Determine input and output paths
-  const inputPath = options.input || join(dataDir, "fetched");
-  const outputPath = options.output || join(dataDir, "processed");
-
-  // Ensure directories exist
-  if (!(await exists(inputPath))) {
-    throw new Error(`Input path does not exist: ${inputPath}`);
-  }
-
-  await ensureDir(outputPath);
-
-  // Get files to process
-  const files = await getFilesToProcess(inputPath, options.mixed);
-
-  if (files.length === 0) {
-    throw new Error("No files found to process");
-  }
-
-  // Prepare batch processing options
-  const batchOptions: BatchProcessingOptions = {
-    outputDir: outputPath,
-    overwrite: options.overwrite,
-    continueOnError: options.continueOnError,
-    maxConcurrency: options.maxConcurrency,
-    onProgress: options.verbose
-      ? createProgressCallback(options.verbose)
-      : undefined,
-    // Summarization options
-    skipSummarization: options.skipSummarization,
-    summaryStrategy: options.summaryStrategy,
-    summaryModel: options.summaryModel || config.llm.llmModel,
-    summaryTemperature: options.summaryTemperature ?? 0.7,
-  };
-
-  // Process files
-  const result = options.mixed
-    ? await processMixedBatch(files, batchOptions)
-    : await processHtmlBatch(files, batchOptions);
-
-  return result;
+  return await processContentModule(options);
 }
 
 /**
@@ -335,32 +201,15 @@ async function main(): Promise<void> {
     console.log("Content Processor CLI");
     console.log("====================");
 
-    // Load configuration for display
-    const config = await getConfig();
-    const dataDir = config.core.dataDir;
-    const inputPath = options.input || join(dataDir, "fetched");
-    const outputPath = options.output || join(dataDir, "processed");
-
-    console.log(`Input directory: ${inputPath}`);
-    console.log(`Output directory: ${outputPath}`);
-    console.log(
-      `Processing mode: ${options.mixed ? "Mixed file types" : "HTML only"}`,
-    );
-    console.log(`LLM Model: ${config.llm.llmModel}`);
-    console.log(`Continue on error: ${options.continueOnError ? "Yes" : "No"}`);
-    console.log("");
-
-    // Check if files exist before processing
-    const files = await getFilesToProcess(inputPath, options.mixed);
-    if (files.length === 0) {
-      console.log("⚠️  No files found to process");
-      return;
+    if (options.verbose) {
+      console.log(`Processing mode: ${options.mixed ? "Mixed file types" : "HTML only"}`);
+      console.log(`Continue on error: ${options.continueOnError ? "Yes" : "No"}`);
+      console.log("");
     }
 
-    console.log(`Found ${files.length} files to process`);
     console.log("🚀 Starting batch processing...\n");
 
-    // Process content using the exported function
+    // Process content using the module
     const result = await processContent(options);
 
     // Display results

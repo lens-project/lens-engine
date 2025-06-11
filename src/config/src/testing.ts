@@ -12,7 +12,7 @@
  * - Support for future A/B testing and model comparison
  */
 
-import type { AppConfig } from "./types.ts";
+import type { AppConfig } from "../types.ts";
 
 // ============================================================================
 // Test Configuration Types
