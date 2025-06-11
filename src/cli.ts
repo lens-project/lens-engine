@@ -14,19 +14,19 @@ import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
 import { getConfig } from "./config/mod.ts";
 
 // Import the main functions from each module
-import { 
-  processFeedsFromOpml, 
-  type ProcessOptions as FeedProcessOptions 
+import {
+  processFeedsFromOpml,
+  type ProcessOptions as FeedProcessOptions,
 } from "./feeds/src/opml_feed_processor.ts";
 
-import { 
-  fetchAllContent, 
-  type ContentFetcherOptions 
+import {
+  type ContentFetcherOptions,
+  fetchAllContent,
 } from "./retrieval/src/content_fetcher.ts";
 
-import { 
-  processContent, 
-  type CliOptions as ProcessorOptions 
+import {
+  type CliOptions as ProcessorOptions,
+  processContent,
 } from "./processors/src/content_processor.ts";
 
 /**
@@ -60,10 +60,10 @@ interface CliOptions {
  */
 function parseArgs(args: string[]): CliOptions {
   const options: CliOptions = {};
-  
+
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
-    
+
     switch (arg) {
       case "--help":
       case "-h":
@@ -101,7 +101,7 @@ function parseArgs(args: string[]): CliOptions {
         break;
     }
   }
-  
+
   return options;
 }
 
@@ -159,13 +159,13 @@ CONFIGURATION:
 async function runFeedProcessing(options: CliOptions): Promise<boolean> {
   try {
     console.log("🔄 Processing feeds from OPML...");
-    
+
     const config = await getConfig();
     const baseDir = config.core.dataDir;
     const opmlDir = join(baseDir, "opml");
     const feedsDir = join(baseDir, "feeds");
     const opmlPath = join(opmlDir, "example.opml");
-    
+
     if (options.verbose) {
       console.log(`OPML file: ${opmlPath}`);
       console.log(`Output directory: ${feedsDir}`);
@@ -173,7 +173,7 @@ async function runFeedProcessing(options: CliOptions): Promise<boolean> {
         console.log(`Category filter: ${options.category}`);
       }
     }
-    
+
     const feedOptions: FeedProcessOptions = {
       opmlPath,
       outputDir: feedsDir,
@@ -181,14 +181,14 @@ async function runFeedProcessing(options: CliOptions): Promise<boolean> {
       maxConcurrent: options.concurrency || 3,
       timeout: 10000,
     };
-    
+
     const summary = await processFeedsFromOpml(feedOptions);
-    
+
     console.log(`✅ Feed processing complete!`);
     console.log(`   Total feeds: ${summary.totalFeeds}`);
     console.log(`   Successfully processed: ${summary.successCount}`);
     console.log(`   Failed: ${summary.failureCount}`);
-    
+
     if (summary.failureCount > 0 && options.verbose) {
       console.log(`\nFailed feeds:`);
       summary.results
@@ -197,10 +197,14 @@ async function runFeedProcessing(options: CliOptions): Promise<boolean> {
           console.log(`   - ${result.source.title}: ${result.message}`);
         });
     }
-    
+
     return summary.failureCount === 0;
   } catch (error) {
-    console.error(`❌ Feed processing failed: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(
+      `❌ Feed processing failed: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
     return false;
   }
 }
@@ -211,15 +215,15 @@ async function runFeedProcessing(options: CliOptions): Promise<boolean> {
 async function runContentFetching(options: CliOptions): Promise<boolean> {
   try {
     console.log("🔄 Fetching content from feeds...");
-    
+
     const config = await getConfig();
     const baseDir = config.core.dataDir;
     const feedsDir = join(baseDir, "feeds");
     const fetchedDir = join(baseDir, "fetched");
-    
+
     const feedName = options.feedName || "austin_kleon";
     let jsonPath = join(feedsDir, `${feedName}.json`);
-    
+
     // Check if the feed file exists, try paz namespace if not
     try {
       await Deno.stat(jsonPath);
@@ -237,13 +241,13 @@ async function runContentFetching(options: CliOptions): Promise<boolean> {
         }
       }
     }
-    
+
     if (options.verbose) {
       console.log(`Feed file: ${jsonPath}`);
       console.log(`Output directory: ${fetchedDir}`);
       console.log(`Concurrency: ${options.concurrency || 2}`);
     }
-    
+
     const fetchOptions: ContentFetcherOptions = {
       jsonPath,
       outputDir: fetchedDir,
@@ -251,27 +255,31 @@ async function runContentFetching(options: CliOptions): Promise<boolean> {
       overwrite: options.overwrite || false,
       timeout: 10000,
     };
-    
+
     const results = await fetchAllContent(fetchOptions);
-    
+
     const successful = results.filter((r) => r.success).length;
     const failed = results.filter((r) => !r.success).length;
-    
+
     console.log(`✅ Content fetching complete!`);
     console.log(`   Total URLs: ${results.length}`);
     console.log(`   Successfully fetched: ${successful}`);
     console.log(`   Failed to fetch: ${failed}`);
-    
+
     if (failed > 0 && options.verbose) {
       console.log(`\nFailed URLs:`);
       results
         .filter((r) => !r.success)
         .forEach((r) => console.log(`   - ${r.url}: ${r.error}`));
     }
-    
+
     return failed === 0;
   } catch (error) {
-    console.error(`❌ Content fetching failed: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(
+      `❌ Content fetching failed: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
     return false;
   }
 }
@@ -313,15 +321,19 @@ async function runContentProcessing(options: CliOptions): Promise<boolean> {
     if (result.failureCount > 0 && options.verbose) {
       console.log(`\nFailed files:`);
       result.results
-        .filter(r => !r.success)
-        .forEach(r => {
+        .filter((r) => !r.success)
+        .forEach((r) => {
           console.log(`   - ${r.input}: ${r.error}`);
         });
     }
 
     return result.failureCount === 0;
   } catch (error) {
-    console.error(`❌ Content processing failed: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(
+      `❌ Content processing failed: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
     return false;
   }
 }
@@ -352,9 +364,12 @@ async function main(): Promise<void> {
     let success = true;
 
     // Determine which operations to run
-    const runFeeds = options.feedsOnly || (!options.fetchOnly && !options.processOnly);
-    const runFetch = options.fetchOnly || (!options.feedsOnly && !options.processOnly);
-    const runProcess = options.processOnly || (!options.feedsOnly && !options.fetchOnly);
+    const runFeeds = options.feedsOnly ||
+      (!options.fetchOnly && !options.processOnly);
+    const runFetch = options.fetchOnly ||
+      (!options.feedsOnly && !options.processOnly);
+    const runProcess = options.processOnly ||
+      (!options.feedsOnly && !options.fetchOnly);
 
     // Run operations in sequence
     if (runFeeds) {
@@ -387,14 +402,17 @@ async function main(): Promise<void> {
     if (success) {
       console.log("🎉 All operations completed successfully!");
     } else {
-      console.log("⚠️  Some operations completed with errors (see details above)");
+      console.log(
+        "⚠️  Some operations completed with errors (see details above)",
+      );
       if (!options.continueOnError) {
         Deno.exit(1);
       }
     }
-
   } catch (error) {
-    console.error(`❌ CLI Error: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(
+      `❌ CLI Error: ${error instanceof Error ? error.message : String(error)}`,
+    );
     Deno.exit(1);
   }
 }

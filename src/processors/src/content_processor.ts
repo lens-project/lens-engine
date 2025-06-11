@@ -10,10 +10,10 @@ import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
 import { ensureDir, exists } from "https://deno.land/std@0.224.0/fs/mod.ts";
 import { getConfig } from "../../config/mod.ts";
 import {
-  processHtmlBatch,
-  processMixedBatch,
   type BatchProcessingOptions,
   type BatchResult,
+  processHtmlBatch,
+  processMixedBatch,
 } from "./controller/mod.ts";
 
 /**
@@ -51,10 +51,10 @@ export interface CliOptions {
  */
 function parseArgs(args: string[]): CliOptions {
   const options: CliOptions = {};
-  
+
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
-    
+
     switch (arg) {
       case "--help":
       case "-h":
@@ -110,7 +110,7 @@ function parseArgs(args: string[]): CliOptions {
         break;
     }
   }
-  
+
   return options;
 }
 
@@ -169,12 +169,15 @@ CONFIGURATION:
 /**
  * Get list of files to process from input path
  */
-async function getFilesToProcess(inputPath: string, mixed: boolean = false): Promise<string[]> {
+async function getFilesToProcess(
+  inputPath: string,
+  mixed: boolean = false,
+): Promise<string[]> {
   const files: string[] = [];
-  
+
   try {
     const stat = await Deno.stat(inputPath);
-    
+
     if (stat.isFile) {
       // Single file
       files.push(inputPath);
@@ -183,14 +186,14 @@ async function getFilesToProcess(inputPath: string, mixed: boolean = false): Pro
       for await (const entry of Deno.readDir(inputPath)) {
         if (entry.isFile) {
           const filePath = join(inputPath, entry.name);
-          
+
           if (mixed) {
             // Accept all files for mixed processing
             files.push(filePath);
           } else {
             // Only HTML files for HTML-only processing
             const ext = entry.name.toLowerCase();
-            if (ext.endsWith('.html') || ext.endsWith('.htm')) {
+            if (ext.endsWith(".html") || ext.endsWith(".htm")) {
               files.push(filePath);
             }
           }
@@ -199,9 +202,11 @@ async function getFilesToProcess(inputPath: string, mixed: boolean = false): Pro
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    throw new Error(`Failed to read input path "${inputPath}": ${errorMessage}`);
+    throw new Error(
+      `Failed to read input path "${inputPath}": ${errorMessage}`,
+    );
   }
-  
+
   return files.sort(); // Sort for consistent processing order
 }
 
@@ -232,24 +237,26 @@ function displayResults(result: BatchResult, verbose: boolean): void {
   console.log(`Total files: ${result.totalItems}`);
   console.log(`✅ Successful: ${result.successCount}`);
   console.log(`❌ Failed: ${result.failureCount}`);
-  
+
   if (result.failureCount > 0) {
     console.log("\nFAILED FILES:");
     result.results
-      .filter(r => !r.success)
-      .forEach(r => {
+      .filter((r) => !r.success)
+      .forEach((r) => {
         console.log(`❌ ${r.input}: ${r.error}`);
       });
   }
-  
+
   if (verbose && result.successCount > 0) {
     console.log("\nSUCCESSFUL FILES:");
     result.results
-      .filter(r => r.success)
-      .forEach(r => {
+      .filter((r) => r.success)
+      .forEach((r) => {
         console.log(`✅ ${r.input}`);
         if (r.metadata) {
-          console.log(`   Words: ${r.metadata.wordCount}, URLs: ${r.metadata.urls.length}`);
+          console.log(
+            `   Words: ${r.metadata.wordCount}, URLs: ${r.metadata.urls.length}`,
+          );
           if (r.metadata.title) {
             console.log(`   Title: ${r.metadata.title}`);
           }
@@ -261,7 +268,9 @@ function displayResults(result: BatchResult, verbose: boolean): void {
 /**
  * Main processing function that can be called from other modules
  */
-export async function processContent(options: Partial<CliOptions> = {}): Promise<BatchResult> {
+export async function processContent(
+  options: Partial<CliOptions> = {},
+): Promise<BatchResult> {
   // Load configuration
   const config = await getConfig();
   const dataDir = config.core.dataDir;
@@ -290,7 +299,9 @@ export async function processContent(options: Partial<CliOptions> = {}): Promise
     overwrite: options.overwrite,
     continueOnError: options.continueOnError,
     maxConcurrency: options.maxConcurrency,
-    onProgress: options.verbose ? createProgressCallback(options.verbose) : undefined,
+    onProgress: options.verbose
+      ? createProgressCallback(options.verbose)
+      : undefined,
     // Summarization options
     skipSummarization: options.skipSummarization,
     summaryStrategy: options.summaryStrategy,
@@ -331,7 +342,9 @@ async function main(): Promise<void> {
 
     console.log(`Input directory: ${inputPath}`);
     console.log(`Output directory: ${outputPath}`);
-    console.log(`Processing mode: ${options.mixed ? "Mixed file types" : "HTML only"}`);
+    console.log(
+      `Processing mode: ${options.mixed ? "Mixed file types" : "HTML only"}`,
+    );
     console.log(`LLM Model: ${config.llm.llmModel}`);
     console.log(`Continue on error: ${options.continueOnError ? "Yes" : "No"}`);
     console.log("");
@@ -356,7 +369,6 @@ async function main(): Promise<void> {
     if (result.failureCount > 0 && !options.continueOnError) {
       Deno.exit(1);
     }
-
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error(`\n❌ CLI Error: ${errorMessage}`);
