@@ -9,6 +9,12 @@ export {
   summarizeContent,
   type SummaryOptions,
   type SummaryResponse,
+  rankContent,
+  type RankingArticleInput,
+  type RankingContext,
+  type RankingOptions,
+  type RankingResult,
+  type RankingResponse,
 } from "./src/controller/mod.ts";
 
 // Providers

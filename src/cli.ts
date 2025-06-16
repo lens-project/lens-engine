@@ -21,6 +21,7 @@ import {
   fetchAllContent,
 } from "@src/retrieval/mod.ts";
 import { processContent, type ProcessingOptions } from "@src/processors/mod.ts";
+import { rankContent, createCurrentContext, createExampleCriteriaConfig, type RankingOptions, type RankingResult, type ScoringResult, type RankingErrorData } from "@src/ranking/mod.ts";
 
 /**
  * CLI command options
@@ -36,6 +37,10 @@ interface CliOptions {
   fetchOnly?: boolean;
   /** Run only content processing */
   processOnly?: boolean;
+  /** Run only content ranking */
+  rankOnly?: boolean;
+  /** Create example ranking criteria config */
+  createCriteriaConfig?: boolean;
   /** Category filter for feeds */
   category?: string;
   /** Feed name for content fetching */
@@ -46,6 +51,12 @@ interface CliOptions {
   overwrite?: boolean;
   /** Continue processing after errors */
   continueOnError?: boolean;
+  /** User mood for ranking context */
+  mood?: 'focused' | 'casual' | 'learning' | 'entertainment';
+  /** Reading duration for ranking context */
+  readingTime?: 'quick' | 'medium' | 'deep';
+  /** Minimum score threshold for output */
+  minScore?: number;
 }
 
 /**
@@ -75,6 +86,12 @@ function parseArgs(args: string[]): CliOptions {
       case "--process-only":
         options.processOnly = true;
         break;
+      case "--rank-only":
+        options.rankOnly = true;
+        break;
+      case "--create-criteria-config":
+        options.createCriteriaConfig = true;
+        break;
       case "--category":
       case "-c":
         options.category = args[++i];
@@ -91,6 +108,15 @@ function parseArgs(args: string[]): CliOptions {
         break;
       case "--continue-on-error":
         options.continueOnError = true;
+        break;
+      case "--mood":
+        options.mood = args[++i] as CliOptions['mood'];
+        break;
+      case "--reading-time":
+        options.readingTime = args[++i] as CliOptions['readingTime'];
+        break;
+      case "--min-score":
+        options.minScore = parseFloat(args[++i]);
         break;
     }
   }
@@ -116,6 +142,8 @@ OPTIONS:
   --feeds-only            Run only feed processing from OPML
   --fetch-only            Run only content fetching
   --process-only          Run only content processing
+  --rank-only             Run only content ranking
+  --create-criteria-config Create example ranking criteria configuration file
   
   # Operation-Specific Options
   -c, --category NAME     Filter feeds by category (feeds operation)
@@ -123,9 +151,14 @@ OPTIONS:
   --concurrency N         Set concurrency level (default: 2-3 depending on operation)
   --overwrite             Overwrite existing files
   --continue-on-error     Continue processing after errors
+  
+  # Ranking-Specific Options
+  --mood MODE             Set user mood context (focused|casual|learning|entertainment)
+  --reading-time TIME     Set available reading time (quick|medium|deep)
+  --min-score N           Minimum score threshold for output (0-10, default: 4)
 
 EXAMPLES:
-  # Run complete pipeline (feeds → fetch → process)
+  # Run complete pipeline (feeds → fetch → process → rank)
   deno run --allow-net --allow-read --allow-write --allow-env --env src/cli.ts
   
   # Run only feed processing with category filter
@@ -137,12 +170,21 @@ EXAMPLES:
   # Run only content processing with verbose output
   deno run --allow-net --allow-read --allow-write --allow-env --env src/cli.ts --process-only --verbose
   
+  # Run only ranking with specific context
+  deno run --allow-net --allow-read --allow-write --allow-env --env src/cli.ts --rank-only --mood focused --reading-time medium --min-score 6
+  
   # Run complete pipeline with custom settings
   deno run --allow-net --allow-read --allow-write --allow-env --env src/cli.ts --concurrency 5 --overwrite --verbose
+  
+  # Create example ranking criteria configuration file
+  deno run --allow-net --allow-read --allow-write --allow-env --env src/cli.ts --create-criteria-config
 
 CONFIGURATION:
   The CLI uses configuration from your .env file for data directories and LLM settings.
   Make sure your LENS_DATA_DIR is properly configured.
+  
+  Customize ranking criteria by creating config/ranking-criteria.json in your data directory.
+  Use --create-criteria-config to generate an example configuration file.
 `);
 }
 
@@ -332,6 +374,269 @@ async function runContentProcessing(options: CliOptions): Promise<boolean> {
 }
 
 /**
+ * Run content ranking operation
+ */
+async function runContentRanking(options: CliOptions): Promise<boolean> {
+  try {
+    console.log("🔄 Ranking content...");
+
+    const config = await getConfig();
+    const baseDir = config.core.dataDir;
+    const processedDir = join(baseDir, "processed");
+    const rankedDir = join(baseDir, "ranked");
+
+    if (options.verbose) {
+      console.log(`Input directory: ${processedDir}`);
+      console.log(`Output directory: ${rankedDir}`);
+      console.log(`LLM Model: ${config.llm.llmModel}`);
+      if (options.mood) console.log(`User mood: ${options.mood}`);
+      if (options.readingTime) console.log(`Reading time: ${options.readingTime}`);
+      if (options.minScore) console.log(`Min score threshold: ${options.minScore}`);
+    }
+
+    // Create ranking context
+    const context = createCurrentContext(options.mood, options.readingTime);
+    console.log(`📅 Ranking context: ${context.dayOfWeek} ${context.timeOfDay}, mood: ${context.userMood || 'default'}, reading: ${context.readingDuration || 'default'}`);
+
+    // Ensure output directory exists
+    await Deno.mkdir(rankedDir, { recursive: true });
+
+    // Read processed content files
+    const articles = await loadProcessedArticles(processedDir, options.verbose || false);
+    if (articles.length === 0) {
+      console.log("⚠️  No processed articles found to rank");
+      return true;
+    }
+
+    console.log(`📊 Found ${articles.length} processed articles to rank`);
+
+    // Rank the articles
+    const rankingOptions: Partial<RankingOptions> = {
+      maxBatchSize: Math.min(options.concurrency || 2, 2), // Smaller batches for better reliability
+      continueOnError: true, // Always continue on error to prevent hanging
+      timeout: 75000, // 75 second timeout per article for better reliability
+    };
+
+    const results = await rankContent(articles, context, rankingOptions);
+    
+    // Filter by minimum score if specified
+    const minScore = options.minScore || 4;
+    const filteredResults = results.filter(result => {
+      if ('score' in result) return result.score >= minScore;
+      return false; // Include errors for reporting
+    });
+
+    // Write ranked results to files
+    await writeRankedResults(rankedDir, filteredResults, options);
+
+    // Report results
+    const successful = results.filter(r => 'score' in r).length;
+    const errors = results.filter(r => 'type' in r).length;
+    const aboveThreshold = filteredResults.filter(r => 'score' in r).length;
+
+    console.log(`✅ Content ranking complete!`);
+    console.log(`   Total articles: ${articles.length}`);
+    console.log(`   Successfully ranked: ${successful}`);
+    console.log(`   Errors: ${errors}`);
+    console.log(`   Above threshold (${minScore}): ${aboveThreshold}`);
+
+    if (errors > 0 && options.verbose) {
+      console.log(`\nRanking errors:`);
+      results
+        .filter(r => 'type' in r)
+        .forEach((r: RankingErrorData) => {
+          console.log(`   - ${r.type}: ${r.message}`);
+        });
+    }
+
+    return errors === 0;
+  } catch (error) {
+    console.error(
+      `❌ Content ranking failed: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+    return false;
+  }
+}
+
+/**
+ * Load processed articles from directory
+ */
+async function loadProcessedArticles(processedDir: string, verbose: boolean): Promise<Array<{title: string, summary: string, url: string, source?: string}>> {
+  const articles = [];
+  
+  try {
+    for await (const entry of Deno.readDir(processedDir)) {
+      if (entry.isFile && entry.name.endsWith('-summary.md')) {
+        try {
+          const filePath = join(processedDir, entry.name);
+          const content = await Deno.readTextFile(filePath);
+          
+          // Parse the markdown summary file
+          const article = parseProcessedArticle(content, entry.name);
+          if (article) {
+            articles.push(article);
+            if (verbose) {
+              console.log(`   Loaded: ${article.title}`);
+            }
+          }
+        } catch (error) {
+          if (verbose) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            console.warn(`   Failed to load ${entry.name}: ${errorMessage}`);
+          }
+        }
+      }
+    }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.warn(`Failed to read processed directory: ${errorMessage}`);
+  }
+
+  return articles;
+}
+
+/**
+ * Parse a processed article markdown file
+ */
+function parseProcessedArticle(content: string, filename: string): {title: string, summary: string, url: string, source?: string} | null {
+  try {
+    // First try to extract title from content metadata
+    let title = '';
+    
+    // Look for title in various formats
+    const titlePatterns = [
+      /^#\s+(.+)$/m,                    // Markdown header: # Title
+      /Title:\s*(.+)$/im,               // Title: value format
+      /^(.+)$/m,                        // First line as title
+    ];
+    
+    for (const pattern of titlePatterns) {
+      const titleMatch = content.match(pattern);
+      if (titleMatch && titleMatch[1]?.trim()) {
+        title = titleMatch[1].trim();
+        break;
+      }
+    }
+    
+    // Fall back to filename if no title found in content
+    if (!title) {
+      title = filename.replace('-summary.md', '').replace(/[-_]/g, ' ');
+    }
+    
+    // Look for URL in content
+    const urlMatch = content.match(/URL:\s*(https?:\/\/[^\s\n]+)/i);
+    const url = urlMatch ? urlMatch[1] : `https://example.com/${filename}`;
+    
+    // Look for source in content
+    const sourceMatch = content.match(/Source:\s*([^\n]+)/i);
+    const source = sourceMatch ? sourceMatch[1].trim() : undefined;
+    
+    // Use the content as summary (clean up any metadata)
+    let summary = content
+      .replace(/URL:\s*https?:\/\/[^\s\n]+/gi, '')
+      .replace(/Source:\s*[^\n]+/gi, '')
+      .replace(/Title:\s*[^\n]+/gi, '')
+      .replace(/#+\s*/g, '')
+      .trim();
+      
+    if (!summary || summary.length < 10) {
+      summary = `Processed content from ${title}`;
+    }
+
+    return { title, summary, url, source };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.warn(`Failed to parse article from ${filename}: ${errorMessage}`);
+    return null;
+  }
+}
+
+/**
+ * Write ranked results to files
+ */
+async function writeRankedResults(rankedDir: string, results: RankingResult[], options: CliOptions): Promise<void> {
+  // Write individual ranking files
+  const rankingFile = join(rankedDir, 'rankings.json');
+  const summaryFile = join(rankedDir, 'ranking-summary.md');
+  
+  // Prepare data for JSON output
+  const jsonData = {
+    timestamp: new Date().toISOString(),
+    context: results.length > 0 ? 'context data would be here' : null,
+    totalArticles: results.length,
+    results: results.map((result: RankingResult) => {
+      if ('score' in result) {
+        return {
+          title: result.input?.title || 'Unknown',
+          url: result.input?.url || '',
+          score: result.score,
+          confidence: result.confidence,
+          method: result.method,
+          reasoning: result.reasoning,
+          categories: result.categories,
+          estimatedReadTime: result.estimatedReadTime,
+        };
+      } else {
+        return {
+          title: result.input?.title || 'Unknown',
+          url: result.input?.url || '',
+          error: result.type,
+          message: result.message,
+        };
+      }
+    })
+  };
+  
+  // Write JSON file
+  await Deno.writeTextFile(rankingFile, JSON.stringify(jsonData, null, 2));
+  
+  // Write markdown summary
+  let markdown = `# Content Ranking Results\n\n`;
+  markdown += `**Generated:** ${new Date().toLocaleString()}\n\n`;
+  markdown += `**Total Articles:** ${results.length}\n\n`;
+  
+  const successful = results.filter((r: RankingResult): r is ScoringResult => 'score' in r);
+  const errors = results.filter((r: RankingResult): r is RankingErrorData => 'type' in r);
+  
+  markdown += `**Successfully Ranked:** ${successful.length}\n`;
+  markdown += `**Errors:** ${errors.length}\n\n`;
+  
+  if (successful.length > 0) {
+    // Sort by score descending
+    const sorted = successful.sort((a: ScoringResult, b: ScoringResult) => b.score - a.score);
+    
+    markdown += `## Top Ranked Articles\n\n`;
+    sorted.forEach((result: ScoringResult, index: number) => {
+      markdown += `${index + 1}. **${result.input?.title || 'Unknown'}** (Score: ${result.score})\n`;
+      markdown += `   - URL: ${result.input?.url || 'N/A'}\n`;
+      markdown += `   - Categories: ${result.categories?.join(', ') || 'None'}\n`;
+      markdown += `   - Read Time: ${result.estimatedReadTime || 'Unknown'} minutes\n`;
+      if (result.reasoning) {
+        markdown += `   - Reasoning: ${result.reasoning}\n`;
+      }
+      markdown += `\n`;
+    });
+  }
+  
+  if (errors.length > 0) {
+    markdown += `## Ranking Errors\n\n`;
+    errors.forEach((error: RankingErrorData, index: number) => {
+      markdown += `${index + 1}. **${error.input?.title || 'Unknown'}**: ${error.message}\n`;
+    });
+  }
+  
+  await Deno.writeTextFile(summaryFile, markdown);
+  
+  if (options.verbose) {
+    console.log(`📄 Results written to:`);
+    console.log(`   JSON: ${rankingFile}`);
+    console.log(`   Summary: ${summaryFile}`);
+  }
+}
+
+/**
  * Main CLI function
  */
 async function main(): Promise<void> {
@@ -342,6 +647,26 @@ async function main(): Promise<void> {
     // Show help if requested
     if (options.help) {
       showHelp();
+      return;
+    }
+
+    // Handle criteria config creation
+    if (options.createCriteriaConfig) {
+      console.log("🚀 Lens Engine CLI - Creating Criteria Configuration");
+      console.log("====================================================");
+      
+      const config = await getConfig();
+      console.log(`Data directory: ${config.core.dataDir}`);
+      
+      try {
+        await createExampleCriteriaConfig(config.core.dataDir);
+        console.log("✅ Example ranking criteria configuration created successfully!");
+        console.log("   📝 Edit the file to customize ranking criteria for your needs");
+        console.log("   🔄 The ranking system will automatically use your custom criteria");
+      } catch (error) {
+        console.error(`❌ Failed to create criteria config: ${error instanceof Error ? error.message : String(error)}`);
+        Deno.exit(1);
+      }
       return;
     }
 
@@ -358,11 +683,13 @@ async function main(): Promise<void> {
 
     // Determine which operations to run
     const runFeeds = options.feedsOnly ||
-      (!options.fetchOnly && !options.processOnly);
+      (!options.fetchOnly && !options.processOnly && !options.rankOnly && !options.createCriteriaConfig);
     const runFetch = options.fetchOnly ||
-      (!options.feedsOnly && !options.processOnly);
+      (!options.feedsOnly && !options.processOnly && !options.rankOnly && !options.createCriteriaConfig);
     const runProcess = options.processOnly ||
-      (!options.feedsOnly && !options.fetchOnly);
+      (!options.feedsOnly && !options.fetchOnly && !options.rankOnly && !options.createCriteriaConfig);
+    const runRank = options.rankOnly ||
+      (!options.feedsOnly && !options.fetchOnly && !options.processOnly && !options.createCriteriaConfig);
 
     // Run operations in sequence
     if (runFeeds) {
@@ -387,6 +714,15 @@ async function main(): Promise<void> {
       success = await runContentProcessing(options) && success;
       if (!success && !options.continueOnError) {
         console.error("❌ Pipeline stopped due to content processing failure");
+        Deno.exit(1);
+      }
+      console.log("");
+    }
+
+    if (runRank) {
+      success = await runContentRanking(options) && success;
+      if (!success && !options.continueOnError) {
+        console.error("❌ Pipeline stopped due to content ranking failure");
         Deno.exit(1);
       }
     }
