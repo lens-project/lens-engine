@@ -1,0 +1,95 @@
+{
+  "version": "1.0",
+  "description": "Example custom ranking criteria - modify to suit your preferences",
+  "criteria": [
+    {
+      "id": "content_quality",
+      "name": "Content Quality",
+      "description": "Is the content well-written, informative, and substantive?",
+      "weight": 8
+    },
+    {
+      "id": "contextual_relevance",
+      "name": "Contextual Relevance",
+      "description": "How well does this match the current context (day/time/mood)?",
+      "weight": 7
+    },
+    {
+      "id": "practical_value",
+      "name": "Practical Value",
+      "description": "Does this provide actionable insights or useful information?",
+      "weight": 6
+    },
+    {
+      "id": "uniqueness",
+      "name": "Uniqueness",
+      "description": "Is this offering new perspectives or just repeating common knowledge?",
+      "weight": 5
+    },
+    {
+      "id": "reading_time_match",
+      "name": "Reading Time Match",
+      "description": "Does the content depth match the available reading time?",
+      "weight": 4
+    }
+  ],
+  "scoringGuidelines": [
+    {
+      "range": "0-2",
+      "description": "Poor quality, clickbait, completely irrelevant, or misleading content",
+      "examples": [
+        "Obvious clickbait",
+        "Factually incorrect",
+        "Spam or promotional"
+      ]
+    },
+    {
+      "range": "3-4",
+      "description": "Low quality but might have minimal interest, repetitive or shallow content",
+      "examples": [
+        "Rehashed content",
+        "Minimal new insights",
+        "Poor writing quality"
+      ]
+    },
+    {
+      "range": "5-6",
+      "description": "Average quality, moderately interesting, standard coverage of topic",
+      "examples": [
+        "Decent article",
+        "Some useful information",
+        "Standard treatment"
+      ]
+    },
+    {
+      "range": "7-8",
+      "description": "High quality, very relevant, valuable insights, well-researched content",
+      "examples": [
+        "Well-researched",
+        "Unique insights",
+        "Highly relevant"
+      ]
+    },
+    {
+      "range": "9-10",
+      "description": "Exceptional quality, must-read content, unique insights, perfect context match",
+      "examples": [
+        "Groundbreaking insights",
+        "Perfect timing",
+        "Life-changing content"
+      ]
+    }
+  ],
+  "additionalInstructions": [
+    "Be honest and critical in your evaluation",
+    "Consider the specific context provided when scoring",
+    "Provide detailed reasoning that explains your score",
+    "Focus on value to the user rather than general quality metrics"
+  ],
+  "_comments": {
+    "version": "Configuration version for future compatibility",
+    "criteria": "List of evaluation criteria - modify weights to prioritize different aspects",
+    "scoringGuidelines": "Score ranges and descriptions - customize for your content types",
+    "additionalInstructions": "Extra guidance for the AI evaluator"
+  }
+}
