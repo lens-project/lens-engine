@@ -1,342 +1,175 @@
 import { ArticleInput, RankingContext, ContextualAdjustments } from '../types.ts';
 
-export function calculateContextualAdjustments(
-  context: RankingContext,
-  article: ArticleInput
-): ContextualAdjustments {
-  return {
-    dayOfWeekMultiplier: getDayOfWeekMultiplier(context.dayOfWeek, article),
-    timeOfDayMultiplier: getTimeOfDayMultiplier(context.timeOfDay, article),
-    moodMultiplier: getMoodMultiplier(context.userMood, article),
-  };
+/**
+ * Content type keywords for classification
+ */
+const CONTENT_TYPES = {
+  lifestyle: ['lifestyle', 'health', 'fitness', 'food', 'recipe', 'travel', 'home', 'family'],
+  entertainment: ['entertainment', 'movie', 'music', 'game', 'celebrity', 'art', 'culture'],
+  personal_development: ['personal', 'development', 'self-help', 'productivity', 'mindfulness', 'career'],
+  industry_news: ['industry', 'business', 'market', 'economy', 'company', 'startup', 'funding'],
+  professional_development: ['professional', 'skill', 'training', 'certification', 'leadership', 'management'],
+  planning: ['plan', 'strategy', 'goal', 'roadmap', 'schedule', 'organization'],
+  creative: ['creative', 'design', 'art', 'writing', 'photography', 'innovation'],
+  heavy_technical: ['algorithm', 'architecture', 'system', 'database', 'performance', 'optimization'],
+  urgent_business: ['breaking', 'urgent', 'crisis', 'emergency', 'market crash', 'stock'],
+  actionable: ['how to', 'guide', 'tutorial', 'step', 'actionable', 'practical'],
+  news: ['news', 'update', 'announcement', 'report', 'breaking'],
+  educational: ['education', 'learn', 'course', 'lesson', 'knowledge', 'understanding'],
+  tutorial: ['tutorial', 'how-to', 'guide', 'walkthrough', 'instruction'],
+  reflective: ['reflection', 'thought', 'opinion', 'perspective', 'insight', 'philosophy'],
+  light_reading: ['light', 'casual', 'fun', 'interesting', 'story', 'anecdote'],
+  work: ['work', 'business', 'professional', 'corporate', 'meeting', 'deadline'],
+  technical: ['technical', 'programming', 'code', 'software', 'development', 'engineering'],
+  analysis: ['analysis', 'research', 'study', 'data', 'statistics', 'deep dive'],
+  how_to: ['how to', 'guide', 'instructions', 'steps', 'method'],
+  humor: ['humor', 'funny', 'comedy', 'joke', 'satire', 'amusing'],
+  story: ['story', 'narrative', 'tale', 'experience', 'journey'],
+  interesting_facts: ['fact', 'trivia', 'interesting', 'surprising', 'did you know'],
+} as const;
+
+/**
+ * Contextual adjustment rules
+ */
+const CONTEXT_RULES = {
+  dayOfWeek: {
+    Sunday: { lifestyle: 2, entertainment: 2, personal_development: 2 },
+    Monday: { industry_news: 2, professional_development: 2, planning: 2 },
+    Tuesday: {},  // No specific adjustments
+    Wednesday: {},  // No specific adjustments
+    Thursday: {},  // No specific adjustments
+    Friday: { creative: 1, heavy_technical: -1 },
+    Saturday: { urgent_business: -1 },
+  },
+  timeOfDay: {
+    morning: { actionable: 1, news: 1, planning: 1 },
+    afternoon: {},  // No specific adjustments
+    evening: { educational: 1, tutorial: 1, reflective: 1 },
+    night: { entertainment: 2, light_reading: 2, work: -2 },
+  },
+  mood: {
+    focused: { technical: 2, tutorial: 2, analysis: 2 },
+    casual: { news: 1, entertainment: 1, light_reading: 1 },
+    learning: { educational: 3, tutorial: 3, how_to: 3 },
+    entertainment: { humor: 2, story: 2, interesting_facts: 2 },
+  },
+} as const;
+
+type ContentType = keyof typeof CONTENT_TYPES;
+
+/**
+ * Classify article content based on categories, title, and summary
+ */
+function classifyContent(article: ArticleInput): ContentType[] {
+  const searchText = [
+    ...(article.categories || []),
+    article.title,
+    article.summary,
+  ].join(' ').toLowerCase();
+
+  const contentTypes: ContentType[] = [];
+  
+  for (const [contentType, keywords] of Object.entries(CONTENT_TYPES)) {
+    if (keywords.some(keyword => searchText.includes(keyword.toLowerCase()))) {
+      contentTypes.push(contentType as ContentType);
+    }
+  }
+  
+  return contentTypes;
 }
 
+/**
+ * Calculate total contextual adjustments for an article
+ */
+function calculateTotalAdjustment(contentTypes: ContentType[], context: RankingContext): number {
+  let totalAdjustment = 0;
+  
+  // Day of week adjustments
+  const dayRules = CONTEXT_RULES.dayOfWeek[context.dayOfWeek] as Record<string, number>;
+  if (dayRules) {
+    for (const contentType of contentTypes) {
+      totalAdjustment += dayRules[contentType] || 0;
+    }
+  }
+  
+  // Time of day adjustments
+  const timeRules = CONTEXT_RULES.timeOfDay[context.timeOfDay] as Record<string, number>;
+  if (timeRules) {
+    for (const contentType of contentTypes) {
+      totalAdjustment += timeRules[contentType] || 0;
+    }
+  }
+  
+  // Mood adjustments (if specified)
+  if (context.userMood) {
+    const moodRules = CONTEXT_RULES.mood[context.userMood] as Record<string, number>;
+    if (moodRules) {
+      for (const contentType of contentTypes) {
+        totalAdjustment += moodRules[contentType] || 0;
+      }
+    }
+  }
+  
+  return totalAdjustment;
+}
+
+/**
+ * Apply contextual adjustments to base score
+ */
 export function applyContextualAdjustments(
   baseScore: number,
   context: RankingContext,
   article: ArticleInput
 ): number {
-  let adjustedScore = baseScore;
-  adjustedScore += getDayOfWeekAdjustment(context.dayOfWeek, article);
-  adjustedScore += getTimeOfDayAdjustment(context.timeOfDay, article);
-  adjustedScore += getMoodAdjustment(context.userMood, article);
+  const contentTypes = classifyContent(article);
+  const adjustment = calculateTotalAdjustment(contentTypes, context);
   
-  return Math.max(0, Math.min(10, adjustedScore));
+  // Apply adjustment and clamp to valid range
+  return Math.max(0, Math.min(10, baseScore + adjustment));
 }
 
-function getDayOfWeekMultiplier(dayOfWeek: RankingContext['dayOfWeek'], article: ArticleInput): number {
-  const categories = article.categories || [];
-  const title = article.title.toLowerCase();
-  const summary = article.summary.toLowerCase();
+/**
+ * Calculate contextual adjustments breakdown (for debugging/transparency)
+ */
+export function calculateContextualAdjustments(
+  context: RankingContext,
+  article: ArticleInput
+): ContextualAdjustments {
+  const contentTypes = classifyContent(article);
   
-  switch (dayOfWeek) {
-    case 'Sunday':
-      if (isLifestyleContent(categories, title, summary)) return 1.2;
-      if (isEntertainmentContent(categories, title, summary)) return 1.2;
-      if (isPersonalDevelopmentContent(categories, title, summary)) return 1.2;
-      return 1.0;
-    
-    case 'Monday':
-      if (isIndustryNewsContent(categories, title, summary)) return 1.2;
-      if (isProfessionalDevelopmentContent(categories, title, summary)) return 1.2;
-      if (isPlanningContent(categories, title, summary)) return 1.2;
-      return 1.0;
-    
-    case 'Friday':
-      if (isCreativeContent(categories, title, summary)) return 1.1;
-      if (isHeavyTechnicalContent(categories, title, summary)) return 0.9;
-      return 1.0;
-    
-    case 'Saturday':
-      if (isUrgentBusinessNews(categories, title, summary)) return 0.9;
-      return 1.0;
-    
-    default:
-      return 1.0;
+  let dayOfWeekAdjustment = 0;
+  let timeOfDayAdjustment = 0;
+  let moodAdjustment = 0;
+  
+  // Day of week
+  const dayRules = CONTEXT_RULES.dayOfWeek[context.dayOfWeek] as Record<string, number>;
+  if (dayRules) {
+    for (const contentType of contentTypes) {
+      dayOfWeekAdjustment += dayRules[contentType] || 0;
+    }
   }
-}
-
-function getDayOfWeekAdjustment(dayOfWeek: RankingContext['dayOfWeek'], article: ArticleInput): number {
-  const categories = article.categories || [];
-  const title = article.title.toLowerCase();
-  const summary = article.summary.toLowerCase();
   
-  switch (dayOfWeek) {
-    case 'Sunday':
-      if (isLifestyleContent(categories, title, summary)) return 2;
-      if (isEntertainmentContent(categories, title, summary)) return 2;
-      if (isPersonalDevelopmentContent(categories, title, summary)) return 2;
-      return 0;
-    
-    case 'Monday':
-      if (isIndustryNewsContent(categories, title, summary)) return 2;
-      if (isProfessionalDevelopmentContent(categories, title, summary)) return 2;
-      if (isPlanningContent(categories, title, summary)) return 2;
-      return 0;
-    
-    case 'Friday':
-      if (isCreativeContent(categories, title, summary)) return 1;
-      if (isHeavyTechnicalContent(categories, title, summary)) return -1;
-      return 0;
-    
-    case 'Saturday':
-      if (isUrgentBusinessNews(categories, title, summary)) return -1;
-      return 0;
-    
-    default:
-      return 0;
+  // Time of day
+  const timeRules = CONTEXT_RULES.timeOfDay[context.timeOfDay] as Record<string, number>;
+  if (timeRules) {
+    for (const contentType of contentTypes) {
+      timeOfDayAdjustment += timeRules[contentType] || 0;
+    }
   }
-}
-
-function getTimeOfDayMultiplier(timeOfDay: RankingContext['timeOfDay'], article: ArticleInput): number {
-  const categories = article.categories || [];
-  const title = article.title.toLowerCase();
-  const summary = article.summary.toLowerCase();
   
-  switch (timeOfDay) {
-    case 'morning':
-      if (isActionableContent(categories, title, summary)) return 1.1;
-      if (isNewsContent(categories, title, summary)) return 1.1;
-      if (isPlanningContent(categories, title, summary)) return 1.1;
-      return 1.0;
-    
-    case 'afternoon':
-      return 1.0;
-    
-    case 'evening':
-      if (isEducationalContent(categories, title, summary)) return 1.1;
-      if (isTutorialContent(categories, title, summary)) return 1.1;
-      if (isReflectiveContent(categories, title, summary)) return 1.1;
-      return 1.0;
-    
-    case 'night':
-      if (isEntertainmentContent(categories, title, summary)) return 1.2;
-      if (isLightReadingContent(categories, title, summary)) return 1.2;
-      if (isWorkContent(categories, title, summary)) return 0.8;
-      return 1.0;
-    
-    default:
-      return 1.0;
+  // Mood
+  if (context.userMood) {
+    const moodRules = CONTEXT_RULES.mood[context.userMood] as Record<string, number>;
+    if (moodRules) {
+      for (const contentType of contentTypes) {
+        moodAdjustment += moodRules[contentType] || 0;
+      }
+    }
   }
-}
-
-function getTimeOfDayAdjustment(timeOfDay: RankingContext['timeOfDay'], article: ArticleInput): number {
-  const categories = article.categories || [];
-  const title = article.title.toLowerCase();
-  const summary = article.summary.toLowerCase();
   
-  switch (timeOfDay) {
-    case 'morning':
-      if (isActionableContent(categories, title, summary)) return 1;
-      if (isNewsContent(categories, title, summary)) return 1;
-      if (isPlanningContent(categories, title, summary)) return 1;
-      return 0;
-    
-    case 'afternoon':
-      return 0;
-    
-    case 'evening':
-      if (isEducationalContent(categories, title, summary)) return 1;
-      if (isTutorialContent(categories, title, summary)) return 1;
-      if (isReflectiveContent(categories, title, summary)) return 1;
-      return 0;
-    
-    case 'night':
-      if (isEntertainmentContent(categories, title, summary)) return 2;
-      if (isLightReadingContent(categories, title, summary)) return 2;
-      if (isWorkContent(categories, title, summary)) return -2;
-      return 0;
-    
-    default:
-      return 0;
-  }
-}
-
-function getMoodMultiplier(userMood: RankingContext['userMood'], article: ArticleInput): number {
-  if (!userMood) return 1.0;
-  
-  const categories = article.categories || [];
-  const title = article.title.toLowerCase();
-  const summary = article.summary.toLowerCase();
-  
-  switch (userMood) {
-    case 'focused':
-      if (isTechnicalContent(categories, title, summary)) return 1.2;
-      if (isTutorialContent(categories, title, summary)) return 1.2;
-      if (isAnalysisContent(categories, title, summary)) return 1.2;
-      return 1.0;
-    
-    case 'casual':
-      if (isNewsContent(categories, title, summary)) return 1.1;
-      if (isEntertainmentContent(categories, title, summary)) return 1.1;
-      if (isLightReadingContent(categories, title, summary)) return 1.1;
-      return 1.0;
-    
-    case 'learning':
-      if (isEducationalContent(categories, title, summary)) return 1.3;
-      if (isTutorialContent(categories, title, summary)) return 1.3;
-      if (isHowToContent(categories, title, summary)) return 1.3;
-      return 1.0;
-    
-    case 'entertainment':
-      if (isHumorContent(categories, title, summary)) return 1.2;
-      if (isStoryContent(categories, title, summary)) return 1.2;
-      if (isInterestingFactsContent(categories, title, summary)) return 1.2;
-      return 1.0;
-    
-    default:
-      return 1.0;
-  }
-}
-
-function getMoodAdjustment(userMood: RankingContext['userMood'], article: ArticleInput): number {
-  if (!userMood) return 0;
-  
-  const categories = article.categories || [];
-  const title = article.title.toLowerCase();
-  const summary = article.summary.toLowerCase();
-  
-  switch (userMood) {
-    case 'focused':
-      if (isTechnicalContent(categories, title, summary)) return 2;
-      if (isTutorialContent(categories, title, summary)) return 2;
-      if (isAnalysisContent(categories, title, summary)) return 2;
-      return 0;
-    
-    case 'casual':
-      if (isNewsContent(categories, title, summary)) return 1;
-      if (isEntertainmentContent(categories, title, summary)) return 1;
-      if (isLightReadingContent(categories, title, summary)) return 1;
-      return 0;
-    
-    case 'learning':
-      if (isEducationalContent(categories, title, summary)) return 3;
-      if (isTutorialContent(categories, title, summary)) return 3;
-      if (isHowToContent(categories, title, summary)) return 3;
-      return 0;
-    
-    case 'entertainment':
-      if (isHumorContent(categories, title, summary)) return 2;
-      if (isStoryContent(categories, title, summary)) return 2;
-      if (isInterestingFactsContent(categories, title, summary)) return 2;
-      return 0;
-    
-    default:
-      return 0;
-  }
-}
-
-function isLifestyleContent(categories: string[], title: string, summary: string): boolean {
-  const lifestyleKeywords = ['lifestyle', 'health', 'fitness', 'food', 'recipe', 'travel', 'home', 'family'];
-  return hasKeywords([...categories, title, summary], lifestyleKeywords);
-}
-
-function isEntertainmentContent(categories: string[], title: string, summary: string): boolean {
-  const entertainmentKeywords = ['entertainment', 'movie', 'music', 'game', 'celebrity', 'art', 'culture'];
-  return hasKeywords([...categories, title, summary], entertainmentKeywords);
-}
-
-function isPersonalDevelopmentContent(categories: string[], title: string, summary: string): boolean {
-  const personalDevKeywords = ['personal', 'development', 'self-help', 'productivity', 'mindfulness', 'career'];
-  return hasKeywords([...categories, title, summary], personalDevKeywords);
-}
-
-function isIndustryNewsContent(categories: string[], title: string, summary: string): boolean {
-  const industryKeywords = ['industry', 'business', 'market', 'economy', 'company', 'startup', 'funding'];
-  return hasKeywords([...categories, title, summary], industryKeywords);
-}
-
-function isProfessionalDevelopmentContent(categories: string[], title: string, summary: string): boolean {
-  const professionalKeywords = ['professional', 'skill', 'training', 'certification', 'leadership', 'management'];
-  return hasKeywords([...categories, title, summary], professionalKeywords);
-}
-
-function isPlanningContent(categories: string[], title: string, summary: string): boolean {
-  const planningKeywords = ['plan', 'strategy', 'goal', 'roadmap', 'schedule', 'organization'];
-  return hasKeywords([...categories, title, summary], planningKeywords);
-}
-
-function isCreativeContent(categories: string[], title: string, summary: string): boolean {
-  const creativeKeywords = ['creative', 'design', 'art', 'writing', 'photography', 'innovation'];
-  return hasKeywords([...categories, title, summary], creativeKeywords);
-}
-
-function isHeavyTechnicalContent(categories: string[], title: string, summary: string): boolean {
-  const technicalKeywords = ['algorithm', 'architecture', 'system', 'database', 'performance', 'optimization'];
-  return hasKeywords([...categories, title, summary], technicalKeywords);
-}
-
-function isUrgentBusinessNews(categories: string[], title: string, summary: string): boolean {
-  const urgentKeywords = ['breaking', 'urgent', 'crisis', 'emergency', 'market crash', 'stock'];
-  return hasKeywords([...categories, title, summary], urgentKeywords);
-}
-
-function isActionableContent(categories: string[], title: string, summary: string): boolean {
-  const actionableKeywords = ['how to', 'guide', 'tutorial', 'step', 'actionable', 'practical'];
-  return hasKeywords([...categories, title, summary], actionableKeywords);
-}
-
-function isNewsContent(categories: string[], title: string, summary: string): boolean {
-  const newsKeywords = ['news', 'update', 'announcement', 'report', 'breaking'];
-  return hasKeywords([...categories, title, summary], newsKeywords);
-}
-
-function isEducationalContent(categories: string[], title: string, summary: string): boolean {
-  const educationalKeywords = ['education', 'learn', 'course', 'lesson', 'knowledge', 'understanding'];
-  return hasKeywords([...categories, title, summary], educationalKeywords);
-}
-
-function isTutorialContent(categories: string[], title: string, summary: string): boolean {
-  const tutorialKeywords = ['tutorial', 'how-to', 'guide', 'walkthrough', 'instruction'];
-  return hasKeywords([...categories, title, summary], tutorialKeywords);
-}
-
-function isReflectiveContent(categories: string[], title: string, summary: string): boolean {
-  const reflectiveKeywords = ['reflection', 'thought', 'opinion', 'perspective', 'insight', 'philosophy'];
-  return hasKeywords([...categories, title, summary], reflectiveKeywords);
-}
-
-function isLightReadingContent(categories: string[], title: string, summary: string): boolean {
-  const lightKeywords = ['light', 'casual', 'fun', 'interesting', 'story', 'anecdote'];
-  return hasKeywords([...categories, title, summary], lightKeywords);
-}
-
-function isWorkContent(categories: string[], title: string, summary: string): boolean {
-  const workKeywords = ['work', 'business', 'professional', 'corporate', 'meeting', 'deadline'];
-  return hasKeywords([...categories, title, summary], workKeywords);
-}
-
-function isTechnicalContent(categories: string[], title: string, summary: string): boolean {
-  const technicalKeywords = ['technical', 'programming', 'code', 'software', 'development', 'engineering'];
-  return hasKeywords([...categories, title, summary], technicalKeywords);
-}
-
-function isAnalysisContent(categories: string[], title: string, summary: string): boolean {
-  const analysisKeywords = ['analysis', 'research', 'study', 'data', 'statistics', 'deep dive'];
-  return hasKeywords([...categories, title, summary], analysisKeywords);
-}
-
-function isHowToContent(categories: string[], title: string, summary: string): boolean {
-  const howToKeywords = ['how to', 'guide', 'instructions', 'steps', 'method'];
-  return hasKeywords([...categories, title, summary], howToKeywords);
-}
-
-function isHumorContent(categories: string[], title: string, summary: string): boolean {
-  const humorKeywords = ['humor', 'funny', 'comedy', 'joke', 'satire', 'amusing'];
-  return hasKeywords([...categories, title, summary], humorKeywords);
-}
-
-function isStoryContent(categories: string[], title: string, summary: string): boolean {
-  const storyKeywords = ['story', 'narrative', 'tale', 'experience', 'journey'];
-  return hasKeywords([...categories, title, summary], storyKeywords);
-}
-
-function isInterestingFactsContent(categories: string[], title: string, summary: string): boolean {
-  const factsKeywords = ['fact', 'trivia', 'interesting', 'surprising', 'did you know'];
-  return hasKeywords([...categories, title, summary], factsKeywords);
-}
-
-function hasKeywords(content: string[], keywords: string[]): boolean {
-  const contentText = content.join(' ').toLowerCase();
-  return keywords.some(keyword => contentText.includes(keyword.toLowerCase()));
+  return {
+    dayOfWeekMultiplier: dayOfWeekAdjustment,
+    timeOfDayMultiplier: timeOfDayAdjustment,
+    moodMultiplier: moodAdjustment,
+  };
 }
