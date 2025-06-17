@@ -6,15 +6,15 @@
 
 // Controllers
 export {
-  summarizeContent,
-  type SummaryOptions,
-  type SummaryResponse,
   rankContent,
   type RankingArticleInput,
   type RankingContext,
   type RankingOptions,
-  type RankingResult,
   type RankingResponse,
+  type RankingResult,
+  summarizeContent,
+  type SummaryOptions,
+  type SummaryResponse,
 } from "./src/controller/mod.ts";
 
 // Providers

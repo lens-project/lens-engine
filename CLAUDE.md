@@ -97,3 +97,7 @@ Working on the `feature-ranking` branch implementing content relevance scoring w
 ## Configuration
 
 Environment configuration via `.env` files. Reference `.env.example` for required variables. The system is designed to work locally-first with AI processing running via Ollama for privacy.
+
+## Code Style Guidelines
+
+**No Emojis**: Do not use emojis in code, console output, or documentation. The codebase maintains a professional, clean appearance without visual decorations in terminal output.

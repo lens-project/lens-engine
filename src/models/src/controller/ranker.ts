@@ -6,7 +6,10 @@
  */
 
 import { chatWithOllamaCustomPrompt } from "../providers/ollama/client.ts";
-import { loadRankingCriteria, generateCriteriaPromptText } from "@src/ranking/src/criteria-loader.ts";
+import {
+  generateCriteriaPromptText,
+  loadRankingCriteria,
+} from "@src/ranking/src/criteria-loader.ts";
 import { type RankingCriteriaConfig } from "@src/ranking/types.ts";
 
 // ============================================================================
@@ -29,10 +32,17 @@ export interface ArticleInput {
  * Context for ranking
  */
 export interface RankingContext {
-  dayOfWeek: 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday';
-  timeOfDay: 'morning' | 'afternoon' | 'evening' | 'night';
-  userMood?: 'focused' | 'casual' | 'learning' | 'entertainment';
-  readingDuration?: 'quick' | 'medium' | 'deep';
+  dayOfWeek:
+    | "Sunday"
+    | "Monday"
+    | "Tuesday"
+    | "Wednesday"
+    | "Thursday"
+    | "Friday"
+    | "Saturday";
+  timeOfDay: "morning" | "afternoon" | "evening" | "night";
+  userMood?: "focused" | "casual" | "learning" | "entertainment";
+  readingDuration?: "quick" | "medium" | "deep";
 }
 
 /**
@@ -108,13 +118,21 @@ export async function rankContent(
     if (options.criteriaConfig) {
       criteria = options.criteriaConfig;
       if (options.verbose) {
-        console.log(`🎯 Using provided criteria: "${criteria.description || 'Default criteria'}" (v${criteria.version})`);
+        console.log(
+          `🎯 Using provided criteria: "${
+            criteria.description || "Default criteria"
+          }" (v${criteria.version})`,
+        );
       }
     } else {
       // Only load and log if not provided
       criteria = await loadRankingCriteria(options.verbose);
       if (options.verbose) {
-        console.log(`🎯 Using loaded criteria: "${criteria.description || 'Default criteria'}" (v${criteria.version})`);
+        console.log(
+          `🎯 Using loaded criteria: "${
+            criteria.description || "Default criteria"
+          }" (v${criteria.version})`,
+        );
       }
     }
 
@@ -124,26 +142,28 @@ export async function rankContent(
       import.meta.url,
     );
     const basePromptTemplate = await Deno.readTextFile(promptPath);
-    
+
     // Generate dynamic criteria text
     const criteriaText = generateCriteriaPromptText(criteria);
-    
+
     // Create the complete prompt by replacing the hardcoded criteria section
     const promptTemplate = basePromptTemplate.replace(
       /Evaluation Criteria:[\s\S]*?(?=Response Format:)/,
-      criteriaText + '\n'
+      criteriaText + "\n",
     );
 
     // Prepare template variables
     const templateVars = {
       title: article.title,
       summary: article.summary,
-      source: article.source || 'Unknown',
-      publishedAt: article.publishedAt ? article.publishedAt.toLocaleDateString() : 'Unknown',
+      source: article.source || "Unknown",
+      publishedAt: article.publishedAt
+        ? article.publishedAt.toLocaleDateString()
+        : "Unknown",
       dayOfWeek: context.dayOfWeek,
       timeOfDay: context.timeOfDay,
-      userMood: context.userMood || 'neutral',
-      readingDuration: context.readingDuration || 'medium',
+      userMood: context.userMood || "neutral",
+      readingDuration: context.readingDuration || "medium",
     };
 
     // Use the Ollama client with custom prompt
@@ -165,7 +185,7 @@ export async function rankContent(
     }
 
     // Parse the JSON response
-    const rankingResult = parseRankingResponse(result.content || '');
+    const rankingResult = parseRankingResponse(result.content || "");
     const processingTime = Date.now() - startTime;
 
     return {
@@ -202,20 +222,22 @@ function parseRankingResponse(response: string): RankingResult {
     // Try to extract JSON from the response
     const jsonMatch = response.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
-      throw new Error('No JSON found in response');
+      throw new Error("No JSON found in response");
     }
-    
+
     const parsed = JSON.parse(jsonMatch[0]);
-    
+
     // Validate and normalize the response
     return {
       score: normalizeScore(parsed.score),
-      reasoning: parsed.reasoning || 'No reasoning provided',
+      reasoning: parsed.reasoning || "No reasoning provided",
       categories: normalizeCategories(parsed.categories),
       estimatedReadTime: normalizeReadTime(parsed.estimatedReadTime),
     };
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorMessage = error instanceof Error
+      ? error.message
+      : "Unknown error";
     throw new Error(`Failed to parse LLM response: ${errorMessage}`);
   }
 }
@@ -223,7 +245,7 @@ function parseRankingResponse(response: string): RankingResult {
 /**
  * Normalize score to be between 0-10
  */
-function normalizeScore(score: any): number {
+function normalizeScore(score: unknown): number {
   const numScore = Number(score);
   if (isNaN(numScore)) return 0;
   return Math.max(0, Math.min(10, numScore));
@@ -232,17 +254,17 @@ function normalizeScore(score: any): number {
 /**
  * Normalize categories array
  */
-function normalizeCategories(categories: any): string[] {
+function normalizeCategories(categories: unknown): string[] {
   if (!Array.isArray(categories)) return [];
   return categories
-    .filter(cat => typeof cat === 'string' && cat.length > 0)
+    .filter((cat) => typeof cat === "string" && cat.length > 0)
     .slice(0, 5); // Limit to 5 categories
 }
 
 /**
  * Normalize read time to be between 1-60 minutes
  */
-function normalizeReadTime(readTime: any): number {
+function normalizeReadTime(readTime: unknown): number {
   const numTime = Number(readTime);
   if (isNaN(numTime) || numTime <= 0) return 5; // Default 5 minutes
   return Math.max(1, Math.min(60, numTime)); // Between 1-60 minutes

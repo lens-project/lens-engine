@@ -16,16 +16,23 @@ export interface ArticleInput {
 }
 
 export interface RankingContext {
-  dayOfWeek: 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday';
-  timeOfDay: 'morning' | 'afternoon' | 'evening' | 'night';
-  userMood?: 'focused' | 'casual' | 'learning' | 'entertainment';
-  readingDuration?: 'quick' | 'medium' | 'deep';
+  dayOfWeek:
+    | "Sunday"
+    | "Monday"
+    | "Tuesday"
+    | "Wednesday"
+    | "Thursday"
+    | "Friday"
+    | "Saturday";
+  timeOfDay: "morning" | "afternoon" | "evening" | "night";
+  userMood?: "focused" | "casual" | "learning" | "entertainment";
+  readingDuration?: "quick" | "medium" | "deep";
 }
 
 export interface ScoringResult {
   score: number;
   confidence: number;
-  method: 'llm' | 'embedding' | 'hybrid';
+  method: "llm" | "embedding" | "hybrid";
   reasoning?: string;
   categories?: string[];
   estimatedReadTime?: number;
@@ -38,7 +45,12 @@ export interface ScoringResult {
 }
 
 export interface RankingErrorData {
-  type: 'invalid_input' | 'llm_error' | 'context_error' | 'timeout' | 'config_error';
+  type:
+    | "invalid_input"
+    | "llm_error"
+    | "context_error"
+    | "timeout"
+    | "config_error";
   message: string;
   input?: ArticleInput;
   context?: RankingContext;
@@ -46,7 +58,7 @@ export interface RankingErrorData {
 
 export type RankingResult = ScoringResult | RankingErrorData;
 
-export type RelevanceCategory = 'high-interest' | 'maybe-interesting' | 'skip';
+export type RelevanceCategory = "high-interest" | "maybe-interesting" | "skip";
 
 export interface RankingOptions {
   /** Maximum time to wait for LLM response (milliseconds) */
@@ -67,7 +79,7 @@ export interface RankingConfig {
   /** Minimum confidence threshold for scoring */
   confidenceThreshold: number;
   /** Default user mood when not specified */
-  defaultMood: 'focused' | 'casual' | 'learning' | 'entertainment';
+  defaultMood: "focused" | "casual" | "learning" | "entertainment";
   /** Enable context-aware scoring adjustments */
   contextAware: boolean;
   /** Timeout for LLM requests (milliseconds) */
@@ -96,18 +108,18 @@ export interface LLMScoringResponse {
 }
 
 export class RankingError extends Error {
-  public readonly type: RankingErrorData['type'];
+  public readonly type: RankingErrorData["type"];
   public readonly input?: ArticleInput;
   public readonly context?: RankingContext;
 
   constructor(
-    type: RankingErrorData['type'],
+    type: RankingErrorData["type"],
     message: string,
     input?: ArticleInput,
-    context?: RankingContext
+    context?: RankingContext,
   ) {
     super(message);
-    this.name = 'RankingError';
+    this.name = "RankingError";
     this.type = type;
     this.input = input;
     this.context = context;

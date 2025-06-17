@@ -8,16 +8,23 @@ export interface ArticleInput {
 }
 
 export interface RankingContext {
-  dayOfWeek: 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday';
-  timeOfDay: 'morning' | 'afternoon' | 'evening' | 'night';
-  userMood?: 'focused' | 'casual' | 'learning' | 'entertainment';
-  readingDuration?: 'quick' | 'medium' | 'deep';
+  dayOfWeek:
+    | "Sunday"
+    | "Monday"
+    | "Tuesday"
+    | "Wednesday"
+    | "Thursday"
+    | "Friday"
+    | "Saturday";
+  timeOfDay: "morning" | "afternoon" | "evening" | "night";
+  userMood?: "focused" | "casual" | "learning" | "entertainment";
+  readingDuration?: "quick" | "medium" | "deep";
 }
 
 export interface ScoringResult {
   score: number;
   confidence: number;
-  method: 'llm' | 'embedding' | 'hybrid';
+  method: "llm" | "embedding" | "hybrid";
   reasoning?: string;
   categories?: string[];
   estimatedReadTime?: number;
@@ -29,7 +36,7 @@ export interface ScoringResult {
 }
 
 export interface RankingError {
-  type: 'invalid_input' | 'llm_error' | 'context_error' | 'timeout';
+  type: "invalid_input" | "llm_error" | "context_error" | "timeout";
   message: string;
   input?: ArticleInput;
   context?: RankingContext;
@@ -37,7 +44,7 @@ export interface RankingError {
 
 export type RankingResult = ScoringResult | RankingError;
 
-export type RelevanceCategory = 'high-interest' | 'maybe-interesting' | 'skip';
+export type RelevanceCategory = "high-interest" | "maybe-interesting" | "skip";
 
 export interface ContextualAdjustments {
   dayOfWeekMultiplier: number;

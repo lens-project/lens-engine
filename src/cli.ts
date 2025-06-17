@@ -21,7 +21,15 @@ import {
   fetchAllContent,
 } from "@src/retrieval/mod.ts";
 import { processContent, type ProcessingOptions } from "@src/processors/mod.ts";
-import { rankContent, createCurrentContext, createExampleCriteriaConfig, type RankingOptions, type RankingResult, type ScoringResult, type RankingErrorData } from "@src/ranking/mod.ts";
+import {
+  createCurrentContext,
+  createExampleCriteriaConfig,
+  rankContent,
+  type RankingErrorData,
+  type RankingOptions,
+  type RankingResult,
+  type ScoringResult,
+} from "@src/ranking/mod.ts";
 
 /**
  * CLI command options
@@ -52,9 +60,9 @@ interface CliOptions {
   /** Continue processing after errors */
   continueOnError?: boolean;
   /** User mood for ranking context */
-  mood?: 'focused' | 'casual' | 'learning' | 'entertainment';
+  mood?: "focused" | "casual" | "learning" | "entertainment";
   /** Reading duration for ranking context */
-  readingTime?: 'quick' | 'medium' | 'deep';
+  readingTime?: "quick" | "medium" | "deep";
   /** Minimum score threshold for output */
   minScore?: number;
 }
@@ -110,10 +118,10 @@ function parseArgs(args: string[]): CliOptions {
         options.continueOnError = true;
         break;
       case "--mood":
-        options.mood = args[++i] as CliOptions['mood'];
+        options.mood = args[++i] as CliOptions["mood"];
         break;
       case "--reading-time":
-        options.readingTime = args[++i] as CliOptions['readingTime'];
+        options.readingTime = args[++i] as CliOptions["readingTime"];
         break;
       case "--min-score":
         options.minScore = parseFloat(args[++i]);
@@ -193,7 +201,7 @@ CONFIGURATION:
  */
 async function runFeedProcessing(options: CliOptions): Promise<boolean> {
   try {
-    console.log("🔄 Processing feeds from OPML...");
+    console.log("Processing feeds from OPML...");
 
     const config = await getConfig();
     const baseDir = config.core.dataDir;
@@ -219,7 +227,7 @@ async function runFeedProcessing(options: CliOptions): Promise<boolean> {
 
     const summary = await processFeedsFromOpml(feedOptions);
 
-    console.log(`✅ Feed processing complete!`);
+    console.log(`Feed processing complete!`);
     console.log(`   Total feeds: ${summary.totalFeeds}`);
     console.log(`   Successfully processed: ${summary.successCount}`);
     console.log(`   Failed: ${summary.failureCount}`);
@@ -236,7 +244,7 @@ async function runFeedProcessing(options: CliOptions): Promise<boolean> {
     return summary.failureCount === 0;
   } catch (error) {
     console.error(
-      `❌ Feed processing failed: ${
+      `Feed processing failed: ${
         error instanceof Error ? error.message : String(error)
       }`,
     );
@@ -249,7 +257,7 @@ async function runFeedProcessing(options: CliOptions): Promise<boolean> {
  */
 async function runContentFetching(options: CliOptions): Promise<boolean> {
   try {
-    console.log("🔄 Fetching content from feeds...");
+    console.log("Fetching content from feeds...");
 
     const config = await getConfig();
     const baseDir = config.core.dataDir;
@@ -296,7 +304,7 @@ async function runContentFetching(options: CliOptions): Promise<boolean> {
     const successful = results.filter((r) => r.success).length;
     const failed = results.filter((r) => !r.success).length;
 
-    console.log(`✅ Content fetching complete!`);
+    console.log(`Content fetching complete!`);
     console.log(`   Total URLs: ${results.length}`);
     console.log(`   Successfully fetched: ${successful}`);
     console.log(`   Failed to fetch: ${failed}`);
@@ -311,7 +319,7 @@ async function runContentFetching(options: CliOptions): Promise<boolean> {
     return failed === 0;
   } catch (error) {
     console.error(
-      `❌ Content fetching failed: ${
+      `Content fetching failed: ${
         error instanceof Error ? error.message : String(error)
       }`,
     );
@@ -324,7 +332,7 @@ async function runContentFetching(options: CliOptions): Promise<boolean> {
  */
 async function runContentProcessing(options: CliOptions): Promise<boolean> {
   try {
-    console.log("🔄 Processing content...");
+    console.log("Processing content...");
 
     const config = await getConfig();
     const baseDir = config.core.dataDir;
@@ -348,7 +356,7 @@ async function runContentProcessing(options: CliOptions): Promise<boolean> {
 
     const result = await processContent(processOptions);
 
-    console.log(`✅ Content processing complete!`);
+    console.log(`Content processing complete!`);
     console.log(`   Total files: ${result.totalItems}`);
     console.log(`   Successfully processed: ${result.successCount}`);
     console.log(`   Failed: ${result.failureCount}`);
@@ -365,7 +373,7 @@ async function runContentProcessing(options: CliOptions): Promise<boolean> {
     return result.failureCount === 0;
   } catch (error) {
     console.error(
-      `❌ Content processing failed: ${
+      `Content processing failed: ${
         error instanceof Error ? error.message : String(error)
       }`,
     );
@@ -378,7 +386,7 @@ async function runContentProcessing(options: CliOptions): Promise<boolean> {
  */
 async function runContentRanking(options: CliOptions): Promise<boolean> {
   try {
-    console.log("🔄 Ranking content...");
+    console.log("Ranking content...");
 
     const config = await getConfig();
     const baseDir = config.core.dataDir;
@@ -390,25 +398,36 @@ async function runContentRanking(options: CliOptions): Promise<boolean> {
       console.log(`Output directory: ${rankedDir}`);
       console.log(`LLM Model: ${config.llm.llmModel}`);
       if (options.mood) console.log(`User mood: ${options.mood}`);
-      if (options.readingTime) console.log(`Reading time: ${options.readingTime}`);
-      if (options.minScore) console.log(`Min score threshold: ${options.minScore}`);
+      if (options.readingTime) {
+        console.log(`Reading time: ${options.readingTime}`);
+      }
+      if (options.minScore) {
+        console.log(`Min score threshold: ${options.minScore}`);
+      }
     }
 
     // Create ranking context
     const context = createCurrentContext(options.mood, options.readingTime);
-    console.log(`📅 Ranking context: ${context.dayOfWeek} ${context.timeOfDay}, mood: ${context.userMood || 'default'}, reading: ${context.readingDuration || 'default'}`);
+    console.log(
+      `Ranking context: ${context.dayOfWeek} ${context.timeOfDay}, mood: ${
+        context.userMood || "default"
+      }, reading: ${context.readingDuration || "default"}`,
+    );
 
     // Ensure output directory exists
     await Deno.mkdir(rankedDir, { recursive: true });
 
     // Read processed content files
-    const articles = await loadProcessedArticles(processedDir, options.verbose || false);
+    const articles = await loadProcessedArticles(
+      processedDir,
+      options.verbose || false,
+    );
     if (articles.length === 0) {
-      console.log("⚠️  No processed articles found to rank");
+      console.log("Warning: No processed articles found to rank");
       return true;
     }
 
-    console.log(`📊 Found ${articles.length} processed articles to rank`);
+    console.log(`Found ${articles.length} processed articles to rank`);
 
     // Rank the articles
     const rankingOptions: Partial<RankingOptions> = {
@@ -418,11 +437,11 @@ async function runContentRanking(options: CliOptions): Promise<boolean> {
     };
 
     const results = await rankContent(articles, context, rankingOptions);
-    
+
     // Filter by minimum score if specified
     const minScore = options.minScore || 4;
-    const filteredResults = results.filter(result => {
-      if ('score' in result) return result.score >= minScore;
+    const filteredResults = results.filter((result) => {
+      if ("score" in result) return result.score >= minScore;
       return false; // Include errors for reporting
     });
 
@@ -430,11 +449,11 @@ async function runContentRanking(options: CliOptions): Promise<boolean> {
     await writeRankedResults(rankedDir, filteredResults, options);
 
     // Report results
-    const successful = results.filter(r => 'score' in r).length;
-    const errors = results.filter(r => 'type' in r).length;
-    const aboveThreshold = filteredResults.filter(r => 'score' in r).length;
+    const successful = results.filter((r) => "score" in r).length;
+    const errors = results.filter((r) => "type" in r).length;
+    const aboveThreshold = filteredResults.filter((r) => "score" in r).length;
 
-    console.log(`✅ Content ranking complete!`);
+    console.log(`Content ranking complete!`);
     console.log(`   Total articles: ${articles.length}`);
     console.log(`   Successfully ranked: ${successful}`);
     console.log(`   Errors: ${errors}`);
@@ -443,7 +462,7 @@ async function runContentRanking(options: CliOptions): Promise<boolean> {
     if (errors > 0 && options.verbose) {
       console.log(`\nRanking errors:`);
       results
-        .filter(r => 'type' in r)
+        .filter((r) => "type" in r)
         .forEach((r: RankingErrorData) => {
           console.log(`   - ${r.type}: ${r.message}`);
         });
@@ -452,7 +471,7 @@ async function runContentRanking(options: CliOptions): Promise<boolean> {
     return errors === 0;
   } catch (error) {
     console.error(
-      `❌ Content ranking failed: ${
+      `Content ranking failed: ${
         error instanceof Error ? error.message : String(error)
       }`,
     );
@@ -463,16 +482,21 @@ async function runContentRanking(options: CliOptions): Promise<boolean> {
 /**
  * Load processed articles from directory
  */
-async function loadProcessedArticles(processedDir: string, verbose: boolean): Promise<Array<{title: string, summary: string, url: string, source?: string}>> {
+async function loadProcessedArticles(
+  processedDir: string,
+  verbose: boolean,
+): Promise<
+  Array<{ title: string; summary: string; url: string; source?: string }>
+> {
   const articles = [];
-  
+
   try {
     for await (const entry of Deno.readDir(processedDir)) {
-      if (entry.isFile && entry.name.endsWith('-summary.md')) {
+      if (entry.isFile && entry.name.endsWith("-summary.md")) {
         try {
           const filePath = join(processedDir, entry.name);
           const content = await Deno.readTextFile(filePath);
-          
+
           // Parse the markdown summary file
           const article = parseProcessedArticle(content, entry.name);
           if (article) {
@@ -483,7 +507,9 @@ async function loadProcessedArticles(processedDir: string, verbose: boolean): Pr
           }
         } catch (error) {
           if (verbose) {
-            const errorMessage = error instanceof Error ? error.message : String(error);
+            const errorMessage = error instanceof Error
+              ? error.message
+              : String(error);
             console.warn(`   Failed to load ${entry.name}: ${errorMessage}`);
           }
         }
@@ -500,18 +526,21 @@ async function loadProcessedArticles(processedDir: string, verbose: boolean): Pr
 /**
  * Parse a processed article markdown file
  */
-function parseProcessedArticle(content: string, filename: string): {title: string, summary: string, url: string, source?: string} | null {
+function parseProcessedArticle(
+  content: string,
+  filename: string,
+): { title: string; summary: string; url: string; source?: string } | null {
   try {
     // First try to extract title from content metadata
-    let title = '';
-    
+    let title = "";
+
     // Look for title in various formats
     const titlePatterns = [
-      /^#\s+(.+)$/m,                    // Markdown header: # Title
-      /Title:\s*(.+)$/im,               // Title: value format
-      /^(.+)$/m,                        // First line as title
+      /^#\s+(.+)$/m, // Markdown header: # Title
+      /Title:\s*(.+)$/im, // Title: value format
+      /^(.+)$/m, // First line as title
     ];
-    
+
     for (const pattern of titlePatterns) {
       const titleMatch = content.match(pattern);
       if (titleMatch && titleMatch[1]?.trim()) {
@@ -519,28 +548,28 @@ function parseProcessedArticle(content: string, filename: string): {title: strin
         break;
       }
     }
-    
+
     // Fall back to filename if no title found in content
     if (!title) {
-      title = filename.replace('-summary.md', '').replace(/[-_]/g, ' ');
+      title = filename.replace("-summary.md", "").replace(/[-_]/g, " ");
     }
-    
+
     // Look for URL in content
     const urlMatch = content.match(/URL:\s*(https?:\/\/[^\s\n]+)/i);
     const url = urlMatch ? urlMatch[1] : `https://example.com/${filename}`;
-    
+
     // Look for source in content
     const sourceMatch = content.match(/Source:\s*([^\n]+)/i);
     const source = sourceMatch ? sourceMatch[1].trim() : undefined;
-    
+
     // Use the content as summary (clean up any metadata)
     let summary = content
-      .replace(/URL:\s*https?:\/\/[^\s\n]+/gi, '')
-      .replace(/Source:\s*[^\n]+/gi, '')
-      .replace(/Title:\s*[^\n]+/gi, '')
-      .replace(/#+\s*/g, '')
+      .replace(/URL:\s*https?:\/\/[^\s\n]+/gi, "")
+      .replace(/Source:\s*[^\n]+/gi, "")
+      .replace(/Title:\s*[^\n]+/gi, "")
+      .replace(/#+\s*/g, "")
       .trim();
-      
+
     if (!summary || summary.length < 10) {
       summary = `Processed content from ${title}`;
     }
@@ -556,21 +585,25 @@ function parseProcessedArticle(content: string, filename: string): {title: strin
 /**
  * Write ranked results to files
  */
-async function writeRankedResults(rankedDir: string, results: RankingResult[], options: CliOptions): Promise<void> {
+async function writeRankedResults(
+  rankedDir: string,
+  results: RankingResult[],
+  options: CliOptions,
+): Promise<void> {
   // Write individual ranking files
-  const rankingFile = join(rankedDir, 'rankings.json');
-  const summaryFile = join(rankedDir, 'ranking-summary.md');
-  
+  const rankingFile = join(rankedDir, "rankings.json");
+  const summaryFile = join(rankedDir, "ranking-summary.md");
+
   // Prepare data for JSON output
   const jsonData = {
     timestamp: new Date().toISOString(),
-    context: results.length > 0 ? 'context data would be here' : null,
+    context: results.length > 0 ? "context data would be here" : null,
     totalArticles: results.length,
     results: results.map((result: RankingResult) => {
-      if ('score' in result) {
+      if ("score" in result) {
         return {
-          title: result.input?.title || 'Unknown',
-          url: result.input?.url || '',
+          title: result.input?.title || "Unknown",
+          url: result.input?.url || "",
           score: result.score,
           confidence: result.confidence,
           method: result.method,
@@ -580,57 +613,71 @@ async function writeRankedResults(rankedDir: string, results: RankingResult[], o
         };
       } else {
         return {
-          title: result.input?.title || 'Unknown',
-          url: result.input?.url || '',
+          title: result.input?.title || "Unknown",
+          url: result.input?.url || "",
           error: result.type,
           message: result.message,
         };
       }
-    })
+    }),
   };
-  
+
   // Write JSON file
   await Deno.writeTextFile(rankingFile, JSON.stringify(jsonData, null, 2));
-  
+
   // Write markdown summary
   let markdown = `# Content Ranking Results\n\n`;
   markdown += `**Generated:** ${new Date().toLocaleString()}\n\n`;
   markdown += `**Total Articles:** ${results.length}\n\n`;
-  
-  const successful = results.filter((r: RankingResult): r is ScoringResult => 'score' in r);
-  const errors = results.filter((r: RankingResult): r is RankingErrorData => 'type' in r);
-  
+
+  const successful = results.filter((r: RankingResult): r is ScoringResult =>
+    "score" in r
+  );
+  const errors = results.filter((r: RankingResult): r is RankingErrorData =>
+    "type" in r
+  );
+
   markdown += `**Successfully Ranked:** ${successful.length}\n`;
   markdown += `**Errors:** ${errors.length}\n\n`;
-  
+
   if (successful.length > 0) {
     // Sort by score descending
-    const sorted = successful.sort((a: ScoringResult, b: ScoringResult) => b.score - a.score);
-    
+    const sorted = successful.sort((a: ScoringResult, b: ScoringResult) =>
+      b.score - a.score
+    );
+
     markdown += `## Top Ranked Articles\n\n`;
     sorted.forEach((result: ScoringResult, index: number) => {
-      markdown += `${index + 1}. **${result.input?.title || 'Unknown'}** (Score: ${result.score})\n`;
-      markdown += `   - URL: ${result.input?.url || 'N/A'}\n`;
-      markdown += `   - Categories: ${result.categories?.join(', ') || 'None'}\n`;
-      markdown += `   - Read Time: ${result.estimatedReadTime || 'Unknown'} minutes\n`;
+      markdown += `${index + 1}. **${
+        result.input?.title || "Unknown"
+      }** (Score: ${result.score})\n`;
+      markdown += `   - URL: ${result.input?.url || "N/A"}\n`;
+      markdown += `   - Categories: ${
+        result.categories?.join(", ") || "None"
+      }\n`;
+      markdown += `   - Read Time: ${
+        result.estimatedReadTime || "Unknown"
+      } minutes\n`;
       if (result.reasoning) {
         markdown += `   - Reasoning: ${result.reasoning}\n`;
       }
       markdown += `\n`;
     });
   }
-  
+
   if (errors.length > 0) {
     markdown += `## Ranking Errors\n\n`;
     errors.forEach((error: RankingErrorData, index: number) => {
-      markdown += `${index + 1}. **${error.input?.title || 'Unknown'}**: ${error.message}\n`;
+      markdown += `${index + 1}. **${
+        error.input?.title || "Unknown"
+      }**: ${error.message}\n`;
     });
   }
-  
+
   await Deno.writeTextFile(summaryFile, markdown);
-  
+
   if (options.verbose) {
-    console.log(`📄 Results written to:`);
+    console.log(`Results written to:`);
     console.log(`   JSON: ${rankingFile}`);
     console.log(`   Summary: ${summaryFile}`);
   }
@@ -652,25 +699,35 @@ async function main(): Promise<void> {
 
     // Handle criteria config creation
     if (options.createCriteriaConfig) {
-      console.log("🚀 Lens Engine CLI - Creating Criteria Configuration");
+      console.log("Lens Engine CLI - Creating Criteria Configuration");
       console.log("====================================================");
-      
+
       const config = await getConfig();
       console.log(`Data directory: ${config.core.dataDir}`);
-      
+
       try {
         await createExampleCriteriaConfig(config.core.dataDir);
-        console.log("✅ Example ranking criteria configuration created successfully!");
-        console.log("   📝 Edit the file to customize ranking criteria for your needs");
-        console.log("   🔄 The ranking system will automatically use your custom criteria");
+        console.log(
+          "Example ranking criteria configuration created successfully!",
+        );
+        console.log(
+          "   Edit the file to customize ranking criteria for your needs",
+        );
+        console.log(
+          "   The ranking system will automatically use your custom criteria",
+        );
       } catch (error) {
-        console.error(`❌ Failed to create criteria config: ${error instanceof Error ? error.message : String(error)}`);
+        console.error(
+          `Failed to create criteria config: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+        );
         Deno.exit(1);
       }
       return;
     }
 
-    console.log("🚀 Lens Engine CLI");
+    console.log("Lens Engine CLI");
     console.log("==================");
 
     // Load and display configuration
@@ -683,19 +740,23 @@ async function main(): Promise<void> {
 
     // Determine which operations to run
     const runFeeds = options.feedsOnly ||
-      (!options.fetchOnly && !options.processOnly && !options.rankOnly && !options.createCriteriaConfig);
+      (!options.fetchOnly && !options.processOnly && !options.rankOnly &&
+        !options.createCriteriaConfig);
     const runFetch = options.fetchOnly ||
-      (!options.feedsOnly && !options.processOnly && !options.rankOnly && !options.createCriteriaConfig);
+      (!options.feedsOnly && !options.processOnly && !options.rankOnly &&
+        !options.createCriteriaConfig);
     const runProcess = options.processOnly ||
-      (!options.feedsOnly && !options.fetchOnly && !options.rankOnly && !options.createCriteriaConfig);
+      (!options.feedsOnly && !options.fetchOnly && !options.rankOnly &&
+        !options.createCriteriaConfig);
     const runRank = options.rankOnly ||
-      (!options.feedsOnly && !options.fetchOnly && !options.processOnly && !options.createCriteriaConfig);
+      (!options.feedsOnly && !options.fetchOnly && !options.processOnly &&
+        !options.createCriteriaConfig);
 
     // Run operations in sequence
     if (runFeeds) {
       success = await runFeedProcessing(options) && success;
       if (!success && !options.continueOnError) {
-        console.error("❌ Pipeline stopped due to feed processing failure");
+        console.error("Pipeline stopped due to feed processing failure");
         Deno.exit(1);
       }
       console.log("");
@@ -704,7 +765,7 @@ async function main(): Promise<void> {
     if (runFetch) {
       success = await runContentFetching(options) && success;
       if (!success && !options.continueOnError) {
-        console.error("❌ Pipeline stopped due to content fetching failure");
+        console.error("Pipeline stopped due to content fetching failure");
         Deno.exit(1);
       }
       console.log("");
@@ -713,7 +774,7 @@ async function main(): Promise<void> {
     if (runProcess) {
       success = await runContentProcessing(options) && success;
       if (!success && !options.continueOnError) {
-        console.error("❌ Pipeline stopped due to content processing failure");
+        console.error("Pipeline stopped due to content processing failure");
         Deno.exit(1);
       }
       console.log("");
@@ -722,17 +783,17 @@ async function main(): Promise<void> {
     if (runRank) {
       success = await runContentRanking(options) && success;
       if (!success && !options.continueOnError) {
-        console.error("❌ Pipeline stopped due to content ranking failure");
+        console.error("Pipeline stopped due to content ranking failure");
         Deno.exit(1);
       }
     }
 
     // Final summary
     if (success) {
-      console.log("🎉 All operations completed successfully!");
+      console.log("All operations completed successfully!");
     } else {
       console.log(
-        "⚠️  Some operations completed with errors (see details above)",
+        "Warning: Some operations completed with errors (see details above)",
       );
       if (!options.continueOnError) {
         Deno.exit(1);
@@ -740,7 +801,7 @@ async function main(): Promise<void> {
     }
   } catch (error) {
     console.error(
-      `❌ CLI Error: ${error instanceof Error ? error.message : String(error)}`,
+      `CLI Error: ${error instanceof Error ? error.message : String(error)}`,
     );
     Deno.exit(1);
   }

@@ -1,9 +1,9 @@
-import { 
-  type LLMScoringRequest, 
-  type ScoringResult,
+import {
+  type LLMScoringRequest,
   type RankingErrorData,
-} from '../types.ts';
-import { 
+  type ScoringResult,
+} from "../types.ts";
+import {
   rankContent as modelsRankContent,
   type RankingArticleInput,
   type RankingContext as ModelsRankingContext,
@@ -15,7 +15,7 @@ export interface LLMRanker {
 
 export class OllamaRanker implements LLMRanker {
   private timeout: number;
-  
+
   constructor(timeout = 60000) { // Default to 60 seconds
     this.timeout = timeout;
   }
@@ -23,10 +23,10 @@ export class OllamaRanker implements LLMRanker {
   async scoreArticle(request: LLMScoringRequest): Promise<ScoringResult> {
     const startTime = Date.now();
     const articleTitle = request.article.title.substring(0, 30);
-    
+
     try {
       console.log(`      🤖 LLM ranking: "${articleTitle}..." - Starting...`);
-      
+
       // Convert our types to models module types
       const modelsArticle: RankingArticleInput = {
         title: request.article.title,
@@ -44,42 +44,64 @@ export class OllamaRanker implements LLMRanker {
         readingDuration: request.context.readingDuration,
       };
 
-      console.log(`      🔗 LLM ranking: "${articleTitle}..." - Calling models module with ${this.timeout}ms timeout...`);
-      
+      console.log(
+        `      🔗 LLM ranking: "${articleTitle}..." - Calling models module with ${this.timeout}ms timeout...`,
+      );
+
       // Use the models module ranking function with timeout
       const rankingPromise = modelsRankContent(modelsArticle, modelsContext, {
         temperature: 0.3, // Lower temperature for consistent scoring
         verbose: false, // Disable verbose logging to avoid spam
         criteriaConfig: request.criteriaConfig, // Pass through criteria if provided
       });
-      
+
       const timeoutPromise = new Promise((_, reject) => {
         setTimeout(() => {
           reject(new Error(`LLM ranking timeout after ${this.timeout}ms`));
         }, this.timeout);
       });
-      
-      const response = await Promise.race([rankingPromise, timeoutPromise]) as any;
+
+      const response = await Promise.race([
+        rankingPromise,
+        timeoutPromise,
+      ]) as {
+        success: boolean;
+        result?: {
+          score: number;
+          reasoning: string;
+          categories: string[];
+          estimatedReadTime: number;
+        };
+        error?: string;
+      };
 
       const elapsed = Date.now() - startTime;
-      console.log(`      ⏱️  LLM ranking: "${articleTitle}..." - Models call took ${elapsed}ms`);
+      console.log(
+        `      ⏱️  LLM ranking: "${articleTitle}..." - Models call took ${elapsed}ms`,
+      );
 
       if (!response.success || !response.result) {
-        console.log(`      ❌ LLM ranking: "${articleTitle}..." - Models call failed: ${response.error || 'Unknown error'}`);
+        console.log(
+          `      ❌ LLM ranking: "${articleTitle}..." - Models call failed: ${
+            response.error || "Unknown error"
+          }`,
+        );
         throw {
-          type: 'llm_error',
-          message: response.error || 'Models ranking failed',
+          type: "llm_error",
+          message: response.error || "Models ranking failed",
           input: request.article,
           context: request.context,
         } as RankingErrorData;
       }
 
-      console.log(`      ✅ LLM ranking: "${articleTitle}..." - Success! Score: ${response.result.score}`);
-      
+      console.log(
+        `      ✅ LLM ranking: "${articleTitle}..." - Success! Score: ${response.result.score}`,
+      );
+
       return {
         score: response.result.score,
         confidence: 0.75, // TODO: Make this dynamic based on response quality
-        method: 'llm',
+        method: "llm",
         reasoning: response.result.reasoning,
         categories: response.result.categories,
         estimatedReadTime: response.result.estimatedReadTime,
@@ -87,17 +109,25 @@ export class OllamaRanker implements LLMRanker {
       };
     } catch (error) {
       const elapsed = Date.now() - startTime;
-      console.log(`      ❌ LLM ranking: "${articleTitle}..." - Error after ${elapsed}ms`);
-      
-      if (error && typeof error === 'object' && 'type' in error) {
+      console.log(
+        `      ❌ LLM ranking: "${articleTitle}..." - Error after ${elapsed}ms`,
+      );
+
+      if (error && typeof error === "object" && "type" in error) {
         throw error; // Re-throw RankingErrorData
       }
-      
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.log(`      📝 LLM ranking: "${articleTitle}..." - Error details: ${errorMessage.substring(0, 100)}${errorMessage.length > 100 ? '...' : ''}`);
-      
+
+      const errorMessage = error instanceof Error
+        ? error.message
+        : "Unknown error";
+      console.log(
+        `      📝 LLM ranking: "${articleTitle}..." - Error details: ${
+          errorMessage.substring(0, 100)
+        }${errorMessage.length > 100 ? "..." : ""}`,
+      );
+
       throw {
-        type: 'llm_error',
+        type: "llm_error",
         message: `LLM scoring failed: ${errorMessage}`,
         input: request.article,
         context: request.context,

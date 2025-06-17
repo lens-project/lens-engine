@@ -1,15 +1,15 @@
-export * from './types.ts';
-import { 
-  ArticleInput, 
-  RankingContext, 
-  ScoringResult, 
-  RankingError, 
+export * from "./types.ts";
+import {
+  ArticleInput,
+  LLMScoringRequest,
+  RankingContext,
+  RankingError,
   RankingResult,
   RelevanceCategory,
-  LLMScoringRequest 
-} from './types.ts';
-import { applyContextualAdjustments } from './context-ranker.ts';
-import { createLLMRanker, LLMRanker } from './llm-ranker.ts';
+  ScoringResult,
+} from "./types.ts";
+import { applyContextualAdjustments } from "./context-ranker.ts";
+import { createLLMRanker, LLMRanker } from "./llm-ranker.ts";
 
 export class ContentRanker {
   private llmRanker: LLMRanker;
@@ -20,7 +20,7 @@ export class ContentRanker {
 
   async scoreArticle(
     article: ArticleInput,
-    context: RankingContext
+    context: RankingContext,
   ): Promise<RankingResult> {
     try {
       this.validateInput(article, context);
@@ -31,7 +31,7 @@ export class ContentRanker {
       const contextAdjustedScore = applyContextualAdjustments(
         baseScoringResult.score,
         context,
-        article
+        article,
       );
 
       return {
@@ -47,10 +47,12 @@ export class ContentRanker {
       if (this.isRankingError(error)) {
         return error;
       }
-      
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+      const errorMessage = error instanceof Error
+        ? error.message
+        : "Unknown error";
       return {
-        type: 'context_error',
+        type: "context_error",
         message: `Ranking failed: ${errorMessage}`,
         input: article,
         context,
@@ -60,31 +62,31 @@ export class ContentRanker {
 
   async scoreArticles(
     articles: ArticleInput[],
-    context: RankingContext
+    context: RankingContext,
   ): Promise<ScoringResult[]> {
     const results: ScoringResult[] = [];
-    
+
     for (const article of articles) {
       const result = await this.scoreArticle(article, context);
       if (!this.isRankingError(result)) {
         results.push(result);
       }
     }
-    
+
     return results;
   }
 
   categorizeRelevance(score: number): RelevanceCategory {
-    if (score >= 7) return 'high-interest';
-    if (score >= 4) return 'maybe-interesting';
-    return 'skip';
+    if (score >= 7) return "high-interest";
+    if (score >= 4) return "maybe-interesting";
+    return "skip";
   }
 
   private validateInput(article: ArticleInput, context: RankingContext): void {
     if (!article.title || article.title.trim().length === 0) {
       throw {
-        type: 'invalid_input',
-        message: 'Article title is required',
+        type: "invalid_input",
+        message: "Article title is required",
         input: article,
         context,
       };
@@ -92,8 +94,8 @@ export class ContentRanker {
 
     if (!article.summary || article.summary.trim().length === 0) {
       throw {
-        type: 'invalid_input',
-        message: 'Article summary is required',
+        type: "invalid_input",
+        message: "Article summary is required",
         input: article,
         context,
       };
@@ -101,28 +103,36 @@ export class ContentRanker {
 
     if (!article.url || !this.isValidUrl(article.url)) {
       throw {
-        type: 'invalid_input',
-        message: 'Valid article URL is required',
+        type: "invalid_input",
+        message: "Valid article URL is required",
         input: article,
         context,
       };
     }
 
-    const validDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const validDays = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
     if (!validDays.includes(context.dayOfWeek)) {
       throw {
-        type: 'invalid_input',
-        message: 'Invalid day of week',
+        type: "invalid_input",
+        message: "Invalid day of week",
         input: article,
         context,
       };
     }
 
-    const validTimes = ['morning', 'afternoon', 'evening', 'night'];
+    const validTimes = ["morning", "afternoon", "evening", "night"];
     if (!validTimes.includes(context.timeOfDay)) {
       throw {
-        type: 'invalid_input',
-        message: 'Invalid time of day',
+        type: "invalid_input",
+        message: "Invalid time of day",
         input: article,
         context,
       };
@@ -138,15 +148,15 @@ export class ContentRanker {
     }
   }
 
-  private isRankingError(obj: any): obj is RankingError {
-    return obj && typeof obj === 'object' && 'type' in obj && 'message' in obj;
+  private isRankingError(obj: unknown): obj is RankingError {
+    return obj && typeof obj === "object" && "type" in obj && "message" in obj;
   }
 }
 
 export function scoreArticle(
   article: ArticleInput,
   context: RankingContext,
-  useMockLLM = true
+  useMockLLM = true,
 ): Promise<RankingResult> {
   const ranker = new ContentRanker(useMockLLM);
   return ranker.scoreArticle(article, context);
@@ -155,7 +165,7 @@ export function scoreArticle(
 export function scoreArticles(
   articles: ArticleInput[],
   context: RankingContext,
-  useMockLLM = true
+  useMockLLM = true,
 ): Promise<ScoringResult[]> {
   const ranker = new ContentRanker(useMockLLM);
   return ranker.scoreArticles(articles, context);

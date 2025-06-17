@@ -13,12 +13,12 @@ export {
 
 // Ranking controller
 export {
-  rankContent,
   type ArticleInput as RankingArticleInput,
+  rankContent,
   type RankingContext,
   type RankingOptions,
-  type RankingResult,
   type RankingResponse,
+  type RankingResult,
 } from "./ranker.ts";
 
 // Future exports:

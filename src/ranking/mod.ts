@@ -8,10 +8,10 @@
  * Usage:
  * ```typescript
  * import { rankContent, ContentRanker } from "@src/ranking/mod.ts";
- * 
+ *
  * // Functional API
  * const results = await rankContent(articles, context);
- * 
+ *
  * // Class-based API
  * const ranker = new ContentRanker();
  * const result = await ranker.rankArticle(article, context);
@@ -28,8 +28,8 @@ import {
   type RankingContext,
   type RankingOptions,
   type RankingResult,
-  type ScoringResult,
   type RelevanceCategory,
+  type ScoringResult as _ScoringResult,
 } from "./types.ts";
 
 /**
@@ -43,10 +43,10 @@ import {
  * @param options Optional ranking configuration
  * @returns Promise resolving to ranking results for each article
  */
-export async function rankContent(
+export function rankContent(
   articles: ArticleInput[],
   context: RankingContext,
-  options?: RankingOptions
+  options?: RankingOptions,
 ): Promise<RankingResult[]> {
   const ranker = new ContentRankerImpl();
   return ranker.rankBatch(articles, context, options);
@@ -62,10 +62,10 @@ export async function rankContent(
  * @param options Optional ranking configuration
  * @returns Promise resolving to ranking result
  */
-export async function rankArticle(
+export function rankArticle(
   article: ArticleInput,
   context: RankingContext,
-  options?: RankingOptions
+  options?: RankingOptions,
 ): Promise<RankingResult> {
   const ranker = new ContentRankerImpl();
   return ranker.rankArticle(article, context, options);
@@ -80,9 +80,9 @@ export async function rankArticle(
  * @returns Relevance category
  */
 export function categorizeRelevance(score: number): RelevanceCategory {
-  if (score >= 7) return 'high-interest';
-  if (score >= 4) return 'maybe-interesting';
-  return 'skip';
+  if (score >= 7) return "high-interest";
+  if (score >= 4) return "maybe-interesting";
+  return "skip";
 }
 
 /**
@@ -96,19 +96,27 @@ export function categorizeRelevance(score: number): RelevanceCategory {
  * @returns Current ranking context
  */
 export function createCurrentContext(
-  userMood?: RankingContext['userMood'],
-  readingDuration?: RankingContext['readingDuration']
+  userMood?: RankingContext["userMood"],
+  readingDuration?: RankingContext["readingDuration"],
 ): RankingContext {
   const now = new Date();
-  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const dayOfWeek = dayNames[now.getDay()] as RankingContext['dayOfWeek'];
-  
+  const dayNames = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const dayOfWeek = dayNames[now.getDay()] as RankingContext["dayOfWeek"];
+
   const hour = now.getHours();
-  let timeOfDay: RankingContext['timeOfDay'];
-  if (hour >= 5 && hour < 12) timeOfDay = 'morning';
-  else if (hour >= 12 && hour < 17) timeOfDay = 'afternoon';
-  else if (hour >= 17 && hour < 22) timeOfDay = 'evening';
-  else timeOfDay = 'night';
+  let timeOfDay: RankingContext["timeOfDay"];
+  if (hour >= 5 && hour < 12) timeOfDay = "morning";
+  else if (hour >= 12 && hour < 17) timeOfDay = "afternoon";
+  else if (hour >= 17 && hour < 22) timeOfDay = "evening";
+  else timeOfDay = "night";
 
   return {
     dayOfWeek,
@@ -120,24 +128,24 @@ export function createCurrentContext(
 
 // Export criteria management functions
 export {
-  loadRankingCriteria,
   createExampleCriteriaConfig,
   generateCriteriaPromptText,
-} from './src/criteria-loader.ts';
+  loadRankingCriteria,
+} from "./src/criteria-loader.ts";
 
 // Export utilities
 export {
+  calculateRankingStats,
+  filterByCategory,
+  filterByScore,
+  formatRankingResults,
+  getErrorResults,
+  getSuccessfulResults,
   isRankingError,
   isScoringResult,
-  getSuccessfulResults,
-  getErrorResults,
-  calculateRankingStats,
-  sortByScore,
-  filterByScore,
-  filterByCategory,
-  formatRankingResults,
   type RankingStats,
-} from './src/utils.ts';
+  sortByScore,
+} from "./src/utils.ts";
 
 /**
  * ContentRanker Class
@@ -155,10 +163,10 @@ export class ContentRanker {
   /**
    * Rank a single article
    */
-  async rankArticle(
+  rankArticle(
     article: ArticleInput,
     context: RankingContext,
-    options?: RankingOptions
+    options?: RankingOptions,
   ): Promise<RankingResult> {
     return this.impl.rankArticle(article, context, options);
   }
@@ -166,10 +174,10 @@ export class ContentRanker {
   /**
    * Rank multiple articles in batch
    */
-  async rankBatch(
+  rankBatch(
     articles: ArticleInput[],
     context: RankingContext,
-    options?: RankingOptions
+    options?: RankingOptions,
   ): Promise<RankingResult[]> {
     return this.impl.rankBatch(articles, context, options);
   }
