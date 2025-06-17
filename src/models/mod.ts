@@ -6,6 +6,12 @@
 
 // Controllers
 export {
+  rankContent,
+  type RankingArticleInput,
+  type RankingContext,
+  type RankingOptions,
+  type RankingResponse,
+  type RankingResult,
   summarizeContent,
   type SummaryOptions,
   type SummaryResponse,
