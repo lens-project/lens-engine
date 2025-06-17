@@ -1,46 +1,56 @@
-# On reading novels - Austin Kleon
+# A peek inside my pocket notebook - Austin Kleon
 
 ## Summary
 
-### Summary of "On Reading Novels"
+### Summary of "A Peek Inside My Pocket Notebook" Blog Post
 
-**Blog Post Overview:**
-The blog post discusses the joy and subversive nature of reading novels for pleasure. It references a previous newsletter that highlighted the act of sitting and reading a novel as an act of resistance in today's busy world, emphasizing how it feels like getting away with something.
+**Author**: Austin Kleon  
+**Date**: June 5, 2025  
 
-**Key Points:**
+#### Overview
+The post provides an insight into the author's pocket notebook, which he describes as his least formal but most surprising and favorite notebook to review. 
 
-1. **Reading Experience:** The author notes that the feeling of "getting away with something" is essential to enjoying novels. Reading should feel subversive because it allows people to disconnect from daily routines and immerse themselves in other worlds.
-   
-2. **Act of Resistance:** In 2025, reading a novel is described as swimming against the current of contemporary distractions and digital interruptions.
+#### Key Points:
+1. **Notebook Type**: The pocket notebook is one of Austin Kleon’s four notebooks.
+2. **Content**: The entries are informal and spontaneous, reflecting a mix of thoughts, sketches, and ideas.
+3. **Surprise Factor**: Due to its casual nature, the contents often surprise him when he reviews it.
 
-3. **Recommendations:** The post includes links to recommendations for favorite novels, such as those listed in a previous newsletter titled "Big Books for Summer."
+#### Additional Notes:
+- **Publication Date**: June 5, 2025
+- **Categories**: Sketchbook
 
-4. **Newsletter Engagement:** Readers are encouraged to engage with the content by leaving their own book recommendations in the comments section.
+#### Related Posts and Projects:
+1. **Other Notebooks**: The author mentions his other notebooks, noting how this one stands out.
+2. **Previous Entries**: He references previous entries like "On This Date" posts, which are themed around specific dates.
 
-**Additional Content:**
+#### Author Information:
+- **Author Bio**: Austin Kleon is a writer who draws and the bestselling author of "Steal Like An Artist."
+- **Publications**: He lists his books, including the aforementioned title.
+- **Newsletter**: Readers can sign up for his newsletter to receive updates weekly.
 
-- A list of newsletters related to the topic.
-- Links to social media platforms where readers can follow Austin Kleon.
-- Information about books and other resources available, such as audiobooks and t-shirts.
-  
-**Author Bio:**
-Austin Kleon is a writer who draws and has written several bestselling books, including "Steal Like An Artist."
+#### Social Media Links:
+- **Facebook**
+- **Instagram** 
+- **Tumblr**
+- **Twitter**
+- **YouTube**
 
-**Footer Information:**
-The post includes copyright information and mentions that the site participates in the Amazon Affiliate program to keep it free for readers.
+#### Additional Content:
+- **Recent Posts**: The post links to other recent entries and projects.
+- **Books by Austin Kleon**: Details about the author's books for purchase.
+- **T-Shirts**: Links to order t-shirts on demand.
 
-### Key Takeaways:
+#### Licensing Note:
+The site participates in the Amazon Affiliates program, which supports its free access. 
 
-- Reading novels should feel like an act of resistance against modern distractions.
-- Engaging with literature provides a sense of freedom and escape from daily routines.
-- Reader recommendations are encouraged to enrich the reading experience.
+This summary encapsulates the essence of the blog post and provides a clear overview of Austin Kleon’s writing process and personal insights shared through his pocket notebook.
 
 ## Metadata
 
-- **Word Count**: 896
-- **URLs Found**: 95
+- **Word Count**: 826
+- **URLs Found**: 93
 - **Model**: qwen2.5:7b
-- **Processing Time**: 25417ms
+- **Processing Time**: 26564ms
 
 ## URLs
 
@@ -48,7 +58,7 @@ The post includes copyright information and mentions that the site participates 
 - //maxcdn.bootstrapcdn.com
 - https://austinkleon.com/feed/
 - https://austinkleon.com/comments/feed/
-- https://austinkleon.com/2025/04/24/on-reading-novels/
+- https://austinkleon.com/2025/06/05/a-peek-inside-my-pocket-notebook/
 - https://austinkleon.com/wp-content/themes/eleven40-pro/style.css?ver=2.2.1
 - https://austinkleon.com/wp-includes/css/dist/block-library/style.min.css?ver=6.7.1
 - https://austinkleon.com/wp-includes/css/dashicons.min.css?ver=6.7.1
@@ -57,10 +67,10 @@ The post includes copyright information and mentions that the site participates 
 - //maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css?ver=4.3.0
 - https://austinkleon.com/wp-content/plugins/kleon-custom-menu/lib/css/klmenu-items.css?ver=0.0.1
 - https://austinkleon.com/wp-json/
-- https://austinkleon.com/wp-json/wp/v2/posts/38977
+- https://austinkleon.com/wp-json/wp/v2/posts/39058
 - https://austinkleon.com/xmlrpc.php?rsd
-- https://austinkleon.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Faustinkleon.com%2F2025%2F04%2F24%2Fon-reading-novels%2F
-- https://austinkleon.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Faustinkleon.com%2F2025%2F04%2F24%2Fon-reading-novels%2F&#038;format=xml
+- https://austinkleon.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Faustinkleon.com%2F2025%2F06%2F05%2Fa-peek-inside-my-pocket-notebook%2F
+- https://austinkleon.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Faustinkleon.com%2F2025%2F06%2F05%2Fa-peek-inside-my-pocket-notebook%2F&#038;format=xml
 - https://austinkleon.com/wp-content/uploads/2018/09/cropped-kleon-200px-32x32.jpg
 - https://austinkleon.com/wp-content/uploads/2018/09/cropped-kleon-200px-192x192.jpg
 - https://austinkleon.com/wp-content/uploads/2018/09/cropped-kleon-200px-180x180.jpg
@@ -74,14 +84,15 @@ The post includes copyright information and mentions that the site participates 
 - https://twitter.com/austinkleon
 - https://instagram.com/austinkleon
 - https://austinkleon.com/
-- https://austinkleon.com/category/reading/
-- https://www.instagram.com/p/DIRs5YlJnKk
-- https://austinkleon.substack.com/p/on-sitting-around-and-reading-a-novel
-- https://austinkleon.substack.com/p/big-books-for-summer
-- https://austinkleon.com/category/reading/
+- https://austinkleon.com/category/sketchbook/
+- https://austinkleon.substack.com/p/a-peek-inside-my-pocket-notebook
+- https://austinkleon.com/2025/01/08/my-4-notebooks/
+- https://austinkleon.substack.com/p/a-peek-inside-my-pocket-notebook
+- https://austinkleon.substack.com/p/a-peek-inside-my-pocket-notebook
+- https://austinkleon.com/category/sketchbook/
 - https://austinkleon.com/tag/newsletter/
-- https://austinkleon.com/tag/novels/
-- https://austinkleon.com/tag/reading/
+- https://austinkleon.com/tag/notebooks/
+- https://austinkleon.com/tag/pocket-notebooks/
 - https://austinkleon.com/about/
 - https://austinkleon.com/about/
 - /steal/
@@ -97,13 +108,10 @@ The post includes copyright information and mentions that the site participates 
 - https://www.youtube.com/channel/UC8uQnyh7DAfp4uX9RN7XxEw
 - https://austinkleon.com/wp-content/plugins/simple-social-icons/symbol-defs.svg#social-youtube
 - /on-this-date/
-- https://austinkleon.com/2024/05/19/some-kinds-of-monsters/
-- https://austinkleon.com/2024/05/19/a-museum-of-technology/
-- https://austinkleon.com/2023/05/19/small-requirements/
-- https://austinkleon.com/2022/05/19/the-map-is-not-the-territory/
-- https://austinkleon.com/2020/05/19/growing-without-schooling/
-- https://austinkleon.com/2019/05/19/pansy-luchadores/
-- https://austinkleon.com/2018/05/19/roba-como-un-artista/
+- https://austinkleon.com/2024/06/11/time-is-a-spiral/
+- https://austinkleon.com/2020/06/11/mass-observation/
+- https://austinkleon.com/2019/06/11/the-fate-of-an-archive/
+- https://austinkleon.com/2018/06/11/what-were-going-to-do-today/
 - https://austinkleon.com/steal/
 - https://austinkleon.com/steal-audiobook-trilogy
 - https://austinkleon.com/keepgoing
@@ -112,11 +120,11 @@ The post includes copyright information and mentions that the site participates 
 - https://austinkleon.com/journal
 - https://austinkleon.com/newspaperblackout/
 - https://cottonbureau.com/people/austin-kleon
-- https://austinkleon.com/2025/05/16/maycember-rage/
-- https://austinkleon.com/2025/05/16/3-thoughts-while-pushing-a-wheelbarrow/
-- https://austinkleon.com/2025/05/09/well-see/
-- https://austinkleon.com/2025/05/09/kids-ask-the-darndest-questions/
-- https://austinkleon.com/2025/05/09/disintegration/
+- https://austinkleon.com/2025/06/05/a-peek-inside-my-pocket-notebook/
+- https://austinkleon.com/2025/05/28/typewriter-interview-with-sarah-manguso/
+- https://austinkleon.com/2025/05/23/writing-shouldnt-be-easier/
+- https://austinkleon.com/2025/05/22/gift-ideas-for-dads-grads/
+- https://austinkleon.com/2025/05/20/may-2025-mixtape/
 - https://austinkleon.com/books/
 - http://austinkleon.com/newsletter
 - https://austinkleon.com/category/reading/my-reading-years/
@@ -141,4 +149,4 @@ The post includes copyright information and mentions that the site participates 
 - https://austinkleon.com/contact/
 
 ---
-*Generated from: /Users/mpaz/workspace/lens-tmp/fetched/on-reading-novels.html*
+*Generated from: /Users/mpaz/workspace/lens-tmp/fetched/a-peek-inside-my-pocket-notebook.html*

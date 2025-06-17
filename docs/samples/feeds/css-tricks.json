@@ -1,0 +1,112 @@
+{
+  "title": "CSS-Tricks",
+  "link": "https://css-tricks.com",
+  "description": "Tips, Tricks, and Techniques on using Cascading Style Sheets.",
+  "items": [
+    {
+      "title": "Creating an Auto-Closing Notification With an HTML Popover",
+      "link": "https://css-tricks.com/creating-an-auto-closing-notification-with-an-html-popover/",
+      "pubDate": "Mon, 09 Jun 2025 12:58:37 +0000",
+      "description": "<![CDATA[<p>The HTML <code>popover</code> attribute transforms elements into top-layer elements that can be opened and closed with a button or JavaScript.  Popovers can be dismissed a number of ways, but there is no option to auto-close them. Preethi has a technique you can use.</p>\n<hr />\n<p><small><a rel=\"nofollow\" href=\"https://css-tricks.com/creating-an-auto-closing-notification-with-an-html-popover/\">Creating an Auto-Closing Notification With an HTML Popover</a> originally published on <a rel=\"nofollow\" href=\"https://css-tricks.com\">CSS-Tricks</a>, which is part of the <a href=\"https://try.digitalocean.com/css-tricks/?utm_medium=rss&amp;utm_source=css-tricks.com&amp;utm_campaign=family_&amp;utm_content=\">DigitalOcean</a> family. You should <a href=\"https://css-tricks.com/newsletters/\">get the newsletter</a>.</p>\n]]>",
+      "guid": "https://css-tricks.com/?p=386694"
+    },
+    {
+      "title": "Better CSS Shapes Using shape() — Part 3: Curves",
+      "link": "https://css-tricks.com/better-css-shapes-using-shape-part-3-curves/",
+      "pubDate": "Fri, 06 Jun 2025 13:52:42 +0000",
+      "description": "<![CDATA[<p>This is the third article in a series about the CSS <code>shape()</code> function. We've covered drawing lines and arcs in previous articles and, this time, we look specifically at the <code>curve</code> command and how to use it for drawing complex shapes.</p>\n<hr />\n<p><small><a rel=\"nofollow\" href=\"https://css-tricks.com/better-css-shapes-using-shape-part-3-curves/\">Better CSS Shapes Using shape() — Part 3: Curves</a> originally published on <a rel=\"nofollow\" href=\"https://css-tricks.com\">CSS-Tricks</a>, which is part of the <a href=\"https://try.digitalocean.com/css-tricks/?utm_medium=rss&amp;utm_source=css-tricks.com&amp;utm_campaign=family_&amp;utm_content=\">DigitalOcean</a> family. You should <a href=\"https://css-tricks.com/newsletters/\">get the newsletter</a>.</p>\n]]>",
+      "guid": "https://css-tricks.com/?p=386876"
+    },
+    {
+      "title": "Exploring the CSS contrast-color() Function… a Second Time",
+      "link": "https://css-tricks.com/exploring-the-css-contrast-color-function-a-second-time/",
+      "pubDate": "Thu, 05 Jun 2025 13:45:56 +0000",
+      "description": "<![CDATA[<p>The <code>contrast-color()</code> function doesn’t check color contrast, but rather it outright resolves to either black or white (whichever one contrasts the most with your chosen color). Safari Technology Preview recently implemented it and we explore its possible uses in this article.</p>\n<hr />\n<p><small><a rel=\"nofollow\" href=\"https://css-tricks.com/exploring-the-css-contrast-color-function-a-second-time/\">Exploring the CSS contrast-color() Function… a Second Time</a> originally published on <a rel=\"nofollow\" href=\"https://css-tricks.com\">CSS-Tricks</a>, which is part of the <a href=\"https://try.digitalocean.com/css-tricks/?utm_medium=rss&amp;utm_source=css-tricks.com&amp;utm_campaign=family_&amp;utm_content=\">DigitalOcean</a> family. You should <a href=\"https://css-tricks.com/newsletters/\">get the newsletter</a>.</p>\n]]>",
+      "guid": "https://css-tricks.com/?p=386829"
+    },
+    {
+      "title": "The State of CSS 2025 Survey is out!",
+      "link": "https://css-tricks.com/the-state-of-css-2025-survey-is-out/",
+      "pubDate": "Thu, 05 Jun 2025 11:13:00 +0000",
+      "description": "<![CDATA[<p>The State of CSS 2025 Survey dropped a few days ago, and besides anticipating the results, it's exciting to see a <em>lot</em> of the new things shipped to CSS reflected in the questions.</p>\n<hr />\n<p><small><a rel=\"nofollow\" href=\"https://css-tricks.com/the-state-of-css-2025-survey-is-out/\">The State of CSS 2025 Survey is out!</a> originally published on <a rel=\"nofollow\" href=\"https://css-tricks.com\">CSS-Tricks</a>, which is part of the <a href=\"https://try.digitalocean.com/css-tricks/?utm_medium=rss&amp;utm_source=css-tricks.com&amp;utm_campaign=family_&amp;utm_content=\">DigitalOcean</a> family. You should <a href=\"https://css-tricks.com/newsletters/\">get the newsletter</a>.</p>\n]]>",
+      "guid": "https://css-tricks.com/?p=387046"
+    },
+    {
+      "title": "Getting Creative With HTML Dialog",
+      "link": "https://css-tricks.com/getting-creative-with-html-dialog/",
+      "pubDate": "Tue, 03 Jun 2025 14:39:04 +0000",
+      "description": "<![CDATA[<p>So, how can you take dialogue box design beyond the generic look of frameworks and templates? How can you style them to reflect a brand’s visual identity and help to tell its stories? Here’s how I do it in CSS using <code>::backdrop</code>, <code>backdrop-filter</code>, and animations.</p>\n<hr />\n<p><small><a rel=\"nofollow\" href=\"https://css-tricks.com/getting-creative-with-html-dialog/\">Getting Creative With HTML Dialog</a> originally published on <a rel=\"nofollow\" href=\"https://css-tricks.com\">CSS-Tricks</a>, which is part of the <a href=\"https://try.digitalocean.com/css-tricks/?utm_medium=rss&amp;utm_source=css-tricks.com&amp;utm_campaign=family_&amp;utm_content=\">DigitalOcean</a> family. You should <a href=\"https://css-tricks.com/newsletters/\">get the newsletter</a>.</p>\n]]>",
+      "guid": "https://css-tricks.com/?p=386750"
+    },
+    {
+      "title": "Better CSS Shapes Using shape() — Part 2: More on Arcs",
+      "link": "https://css-tricks.com/better-css-shapes-using-shape-part-2-more-on-arcs/",
+      "pubDate": "Fri, 30 May 2025 13:45:43 +0000",
+      "description": "<![CDATA[<p>This is the second part of a series that dives deep into the CSS <code>shape()</code> command, continuing with a more detailed look at the <code>arc</code> command.</p>\n<hr />\n<p><small><a rel=\"nofollow\" href=\"https://css-tricks.com/better-css-shapes-using-shape-part-2-more-on-arcs/\">Better CSS Shapes Using shape() — Part 2: More on Arcs</a> originally published on <a rel=\"nofollow\" href=\"https://css-tricks.com\">CSS-Tricks</a>, which is part of the <a href=\"https://try.digitalocean.com/css-tricks/?utm_medium=rss&amp;utm_source=css-tricks.com&amp;utm_campaign=family_&amp;utm_content=\">DigitalOcean</a> family. You should <a href=\"https://css-tricks.com/newsletters/\">get the newsletter</a>.</p>\n]]>",
+      "guid": "https://css-tricks.com/?p=386673"
+    },
+    {
+      "title": "What We Know (So Far) About CSS Reading Order",
+      "link": "https://css-tricks.com/what-we-know-so-far-about-css-reading-order/",
+      "pubDate": "Tue, 27 May 2025 13:02:32 +0000",
+      "description": "<![CDATA[<p>The reading-flow and reading-order proposed CSS properties are designed to specify the source order of HTML elements in the DOM tree, or in simpler terms, how accessibility tools deduce the order of elements. You’d use them to make the focus order of focusable elements match the visual order, as outlined in the Web Content Accessibility Guidelines (WCAG 2.2).</p>\n<hr />\n<p><small><a rel=\"nofollow\" href=\"https://css-tricks.com/what-we-know-so-far-about-css-reading-order/\">What We Know (So Far) About CSS Reading Order</a> originally published on <a rel=\"nofollow\" href=\"https://css-tricks.com\">CSS-Tricks</a>, which is part of the <a href=\"https://try.digitalocean.com/css-tricks/?utm_medium=rss&amp;utm_source=css-tricks.com&amp;utm_campaign=family_&amp;utm_content=\">DigitalOcean</a> family. You should <a href=\"https://css-tricks.com/newsletters/\">get the newsletter</a>.</p>\n]]>",
+      "guid": "https://css-tricks.com/?p=386654"
+    },
+    {
+      "title": "Better CSS Shapes Using shape() — Part 1: Lines and Arcs",
+      "link": "https://css-tricks.com/better-css-shapes-using-shape-part-1-lines-and-arcs/",
+      "pubDate": "Fri, 23 May 2025 13:02:32 +0000",
+      "description": "<![CDATA[<p>This is the first part of a series that dives deep into the shape function, starting with shapes that use lines and arcs.</p>\n<hr />\n<p><small><a rel=\"nofollow\" href=\"https://css-tricks.com/better-css-shapes-using-shape-part-1-lines-and-arcs/\">Better CSS Shapes Using shape() — Part 1: Lines and Arcs</a> originally published on <a rel=\"nofollow\" href=\"https://css-tricks.com\">CSS-Tricks</a>, which is part of the <a href=\"https://try.digitalocean.com/css-tricks/?utm_medium=rss&amp;utm_source=css-tricks.com&amp;utm_campaign=family_&amp;utm_content=\">DigitalOcean</a> family. You should <a href=\"https://css-tricks.com/newsletters/\">get the newsletter</a>.</p>\n]]>",
+      "guid": "https://css-tricks.com/?p=386640"
+    },
+    {
+      "title": "You can style alt text like any other text",
+      "link": "https://css-tricks.com/you-can-style-alt-text-like-any-other-text/",
+      "pubDate": "Thu, 22 May 2025 14:43:09 +0000",
+      "description": "<![CDATA[<p>Clever, clever that Andy Bell. He shares a technique for displaying image <code>alt</code> text when the image fails to load. Well, more precisely, it's a technique to apply styles to the <code>alt</code> when the image doesn't load, offering a nice UI fallback for what would otherwise be a busted-looking error.</p>\n<hr />\n<p><small><a rel=\"nofollow\" href=\"https://css-tricks.com/you-can-style-alt-text-like-any-other-text/\">You can style alt text like any other text</a> originally published on <a rel=\"nofollow\" href=\"https://css-tricks.com\">CSS-Tricks</a>, which is part of the <a href=\"https://try.digitalocean.com/css-tricks/?utm_medium=rss&amp;utm_source=css-tricks.com&amp;utm_campaign=family_&amp;utm_content=\">DigitalOcean</a> family. You should <a href=\"https://css-tricks.com/newsletters/\">get the newsletter</a>.</p>\n]]>",
+      "guid": "https://css-tricks.com/?p=386724"
+    },
+    {
+      "title": "SVG to CSS Shape Converter",
+      "link": "https://css-tricks.com/svg-to-css-shape-converter/",
+      "pubDate": "Wed, 21 May 2025 15:09:29 +0000",
+      "description": "<![CDATA[<p>Shape master Temani Afif has what might be <a href=\"https://css-generators.com\" rel=\"noopener\">the largest collection of CSS shapes</a> on the planet with all the tools to generate them on the fly. There&#8217;s a mix of clever techniques he&#8217;s typically used to make those shapes, &#8230;</p>\n<hr />\n<p><small><a rel=\"nofollow\" href=\"https://css-tricks.com/svg-to-css-shape-converter/\">SVG to CSS Shape Converter</a> originally published on <a rel=\"nofollow\" href=\"https://css-tricks.com\">CSS-Tricks</a>, which is part of the <a href=\"https://try.digitalocean.com/css-tricks/?utm_medium=rss&amp;utm_source=css-tricks.com&amp;utm_campaign=family_&amp;utm_content=\">DigitalOcean</a> family. You should <a href=\"https://css-tricks.com/newsletters/\">get the newsletter</a>.</p>\n]]>",
+      "guid": "https://css-tricks.com/?p=386716"
+    },
+    {
+      "title": "A Reader&#8217;s Question on Nested Lists",
+      "link": "https://css-tricks.com/a-readers-question-on-nested-lists/",
+      "pubDate": "Mon, 19 May 2025 12:32:22 +0000",
+      "description": "<![CDATA[<p>Answering a reader's question about how to create a complex numbering system with CSS list counters.</p>\n<hr />\n<p><small><a rel=\"nofollow\" href=\"https://css-tricks.com/a-readers-question-on-nested-lists/\">A Reader&#8217;s Question on Nested Lists</a> originally published on <a rel=\"nofollow\" href=\"https://css-tricks.com\">CSS-Tricks</a>, which is part of the <a href=\"https://try.digitalocean.com/css-tricks/?utm_medium=rss&amp;utm_source=css-tricks.com&amp;utm_campaign=family_&amp;utm_content=\">DigitalOcean</a> family. You should <a href=\"https://css-tricks.com/newsletters/\">get the newsletter</a>.</p>\n]]>",
+      "guid": "https://css-tricks.com/?p=386580"
+    },
+    {
+      "title": "HTML Email Accessibility Report 2025",
+      "link": "https://css-tricks.com/html-email-accessibility-report-2025/",
+      "pubDate": "Fri, 16 May 2025 14:38:19 +0000",
+      "description": "<![CDATA[<p>Some weekend reading on the heels of <a href=\"https://accessibility.day\" rel=\"noopener\">Global Accessibility Awareness Day (<abbr>GAADM</abbr>)</a>, which took place yesterday. The Email Markup Consortium (<abbr>EMC</abbr>) released its 2025 study on the accessibility in HTML emails, and the <abbr>TL;DR</abbr> is &#8230;</p>\n<hr />\n<p><small><a rel=\"nofollow\" href=\"https://css-tricks.com/html-email-accessibility-report-2025/\">HTML Email Accessibility Report 2025</a> originally published on <a rel=\"nofollow\" href=\"https://css-tricks.com\">CSS-Tricks</a>, which is part of the <a href=\"https://try.digitalocean.com/css-tricks/?utm_medium=rss&amp;utm_source=css-tricks.com&amp;utm_campaign=family_&amp;utm_content=\">DigitalOcean</a> family. You should <a href=\"https://css-tricks.com/newsletters/\">get the newsletter</a>.</p>\n]]>",
+      "guid": "https://css-tricks.com/?p=386631"
+    },
+    {
+      "title": "Scroll-Driven Animations Inside a CSS Carousel",
+      "link": "https://css-tricks.com/scroll-driven-animations-inside-a-css-carousel/",
+      "pubDate": "Thu, 15 May 2025 12:30:59 +0000",
+      "description": "<![CDATA[<p>Hey, isn't there a fairly new CSS feature that works with scroll regions? Oh yes, that's Scroll-Driven Animations. Shouldn't that mean we can trigger an animation while scrolling through the items in a CSS carousel?</p>\n<hr />\n<p><small><a rel=\"nofollow\" href=\"https://css-tricks.com/scroll-driven-animations-inside-a-css-carousel/\">Scroll-Driven Animations Inside a CSS Carousel</a> originally published on <a rel=\"nofollow\" href=\"https://css-tricks.com\">CSS-Tricks</a>, which is part of the <a href=\"https://try.digitalocean.com/css-tricks/?utm_medium=rss&amp;utm_source=css-tricks.com&amp;utm_campaign=family_&amp;utm_content=\">DigitalOcean</a> family. You should <a href=\"https://css-tricks.com/newsletters/\">get the newsletter</a>.</p>\n]]>",
+      "guid": "https://css-tricks.com/?p=386537"
+    },
+    {
+      "title": "This Isn’t Supposed to Happen: Troubleshooting the Impossible",
+      "link": "https://css-tricks.com/this-isnt-supposed-to-happen-troubleshooting-the-impossible/",
+      "pubDate": "Wed, 14 May 2025 14:01:42 +0000",
+      "description": "<![CDATA[<p>What it looks like to troubleshoot one of those impossible issues that turns out to be something totally else you never thought of.</p>\n<hr />\n<p><small><a rel=\"nofollow\" href=\"https://css-tricks.com/this-isnt-supposed-to-happen-troubleshooting-the-impossible/\">This Isn’t Supposed to Happen: Troubleshooting the Impossible</a> originally published on <a rel=\"nofollow\" href=\"https://css-tricks.com\">CSS-Tricks</a>, which is part of the <a href=\"https://try.digitalocean.com/css-tricks/?utm_medium=rss&amp;utm_source=css-tricks.com&amp;utm_campaign=family_&amp;utm_content=\">DigitalOcean</a> family. You should <a href=\"https://css-tricks.com/newsletters/\">get the newsletter</a>.</p>\n]]>",
+      "guid": "https://css-tricks.com/?p=386415"
+    },
+    {
+      "title": "Using Pages CMS for Static Site Content Management",
+      "link": "https://css-tricks.com/using-pages-cms-for-static-site-content-management/",
+      "pubDate": "Mon, 12 May 2025 12:42:10 +0000",
+      "description": "<![CDATA[<p>I know, I know: there are a ton of content management system options available, and while I've tested several, none have really been the one, y'know? Weird pricing models, difficult customization, some even end up becoming a whole 'nother thing to manage.</p>\n<hr />\n<p><small><a rel=\"nofollow\" href=\"https://css-tricks.com/using-pages-cms-for-static-site-content-management/\">Using Pages CMS for Static Site Content Management</a> originally published on <a rel=\"nofollow\" href=\"https://css-tricks.com\">CSS-Tricks</a>, which is part of the <a href=\"https://try.digitalocean.com/css-tricks/?utm_medium=rss&amp;utm_source=css-tricks.com&amp;utm_campaign=family_&amp;utm_content=\">DigitalOcean</a> family. You should <a href=\"https://css-tricks.com/newsletters/\">get the newsletter</a>.</p>\n]]>",
+      "guid": "https://css-tricks.com/?p=386522"
+    }
+  ]
+}

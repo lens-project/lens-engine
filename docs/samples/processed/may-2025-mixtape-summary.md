@@ -1,46 +1,42 @@
-# On reading novels - Austin Kleon
+# May 2025 mixtape - Austin Kleon
 
 ## Summary
 
-### Summary of "On Reading Novels"
+**Summary of May 2025 Mixtape:**
 
-**Blog Post Overview:**
-The blog post discusses the joy and subversive nature of reading novels for pleasure. It references a previous newsletter that highlighted the act of sitting and reading a novel as an act of resistance in today's busy world, emphasizing how it feels like getting away with something.
+- **Title:** May 2025 mixtape
+- **Date:** Tuesday, May 20, 2025
+- **Platforms:** Available on Spotify, Apple Music, and YouTube
 
-**Key Points:**
+This mixtape is described as a mopey, gloomy, gothy, synthy collection inspired by the theme of a warming Earth. It's reminiscent of "Dancing in the Ruins" and was created using a pre-recorded cassette tape that the creator taped over multiple times.
 
-1. **Reading Experience:** The author notes that the feeling of "getting away with something" is essential to enjoying novels. Reading should feel subversive because it allows people to disconnect from daily routines and immerse themselves in other worlds.
-   
-2. **Act of Resistance:** In 2025, reading a novel is described as swimming against the current of contemporary distractions and digital interruptions.
+The track list includes Billy Idol’s “Eyes Without A Face,” among others. The mixtape is designed to evoke a melancholic mood, fitting for its environmental theme.
 
-3. **Recommendations:** The post includes links to recommendations for favorite novels, such as those listed in a previous newsletter titled "Big Books for Summer."
+**Availability:**
+- **Spotify:** [Link](#)
+- **Apple Music:** [Link](#)
+- **YouTube:** [Link](#)
 
-4. **Newsletter Engagement:** Readers are encouraged to engage with the content by leaving their own book recommendations in the comments section.
+**Categories and Tags:**
+- **Category:** Mixtapes
+- **Tags:** mixtapes, MUSIC
 
-**Additional Content:**
+**Additional Notes:**
+1. The author mentions that the track "Eyes Without A Face" has a problematic section but includes it anyway.
+2. The creator emphasizes the use of pre-recorded cassette tapes, adding an element of nostalgia and physical media to the digital age.
 
-- A list of newsletters related to the topic.
-- Links to social media platforms where readers can follow Austin Kleon.
-- Information about books and other resources available, such as audiobooks and t-shirts.
-  
-**Author Bio:**
-Austin Kleon is a writer who draws and has written several bestselling books, including "Steal Like An Artist."
+**Author Information:**
+- **Austin Kleon:** Writer who draws, bestselling author of books like "Steal Like An Artist."
+- **Other Works:** Books, newsletter, speaking engagements, social media presence (Facebook, Instagram, Tumblr, Twitter, YouTube).
 
-**Footer Information:**
-The post includes copyright information and mentions that the site participates in the Amazon Affiliate program to keep it free for readers.
-
-### Key Takeaways:
-
-- Reading novels should feel like an act of resistance against modern distractions.
-- Engaging with literature provides a sense of freedom and escape from daily routines.
-- Reader recommendations are encouraged to enrich the reading experience.
+The post includes links for readers to engage with the mixtape and other content from Austin Kleon's blog.
 
 ## Metadata
 
-- **Word Count**: 896
-- **URLs Found**: 95
+- **Word Count**: 889
+- **URLs Found**: 96
 - **Model**: qwen2.5:7b
-- **Processing Time**: 25417ms
+- **Processing Time**: 24824ms
 
 ## URLs
 
@@ -48,7 +44,7 @@ The post includes copyright information and mentions that the site participates 
 - //maxcdn.bootstrapcdn.com
 - https://austinkleon.com/feed/
 - https://austinkleon.com/comments/feed/
-- https://austinkleon.com/2025/04/24/on-reading-novels/
+- https://austinkleon.com/2025/05/20/may-2025-mixtape/
 - https://austinkleon.com/wp-content/themes/eleven40-pro/style.css?ver=2.2.1
 - https://austinkleon.com/wp-includes/css/dist/block-library/style.min.css?ver=6.7.1
 - https://austinkleon.com/wp-includes/css/dashicons.min.css?ver=6.7.1
@@ -57,10 +53,10 @@ The post includes copyright information and mentions that the site participates 
 - //maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css?ver=4.3.0
 - https://austinkleon.com/wp-content/plugins/kleon-custom-menu/lib/css/klmenu-items.css?ver=0.0.1
 - https://austinkleon.com/wp-json/
-- https://austinkleon.com/wp-json/wp/v2/posts/38977
+- https://austinkleon.com/wp-json/wp/v2/posts/39034
 - https://austinkleon.com/xmlrpc.php?rsd
-- https://austinkleon.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Faustinkleon.com%2F2025%2F04%2F24%2Fon-reading-novels%2F
-- https://austinkleon.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Faustinkleon.com%2F2025%2F04%2F24%2Fon-reading-novels%2F&#038;format=xml
+- https://austinkleon.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Faustinkleon.com%2F2025%2F05%2F20%2Fmay-2025-mixtape%2F
+- https://austinkleon.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Faustinkleon.com%2F2025%2F05%2F20%2Fmay-2025-mixtape%2F&#038;format=xml
 - https://austinkleon.com/wp-content/uploads/2018/09/cropped-kleon-200px-32x32.jpg
 - https://austinkleon.com/wp-content/uploads/2018/09/cropped-kleon-200px-192x192.jpg
 - https://austinkleon.com/wp-content/uploads/2018/09/cropped-kleon-200px-180x180.jpg
@@ -74,14 +70,18 @@ The post includes copyright information and mentions that the site participates 
 - https://twitter.com/austinkleon
 - https://instagram.com/austinkleon
 - https://austinkleon.com/
-- https://austinkleon.com/category/reading/
-- https://www.instagram.com/p/DIRs5YlJnKk
-- https://austinkleon.substack.com/p/on-sitting-around-and-reading-a-novel
-- https://austinkleon.substack.com/p/big-books-for-summer
-- https://austinkleon.com/category/reading/
-- https://austinkleon.com/tag/newsletter/
-- https://austinkleon.com/tag/novels/
-- https://austinkleon.com/tag/reading/
+- https://austinkleon.com/category/miscellany/
+- https://open.spotify.com/playlist/08Vodq0wG1mbZ20mL8Aygn?si=a825ca3f89a44a72
+- https://music.apple.com/us/playlist/may-be-the-futures-void/pl.u-2aoqqZafRvDoP
+- https://youtube.com/playlist?list=PLWVRTF2cD2mZAw2eRwJwW8funWZ8Ny7QC&amp;si=AQHk997yp4QoSq8h
+- https://austinkleon.com/2024/11/17/dance-in-the-ruins-a-november-mixtape/
+- https://open.spotify.com/playlist/08Vodq0wG1mbZ20mL8Aygn?si=a825ca3f89a44a72
+- https://music.apple.com/us/playlist/may-be-the-futures-void/pl.u-2aoqqZafRvDoP
+- https://youtube.com/playlist?list=PLWVRTF2cD2mZAw2eRwJwW8funWZ8Ny7QC&amp;si=AQHk997yp4QoSq8h
+- /tag/mixtapes
+- https://austinkleon.com/category/miscellany/
+- https://austinkleon.com/tag/mixtapes/
+- https://austinkleon.com/tag/music/
 - https://austinkleon.com/about/
 - https://austinkleon.com/about/
 - /steal/
@@ -97,13 +97,10 @@ The post includes copyright information and mentions that the site participates 
 - https://www.youtube.com/channel/UC8uQnyh7DAfp4uX9RN7XxEw
 - https://austinkleon.com/wp-content/plugins/simple-social-icons/symbol-defs.svg#social-youtube
 - /on-this-date/
-- https://austinkleon.com/2024/05/19/some-kinds-of-monsters/
-- https://austinkleon.com/2024/05/19/a-museum-of-technology/
-- https://austinkleon.com/2023/05/19/small-requirements/
-- https://austinkleon.com/2022/05/19/the-map-is-not-the-territory/
-- https://austinkleon.com/2020/05/19/growing-without-schooling/
-- https://austinkleon.com/2019/05/19/pansy-luchadores/
-- https://austinkleon.com/2018/05/19/roba-como-un-artista/
+- https://austinkleon.com/2024/06/11/time-is-a-spiral/
+- https://austinkleon.com/2020/06/11/mass-observation/
+- https://austinkleon.com/2019/06/11/the-fate-of-an-archive/
+- https://austinkleon.com/2018/06/11/what-were-going-to-do-today/
 - https://austinkleon.com/steal/
 - https://austinkleon.com/steal-audiobook-trilogy
 - https://austinkleon.com/keepgoing
@@ -112,11 +109,11 @@ The post includes copyright information and mentions that the site participates 
 - https://austinkleon.com/journal
 - https://austinkleon.com/newspaperblackout/
 - https://cottonbureau.com/people/austin-kleon
-- https://austinkleon.com/2025/05/16/maycember-rage/
-- https://austinkleon.com/2025/05/16/3-thoughts-while-pushing-a-wheelbarrow/
-- https://austinkleon.com/2025/05/09/well-see/
-- https://austinkleon.com/2025/05/09/kids-ask-the-darndest-questions/
-- https://austinkleon.com/2025/05/09/disintegration/
+- https://austinkleon.com/2025/06/05/a-peek-inside-my-pocket-notebook/
+- https://austinkleon.com/2025/05/28/typewriter-interview-with-sarah-manguso/
+- https://austinkleon.com/2025/05/23/writing-shouldnt-be-easier/
+- https://austinkleon.com/2025/05/22/gift-ideas-for-dads-grads/
+- https://austinkleon.com/2025/05/20/may-2025-mixtape/
 - https://austinkleon.com/books/
 - http://austinkleon.com/newsletter
 - https://austinkleon.com/category/reading/my-reading-years/
@@ -141,4 +138,4 @@ The post includes copyright information and mentions that the site participates 
 - https://austinkleon.com/contact/
 
 ---
-*Generated from: /Users/mpaz/workspace/lens-tmp/fetched/on-reading-novels.html*
+*Generated from: /Users/mpaz/workspace/lens-tmp/fetched/may-2025-mixtape.html*
