@@ -54,10 +54,11 @@ deno task test
 
 ## Sample Data
 
-The project includes sample data in the `docs/samples/` directory that demonstrates the complete data flow through the Lens system. This sample data serves multiple purposes:
+The project includes sample data in the `docs/samples/` directory that contains a **replica of an actual working Lens Engine directory**. This sample data serves multiple purposes:
 
 - **Documentation**: Illustrates how data is structured and transformed at each stage of processing
-- **Development**: Provides real-world examples for testing and developing new features
+- **Development**: Provides real-world examples for testing and developing new features without running the full CLI pipeline
+- **UI Development**: Offers pre-generated output files (especially in `ranked/`) for frontend developers to build interfaces without backend setup
 - **Onboarding**: Helps new developers understand the system without setting up their own data environment
 - **Reference**: Shows expected input/output formats for each component
 
@@ -67,6 +68,9 @@ The sample data includes:
 - **RSS Feeds**: Parsed feed content in JSON format (`docs/samples/feeds/`)
 - **Fetched Content**: HTML content from feed items (`docs/samples/fetched/`)
 - **Processed Content**: AI-generated summaries and metadata (`docs/samples/processed/`)
+- **Ranked Content**: Final scored and ranked articles with summary outputs (`docs/samples/ranked/`)
+
+**Note**: This is a replica of a real working directory, providing authentic data structures and content that developers can immediately use for testing UI components, understanding data flow, and developing features without needing to run the complete processing pipeline.
 
 The samples feature real, accessible content from Austin Kleon's blog, allowing developers to see the complete journey from feed subscription to processed content with actual working endpoints.
 
