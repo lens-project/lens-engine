@@ -1,46 +1,50 @@
-# On reading novels - Austin Kleon
+# Gift ideas for dads and grads - Austin Kleon
 
 ## Summary
 
-### Summary of "On Reading Novels"
+### Summary of Gift Ideas for Dads & Grads
 
-**Blog Post Overview:**
-The blog post discusses the joy and subversive nature of reading novels for pleasure. It references a previous newsletter that highlighted the act of sitting and reading a novel as an act of resistance in today's busy world, emphasizing how it feels like getting away with something.
+**Author:** Austin Kleon  
+**Date:** May 22, 2025  
 
-**Key Points:**
+#### Introduction
+The author suggests gift ideas during the "Dads & Grad" season. He recommends gifts that are meaningful and aligned with his personal interests.
 
-1. **Reading Experience:** The author notes that the feeling of "getting away with something" is essential to enjoying novels. Reading should feel subversive because it allows people to disconnect from daily routines and immerse themselves in other worlds.
-   
-2. **Act of Resistance:** In 2025, reading a novel is described as swimming against the current of contemporary distractions and digital interruptions.
+#### Gift Ideas
 
-3. **Recommendations:** The post includes links to recommendations for favorite novels, such as those listed in a previous newsletter titled "Big Books for Summer."
+1. **Books**
+   - Suggest giving one of the author's books as a gift.
+   - Recommend the deluxe hardcover anniversary edition of "Steal Like an Artist" if unsure which book to choose.
 
-4. **Newsletter Engagement:** Readers are encouraged to engage with the content by leaving their own book recommendations in the comments section.
+2. **Newsletter Subscription**
+   - Offer a paid subscription to the author’s newsletter.
+   - Provide a downloadable, printable zine to explain the concept and include instructions on how to make it manually (with a video tutorial).
 
-**Additional Content:**
+3. **Other Gifts**
+   - Purchase items from the author's gear list or previous gift guides.
+   - Choose favorite books from his yearly lists.
 
-- A list of newsletters related to the topic.
-- Links to social media platforms where readers can follow Austin Kleon.
-- Information about books and other resources available, such as audiobooks and t-shirts.
-  
-**Author Bio:**
-Austin Kleon is a writer who draws and has written several bestselling books, including "Steal Like An Artist."
+#### Additional Notes
+- The author provides links for buying items from these suggestions.
+- He encourages readers to explore his blog, books, and newsletter further.
 
-**Footer Information:**
-The post includes copyright information and mentions that the site participates in the Amazon Affiliate program to keep it free for readers.
+#### Conclusion
+The post concludes with various social media handles and a call-to-action for subscribing to the author's newsletter. It also includes an acknowledgment of the Amazon Affiliate program that supports the site.
 
-### Key Takeaways:
+### Key Points
 
-- Reading novels should feel like an act of resistance against modern distractions.
-- Engaging with literature provides a sense of freedom and escape from daily routines.
-- Reader recommendations are encouraged to enrich the reading experience.
+1. **Books:** Recommend specific titles or allow recipients to choose.
+2. **Newsletter Subscription:** Provide additional resources like a DIY zine.
+3. **Other Gifts:** Offer links and suggestions for related items.
+
+This summary outlines the various gift ideas suggested by Austin Kleon, tailored specifically for Dads & Grad season.
 
 ## Metadata
 
-- **Word Count**: 896
-- **URLs Found**: 95
+- **Word Count**: 911
+- **URLs Found**: 96
 - **Model**: qwen2.5:7b
-- **Processing Time**: 25417ms
+- **Processing Time**: 24092ms
 
 ## URLs
 
@@ -48,7 +52,7 @@ The post includes copyright information and mentions that the site participates 
 - //maxcdn.bootstrapcdn.com
 - https://austinkleon.com/feed/
 - https://austinkleon.com/comments/feed/
-- https://austinkleon.com/2025/04/24/on-reading-novels/
+- https://austinkleon.com/2025/05/22/gift-ideas-for-dads-grads/
 - https://austinkleon.com/wp-content/themes/eleven40-pro/style.css?ver=2.2.1
 - https://austinkleon.com/wp-includes/css/dist/block-library/style.min.css?ver=6.7.1
 - https://austinkleon.com/wp-includes/css/dashicons.min.css?ver=6.7.1
@@ -57,10 +61,10 @@ The post includes copyright information and mentions that the site participates 
 - //maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css?ver=4.3.0
 - https://austinkleon.com/wp-content/plugins/kleon-custom-menu/lib/css/klmenu-items.css?ver=0.0.1
 - https://austinkleon.com/wp-json/
-- https://austinkleon.com/wp-json/wp/v2/posts/38977
+- https://austinkleon.com/wp-json/wp/v2/posts/39041
 - https://austinkleon.com/xmlrpc.php?rsd
-- https://austinkleon.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Faustinkleon.com%2F2025%2F04%2F24%2Fon-reading-novels%2F
-- https://austinkleon.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Faustinkleon.com%2F2025%2F04%2F24%2Fon-reading-novels%2F&#038;format=xml
+- https://austinkleon.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Faustinkleon.com%2F2025%2F05%2F22%2Fgift-ideas-for-dads-grads%2F
+- https://austinkleon.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Faustinkleon.com%2F2025%2F05%2F22%2Fgift-ideas-for-dads-grads%2F&#038;format=xml
 - https://austinkleon.com/wp-content/uploads/2018/09/cropped-kleon-200px-32x32.jpg
 - https://austinkleon.com/wp-content/uploads/2018/09/cropped-kleon-200px-192x192.jpg
 - https://austinkleon.com/wp-content/uploads/2018/09/cropped-kleon-200px-180x180.jpg
@@ -74,14 +78,18 @@ The post includes copyright information and mentions that the site participates 
 - https://twitter.com/austinkleon
 - https://instagram.com/austinkleon
 - https://austinkleon.com/
-- https://austinkleon.com/category/reading/
-- https://www.instagram.com/p/DIRs5YlJnKk
-- https://austinkleon.substack.com/p/on-sitting-around-and-reading-a-novel
-- https://austinkleon.substack.com/p/big-books-for-summer
-- https://austinkleon.com/category/reading/
-- https://austinkleon.com/tag/newsletter/
-- https://austinkleon.com/tag/novels/
-- https://austinkleon.com/tag/reading/
+- https://austinkleon.com/category/miscellany/
+- https://austinkleon.com/books
+- https://geni.us/steal10th
+- https://austinkleon.substack.com/subscribe?gift=true
+- https://austinkleon.substack.com/p/a-zine-for-gift-subscriptions
+- https://austinkleon.substack.com/p/a-zine-for-gift-subscriptions
+- https://austinkleon.com/gear/
+- https://austinkleon.substack.com/p/the-2024-kleon-studios-gift-guide
+- https://austinkleon.com/category/reading/my-reading-years/
+- https://austinkleon.com/category/miscellany/
+- https://austinkleon.com/tag/gift-guide/
+- https://austinkleon.com/tag/gifts/
 - https://austinkleon.com/about/
 - https://austinkleon.com/about/
 - /steal/
@@ -97,13 +105,10 @@ The post includes copyright information and mentions that the site participates 
 - https://www.youtube.com/channel/UC8uQnyh7DAfp4uX9RN7XxEw
 - https://austinkleon.com/wp-content/plugins/simple-social-icons/symbol-defs.svg#social-youtube
 - /on-this-date/
-- https://austinkleon.com/2024/05/19/some-kinds-of-monsters/
-- https://austinkleon.com/2024/05/19/a-museum-of-technology/
-- https://austinkleon.com/2023/05/19/small-requirements/
-- https://austinkleon.com/2022/05/19/the-map-is-not-the-territory/
-- https://austinkleon.com/2020/05/19/growing-without-schooling/
-- https://austinkleon.com/2019/05/19/pansy-luchadores/
-- https://austinkleon.com/2018/05/19/roba-como-un-artista/
+- https://austinkleon.com/2024/06/11/time-is-a-spiral/
+- https://austinkleon.com/2020/06/11/mass-observation/
+- https://austinkleon.com/2019/06/11/the-fate-of-an-archive/
+- https://austinkleon.com/2018/06/11/what-were-going-to-do-today/
 - https://austinkleon.com/steal/
 - https://austinkleon.com/steal-audiobook-trilogy
 - https://austinkleon.com/keepgoing
@@ -112,11 +117,11 @@ The post includes copyright information and mentions that the site participates 
 - https://austinkleon.com/journal
 - https://austinkleon.com/newspaperblackout/
 - https://cottonbureau.com/people/austin-kleon
-- https://austinkleon.com/2025/05/16/maycember-rage/
-- https://austinkleon.com/2025/05/16/3-thoughts-while-pushing-a-wheelbarrow/
-- https://austinkleon.com/2025/05/09/well-see/
-- https://austinkleon.com/2025/05/09/kids-ask-the-darndest-questions/
-- https://austinkleon.com/2025/05/09/disintegration/
+- https://austinkleon.com/2025/06/05/a-peek-inside-my-pocket-notebook/
+- https://austinkleon.com/2025/05/28/typewriter-interview-with-sarah-manguso/
+- https://austinkleon.com/2025/05/23/writing-shouldnt-be-easier/
+- https://austinkleon.com/2025/05/22/gift-ideas-for-dads-grads/
+- https://austinkleon.com/2025/05/20/may-2025-mixtape/
 - https://austinkleon.com/books/
 - http://austinkleon.com/newsletter
 - https://austinkleon.com/category/reading/my-reading-years/
@@ -141,4 +146,4 @@ The post includes copyright information and mentions that the site participates 
 - https://austinkleon.com/contact/
 
 ---
-*Generated from: /Users/mpaz/workspace/lens-tmp/fetched/on-reading-novels.html*
+*Generated from: /Users/mpaz/workspace/lens-tmp/fetched/gift-ideas-for-dads-grads.html*

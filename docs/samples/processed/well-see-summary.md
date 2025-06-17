@@ -1,46 +1,23 @@
-# On reading novels - Austin Kleon
+# We’ll see - Austin Kleon
 
 ## Summary
 
-### Summary of "On Reading Novels"
+The blog post titled "We’ll see" discusses the parable of the old man who lost his horse and its modern version in Charlie Wilson's War. Austin Kleon shares Ursula K. Le Guin’s translation from the Tao Te Ching, which emphasizes uncertainty and unpredictability. The post explores themes like embracing bewilderment and the unpredictable nature of life and luck.
 
-**Blog Post Overview:**
-The blog post discusses the joy and subversive nature of reading novels for pleasure. It references a previous newsletter that highlighted the act of sitting and reading a novel as an act of resistance in today's busy world, emphasizing how it feels like getting away with something.
+Key points include:
+- The parable’s refrain "We’ll see" or "Maybe," used by different versions.
+- Embracing uncertainty as a central theme in the story and Le Guin's interpretation.
+- Reflections on how unpredictability applies to modern life, including issues like luck and the future.
+- A call to embrace bewilderment rather than seeking certainty.
 
-**Key Points:**
-
-1. **Reading Experience:** The author notes that the feeling of "getting away with something" is essential to enjoying novels. Reading should feel subversive because it allows people to disconnect from daily routines and immerse themselves in other worlds.
-   
-2. **Act of Resistance:** In 2025, reading a novel is described as swimming against the current of contemporary distractions and digital interruptions.
-
-3. **Recommendations:** The post includes links to recommendations for favorite novels, such as those listed in a previous newsletter titled "Big Books for Summer."
-
-4. **Newsletter Engagement:** Readers are encouraged to engage with the content by leaving their own book recommendations in the comments section.
-
-**Additional Content:**
-
-- A list of newsletters related to the topic.
-- Links to social media platforms where readers can follow Austin Kleon.
-- Information about books and other resources available, such as audiobooks and t-shirts.
-  
-**Author Bio:**
-Austin Kleon is a writer who draws and has written several bestselling books, including "Steal Like An Artist."
-
-**Footer Information:**
-The post includes copyright information and mentions that the site participates in the Amazon Affiliate program to keep it free for readers.
-
-### Key Takeaways:
-
-- Reading novels should feel like an act of resistance against modern distractions.
-- Engaging with literature provides a sense of freedom and escape from daily routines.
-- Reader recommendations are encouraged to enrich the reading experience.
+The post concludes with links to other writings and resources from Austin Kleon’s blog.
 
 ## Metadata
 
-- **Word Count**: 896
-- **URLs Found**: 95
+- **Word Count**: 914
+- **URLs Found**: 105
 - **Model**: qwen2.5:7b
-- **Processing Time**: 25417ms
+- **Processing Time**: 18260ms
 
 ## URLs
 
@@ -48,7 +25,7 @@ The post includes copyright information and mentions that the site participates 
 - //maxcdn.bootstrapcdn.com
 - https://austinkleon.com/feed/
 - https://austinkleon.com/comments/feed/
-- https://austinkleon.com/2025/04/24/on-reading-novels/
+- https://austinkleon.com/2025/05/09/well-see/
 - https://austinkleon.com/wp-content/themes/eleven40-pro/style.css?ver=2.2.1
 - https://austinkleon.com/wp-includes/css/dist/block-library/style.min.css?ver=6.7.1
 - https://austinkleon.com/wp-includes/css/dashicons.min.css?ver=6.7.1
@@ -57,10 +34,10 @@ The post includes copyright information and mentions that the site participates 
 - //maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css?ver=4.3.0
 - https://austinkleon.com/wp-content/plugins/kleon-custom-menu/lib/css/klmenu-items.css?ver=0.0.1
 - https://austinkleon.com/wp-json/
-- https://austinkleon.com/wp-json/wp/v2/posts/38977
+- https://austinkleon.com/wp-json/wp/v2/posts/39014
 - https://austinkleon.com/xmlrpc.php?rsd
-- https://austinkleon.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Faustinkleon.com%2F2025%2F04%2F24%2Fon-reading-novels%2F
-- https://austinkleon.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Faustinkleon.com%2F2025%2F04%2F24%2Fon-reading-novels%2F&#038;format=xml
+- https://austinkleon.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Faustinkleon.com%2F2025%2F05%2F09%2Fwell-see%2F
+- https://austinkleon.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Faustinkleon.com%2F2025%2F05%2F09%2Fwell-see%2F&#038;format=xml
 - https://austinkleon.com/wp-content/uploads/2018/09/cropped-kleon-200px-32x32.jpg
 - https://austinkleon.com/wp-content/uploads/2018/09/cropped-kleon-200px-192x192.jpg
 - https://austinkleon.com/wp-content/uploads/2018/09/cropped-kleon-200px-180x180.jpg
@@ -74,14 +51,27 @@ The post includes copyright information and mentions that the site participates 
 - https://twitter.com/austinkleon
 - https://instagram.com/austinkleon
 - https://austinkleon.com/
-- https://austinkleon.com/category/reading/
-- https://www.instagram.com/p/DIRs5YlJnKk
-- https://austinkleon.substack.com/p/on-sitting-around-and-reading-a-novel
-- https://austinkleon.substack.com/p/big-books-for-summer
-- https://austinkleon.com/category/reading/
+- https://austinkleon.com/category/miscellany/
+- https://austinkleon.substack.com/p/well-see
+- https://youtube.com/clip/Ugkx7-OFu1rq61wHPK7foXJ9gB9ISGRlFzdv?si=w3JJF11Tzr3We0U0
+- https://youtube.com/clip/Ugkx7-OFu1rq61wHPK7foXJ9gB9ISGRlFzdv?si=w3JJF11Tzr3We0U0
+- https://youtube.com/clip/Ugkx7-OFu1rq61wHPK7foXJ9gB9ISGRlFzdv?si=w3JJF11Tzr3We0U0
+- https://en.wikipedia.org/wiki/The_old_man_lost_his_horse
+- https://www.bbc.com/culture/article/20240412-the-ancient-philosophy-behind-blueys-blockbuster-episode-the-sign
+- https://wellsbaum.blog/alan-watts-story-of-the-chinese-farmer/
+- https://www.youtube.com/watch?v=Ig6MV5G1Hqk
+- https://austinkleon.com/2021/02/19/ursula-k-le-guins-translation-of-the-tao-te-ching/
+- https://en.wikipedia.org/wiki/Tao_Te_Ching
+- https://austinkleon.substack.com/p/embrace-bewilderment
+- https://austinkleon.substack.com/p/well-see
+- https://austinkleon.com/category/miscellany/
+- https://austinkleon.com/tag/america/
+- https://austinkleon.com/tag/luck/
+- https://austinkleon.com/tag/maybe/
 - https://austinkleon.com/tag/newsletter/
-- https://austinkleon.com/tag/novels/
-- https://austinkleon.com/tag/reading/
+- https://austinkleon.com/tag/prints/
+- https://austinkleon.com/tag/the-future/
+- https://austinkleon.com/tag/we-will-see/
 - https://austinkleon.com/about/
 - https://austinkleon.com/about/
 - /steal/
@@ -97,13 +87,10 @@ The post includes copyright information and mentions that the site participates 
 - https://www.youtube.com/channel/UC8uQnyh7DAfp4uX9RN7XxEw
 - https://austinkleon.com/wp-content/plugins/simple-social-icons/symbol-defs.svg#social-youtube
 - /on-this-date/
-- https://austinkleon.com/2024/05/19/some-kinds-of-monsters/
-- https://austinkleon.com/2024/05/19/a-museum-of-technology/
-- https://austinkleon.com/2023/05/19/small-requirements/
-- https://austinkleon.com/2022/05/19/the-map-is-not-the-territory/
-- https://austinkleon.com/2020/05/19/growing-without-schooling/
-- https://austinkleon.com/2019/05/19/pansy-luchadores/
-- https://austinkleon.com/2018/05/19/roba-como-un-artista/
+- https://austinkleon.com/2024/06/11/time-is-a-spiral/
+- https://austinkleon.com/2020/06/11/mass-observation/
+- https://austinkleon.com/2019/06/11/the-fate-of-an-archive/
+- https://austinkleon.com/2018/06/11/what-were-going-to-do-today/
 - https://austinkleon.com/steal/
 - https://austinkleon.com/steal-audiobook-trilogy
 - https://austinkleon.com/keepgoing
@@ -112,11 +99,11 @@ The post includes copyright information and mentions that the site participates 
 - https://austinkleon.com/journal
 - https://austinkleon.com/newspaperblackout/
 - https://cottonbureau.com/people/austin-kleon
-- https://austinkleon.com/2025/05/16/maycember-rage/
-- https://austinkleon.com/2025/05/16/3-thoughts-while-pushing-a-wheelbarrow/
-- https://austinkleon.com/2025/05/09/well-see/
-- https://austinkleon.com/2025/05/09/kids-ask-the-darndest-questions/
-- https://austinkleon.com/2025/05/09/disintegration/
+- https://austinkleon.com/2025/06/05/a-peek-inside-my-pocket-notebook/
+- https://austinkleon.com/2025/05/28/typewriter-interview-with-sarah-manguso/
+- https://austinkleon.com/2025/05/23/writing-shouldnt-be-easier/
+- https://austinkleon.com/2025/05/22/gift-ideas-for-dads-grads/
+- https://austinkleon.com/2025/05/20/may-2025-mixtape/
 - https://austinkleon.com/books/
 - http://austinkleon.com/newsletter
 - https://austinkleon.com/category/reading/my-reading-years/
@@ -141,4 +128,4 @@ The post includes copyright information and mentions that the site participates 
 - https://austinkleon.com/contact/
 
 ---
-*Generated from: /Users/mpaz/workspace/lens-tmp/fetched/on-reading-novels.html*
+*Generated from: /Users/mpaz/workspace/lens-tmp/fetched/well-see.html*
